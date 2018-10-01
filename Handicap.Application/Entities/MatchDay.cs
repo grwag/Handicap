@@ -11,26 +11,26 @@ namespace Handicap.Application.Entities
         private readonly ICollection<Player> _players;
         private readonly int _numberOfTables;
         private readonly IHandicapCalculator _handicapCalculator;
+        private readonly IQueueService _queueService;
 
         private Random _rnd;
 
         public DateTime Date { get; set; }
-        public ICollection<Player> PlayerQueue { get; set; }
-        public ICollection<Player> AlreadyPlayedQueue { get; set; }
 
         public bool[] Tables { get; set; }
 
 
-        public MatchDay(ICollection<Player> players, int numberOfTables, IHandicapCalculator handicapCalculator)
+        public MatchDay(ICollection<Player> players, int numberOfTables, IHandicapCalculator handicapCalculator, IQueueService queueService)
         {
             _players = players;
             _numberOfTables = numberOfTables;
             _handicapCalculator = handicapCalculator;
+            _queueService = queueService;
+
+            _queueService.Setup(_players);
 
             _rnd = new Random();
 
-            PlayerQueue = _players;
-            AlreadyPlayedQueue = new List<Player>();
             Date = DateTime.Now;
 
             Tables = new bool[numberOfTables];
@@ -48,13 +48,14 @@ namespace Handicap.Application.Entities
                 return null;
             }
 
-            if (PlayerQueue.Count + AlreadyPlayedQueue.Count < 2)
+            if (!_queueService.IsQueueingPossible())
             {
                 return null;
             }
 
-            var playerOne = GetNextPlayer();
-            var playerTwo = GetNextPlayer();
+            var playerOne = _queueService.GetNextPlayer();
+            var playerTwo = _queueService.GetNextPlayer();
+
             var game = new Game(playerOne, playerTwo, _rnd);
 
             game.PlayerOneRequiredPoints = _handicapCalculator.Calculate(playerOne.Handicap, game.Type);
@@ -84,44 +85,5 @@ namespace Handicap.Application.Entities
 
             return table;
         }
-
-        private Player GetNextPlayer()
-        {
-            if (PlayerQueue.Any())
-            {
-                var player = QueuePlayer(PlayerQueue);
-                ManageQueues();
-
-                return player;
-            }
-
-            if (AlreadyPlayedQueue.Any())
-            {
-                var player = QueuePlayer(AlreadyPlayedQueue);
-                ManageQueues();
-
-                return player;
-            }
-
-            return null;
-        }
-
-        private Player QueuePlayer(ICollection<Player> queue)
-        {
-            int index = _rnd.Next(0, queue.Count());
-            var player = queue.ElementAt(index);
-            queue.Remove(player);
-            return player;
-        }
-
-        private void ManageQueues()
-        {
-            if (!PlayerQueue.Any() && AlreadyPlayedQueue.Any())
-            {
-                PlayerQueue = AlreadyPlayedQueue;
-                AlreadyPlayedQueue.Clear();
-            }
-        }
-
     }
 }

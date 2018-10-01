@@ -15,10 +15,23 @@ namespace Handicap.Application.Tests
         public void GetNextGame_UsesFirstAvailableTable()
         {
             var mockCalculator = new Mock<IHandicapCalculator>();
+            var mockQueueService = new Mock<IQueueService>();
+
             mockCalculator.Setup(calc => 
                 calc.Calculate(It.IsAny<int>(), It.IsAny<GameType>())).Returns(25);
 
-            var md = new MatchDay(GetPlayers(), 4, mockCalculator.Object);
+            mockQueueService.Setup(queue =>
+                queue.GetNextPlayer()).Returns(new Player()
+                {
+                    FirstName = "alf",
+                    LastName = "wurst",
+                    IsBusy = false
+                });
+
+            mockQueueService.Setup(queue =>
+                queue.IsQueueingPossible()).Returns(true);
+
+            var md = new MatchDay(GetPlayers(), 4, mockCalculator.Object, mockQueueService.Object);
 
             var game = md.GetNextGame();
 
@@ -30,10 +43,12 @@ namespace Handicap.Application.Tests
         public void GetNextGame_ReturnsNullIfNoTablesAreAvailable()
         {
             var mockCalculator = new Mock<IHandicapCalculator>();
+            var mockQueueService = new Mock<IQueueService>();
+
             mockCalculator.Setup(calc =>
                 calc.Calculate(It.IsAny<int>(), It.IsAny<GameType>())).Returns(25);
 
-            var md = new MatchDay(GetPlayers(), 4, mockCalculator.Object);
+            var md = new MatchDay(GetPlayers(), 4, mockCalculator.Object, mockQueueService.Object);
             md.Tables = new bool[]{ false, false, false, false};
 
             var game = md.GetNextGame();
