@@ -1,0 +1,127 @@
+﻿using Handicap.Application.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Handicap.Application.Entities
+{
+    public class MatchDay : BaseEntity
+    {
+        private readonly ICollection<Player> _players;
+        private readonly int _numberOfTables;
+        private readonly IHandicapCalculator _handicapCalculator;
+
+        private Random _rnd;
+
+        public DateTime Date { get; set; }
+        public ICollection<Player> PlayerQueue { get; set; }
+        public ICollection<Player> AlreadyPlayedQueue { get; set; }
+
+        public bool[] Tables { get; set; }
+
+
+        public MatchDay(ICollection<Player> players, int numberOfTables, IHandicapCalculator handicapCalculator)
+        {
+            _players = players;
+            _numberOfTables = numberOfTables;
+            _handicapCalculator = handicapCalculator;
+
+            _rnd = new Random();
+
+            PlayerQueue = _players;
+            AlreadyPlayedQueue = new List<Player>();
+            Date = DateTime.Now;
+
+            Tables = new bool[numberOfTables];
+            for (var i = 0; i < Tables.Length; i++)
+            {
+                Tables[i] = true;
+            }
+        }
+
+        public Game GetNextGame()
+        {
+            var table = GetTable();
+            if (table == -1)
+            {
+                return null;
+            }
+
+            if (PlayerQueue.Count + AlreadyPlayedQueue.Count < 2)
+            {
+                return null;
+            }
+
+            var playerOne = GetNextPlayer();
+            var playerTwo = GetNextPlayer();
+            var game = new Game(playerOne, playerTwo, _rnd);
+
+            game.PlayerOneRequiredPoints = _handicapCalculator.Calculate(playerOne.Handicap, game.Type);
+            game.PlayerTwoRequiredPoints = _handicapCalculator.Calculate(playerTwo.Handicap, game.Type);
+
+            return game;
+        }
+
+        private int GetTable()
+        {
+            if (!Tables.Contains(true))
+            {
+                return -1;
+            }
+
+            var table = 0;
+            for (var i = 0; i < Tables.Length; i++)
+            {
+                if (Tables[i])
+                {
+                    table = i;
+                    Tables[i] = false;
+
+                    break;
+                }
+            }
+
+            return table;
+        }
+
+        private Player GetNextPlayer()
+        {
+            if (PlayerQueue.Any())
+            {
+                var player = QueuePlayer(PlayerQueue);
+                ManageQueues();
+
+                return player;
+            }
+
+            if (AlreadyPlayedQueue.Any())
+            {
+                var player = QueuePlayer(AlreadyPlayedQueue);
+                ManageQueues();
+
+                return player;
+            }
+
+            return null;
+        }
+
+        private Player QueuePlayer(ICollection<Player> queue)
+        {
+            int index = _rnd.Next(0, queue.Count());
+            var player = queue.ElementAt(index);
+            queue.Remove(player);
+            return player;
+        }
+
+        private void ManageQueues()
+        {
+            if (!PlayerQueue.Any() && AlreadyPlayedQueue.Any())
+            {
+                PlayerQueue = AlreadyPlayedQueue;
+                AlreadyPlayedQueue.Clear();
+            }
+        }
+
+    }
+}
