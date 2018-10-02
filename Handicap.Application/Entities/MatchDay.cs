@@ -53,8 +53,8 @@ namespace Handicap.Application.Entities
                 return null;
             }
 
-            var playerOne = _queueService.GetNextPlayer();
-            var playerTwo = _queueService.GetNextPlayer();
+            var playerOne = _queueService.NextPlayer();
+            var playerTwo = _queueService.NextPlayer();
 
             var game = new Game(playerOne, playerTwo, _rnd);
 

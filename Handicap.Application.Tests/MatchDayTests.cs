@@ -21,7 +21,7 @@ namespace Handicap.Application.Tests
                 calc.Calculate(It.IsAny<int>(), It.IsAny<GameType>())).Returns(25);
 
             mockQueueService.Setup(queue =>
-                queue.GetNextPlayer()).Returns(new Player()
+                queue.NextPlayer()).Returns(new Player()
                 {
                     FirstName = "alf",
                     LastName = "wurst",

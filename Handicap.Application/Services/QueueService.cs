@@ -29,20 +29,20 @@ namespace Handicap.Application.Services
             return (_queue.Count + AlreadyPlayedQueue.Count >= 2);
         }
 
-        public Player GetNextPlayer()
+        public Player NextPlayer()
         {
             if (_queue.Any())
             {
-                var player = QueuePlayer(_queue);
-                ManageQueues();
+                var player = TakePlayer(_queue);
+                RefreshQueues();
 
                 return player;
             }
 
             if (AlreadyPlayedQueue.Any())
             {
-                var player = QueuePlayer(AlreadyPlayedQueue);
-                ManageQueues();
+                var player = TakePlayer(AlreadyPlayedQueue);
+                RefreshQueues();
 
                 return player;
             }
@@ -50,7 +50,31 @@ namespace Handicap.Application.Services
             return null;
         }
 
-        private Player QueuePlayer(ICollection<Player> queue)
+        public void RequeuePlayer(Player player)
+        {
+            AlreadyPlayedQueue.Add(player);
+            RefreshQueues();
+        }
+
+        public void AddPlayer(Player player)
+        {
+            _queue.Add(player);
+        }
+
+        public void RemovePlayer(Player player)
+        {
+            if (_queue.Contains(player))
+            {
+                _queue.Remove(player);
+            }
+
+            if (AlreadyPlayedQueue.Contains(player))
+            {
+                AlreadyPlayedQueue.Remove(player);
+            }
+        }
+
+        private Player TakePlayer(ICollection<Player> queue)
         {
             int index = _rnd.Next(0, queue.Count());
             var player = queue.ElementAt(index);
@@ -58,7 +82,7 @@ namespace Handicap.Application.Services
             return player;
         }
 
-        private void ManageQueues()
+        private void RefreshQueues()
         {
             if (!_queue.Any() && AlreadyPlayedQueue.Any())
             {
