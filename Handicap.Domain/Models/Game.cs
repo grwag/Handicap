@@ -1,6 +1,7 @@
 ﻿using System;
 
-namespace Handicap.Application.Entities{
+namespace Handicap.Domain.Models
+{
     public class Game : BaseEntity {
         private readonly Player _playerOne;
         private readonly Player _playerTwo;
@@ -11,10 +12,7 @@ namespace Handicap.Application.Entities{
         public int PlayerOnePoints { get; set; }
         public int PlayerTwoRequiredPoints { get; set; }
         public int PlayerTwoPoints { get; set; }
-
-        public int Table { get; set; }
-
-        public bool IsFinished { get; set; }
+        public DateTimeOffset Date { get; set; }
 
         public Game(Player playerOne, Player playerTwo, Random rnd)
         {
@@ -27,7 +25,7 @@ namespace Handicap.Application.Entities{
             PlayerOnePoints = 0;
             PlayerTwoPoints = 0;
 
-            IsFinished = false;
+            Date = DateTimeOffset.Now;
         }
 
         private GameType GetGameType()
@@ -35,12 +33,5 @@ namespace Handicap.Application.Entities{
             var types = Enum.GetValues(typeof(GameType));
             return (GameType)types.GetValue(_rnd.Next(types.Length));
         }
-    }
-
-    public enum GameType{
-        EIGHTBALL,
-        NINEBALL,
-        TENBALL,
-        STRAIGHTPOOL
     }
 }

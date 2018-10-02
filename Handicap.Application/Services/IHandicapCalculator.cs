@@ -1,4 +1,4 @@
-﻿using Handicap.Application.Entities;
+﻿using Handicap.Domain.Models;
 
 namespace Handicap.Application.Services
 {

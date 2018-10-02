@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Handicap.Application.Entities;
+﻿using Handicap.Domain.Models;
+using System;
 
 namespace Handicap.Application.Services
 {
@@ -9,22 +7,7 @@ namespace Handicap.Application.Services
     {
         public int Calculate(int handicap, GameType gameType)
         {
-            var max = 0;
-            switch (gameType)
-            {
-                case GameType.EIGHTBALL:
-                    max = 7;
-                    break;
-                case GameType.NINEBALL:
-                    max = 9;
-                    break;
-                case GameType.TENBALL:
-                    max = 8;
-                    break;
-                case GameType.STRAIGHTPOOL:
-                    max = 100;
-                    break;
-            }
+            var max = (int)gameType;
 
             return (int)Math.Ceiling((double)(max - ((max / 100) * handicap)));
         }

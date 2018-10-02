@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Handicap.Api", "Handicap.Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Handicap.Data", "Handicap.Data\Handicap.Data.csproj", "{C1ED3954-1FF2-49B6-9221-EF564A059B46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Handicap.Application.Tests", "Handicap.Application.Tests\Handicap.Application.Tests.csproj", "{338B790B-CCE9-49D2-9D69-30F35911F04C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Handicap.Application.Tests", "Handicap.Application.Tests\Handicap.Application.Tests.csproj", "{338B790B-CCE9-49D2-9D69-30F35911F04C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Handicap.Domain", "Handicap.Domain\Handicap.Domain.csproj", "{666EF03B-5B11-4161-A21B-E85F01ADCB7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{338B790B-CCE9-49D2-9D69-30F35911F04C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{338B790B-CCE9-49D2-9D69-30F35911F04C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{338B790B-CCE9-49D2-9D69-30F35911F04C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{666EF03B-5B11-4161-A21B-E85F01ADCB7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{666EF03B-5B11-4161-A21B-E85F01ADCB7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{666EF03B-5B11-4161-A21B-E85F01ADCB7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{666EF03B-5B11-4161-A21B-E85F01ADCB7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
