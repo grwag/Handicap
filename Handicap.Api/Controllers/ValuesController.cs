@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Handicap.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Handicap.Api.Controllers
@@ -10,11 +11,24 @@ namespace Handicap.Api.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly IMatchDayService _matchDayService;
+
+        public ValuesController(IMatchDayService matchDayService)
+        {
+            _matchDayService = matchDayService;
+        }
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public async Task<IActionResult> Get()
         {
-            return new string[] { "value1", "value2" };
+            var md = await _matchDayService.CreateMatchDay(4);
+            
+            if(md != null)
+            {
+                return Ok(md);
+            }
+
+            return BadRequest();
         }
 
         // GET api/values/5

@@ -12,4 +12,10 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Handicap.Application\Handicap.Application.csproj" />
+    <ProjectReference Include="..\Handicap.Data\Handicap.Data.csproj" />
+    <ProjectReference Include="..\Handicap.Domain\Handicap.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
