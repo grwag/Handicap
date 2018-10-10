@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using AutoMapper;
 using Handicap.Application.Services;
 using Handicap.Data.Infrastructure;
 using Handicap.Data.Repo;
+using Handicap.Mapping;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -36,8 +39,14 @@ namespace Handicap.Api
                 opts.UseInMemoryDatabase("InMemoryDb");
             });
 
-            services.AddScoped(typeof(IRepository<>), typeof(HandicapRepository<>));
-            services.AddScoped<IMatchDayService, MatchDayService>();
+            services.AddScoped(typeof(IPlayerRepository), typeof(PlayerRepository));
+            services.AddScoped<IPlayerService, PlayerService>();
+
+            services.AddAutoMapper(exp =>
+            {
+                exp.AddProfiles(Assembly.GetAssembly(typeof(DomainToDtoMappingProfile)));
+                exp.AddProfiles(Assembly.GetAssembly(typeof(DomainToDboMappingProfile)));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

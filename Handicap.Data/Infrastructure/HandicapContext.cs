@@ -1,4 +1,4 @@
-﻿using Handicap.Domain.Dbo;
+﻿using Handicap.Dbo;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

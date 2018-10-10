@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
-namespace Handicap.Domain.Models
+namespace Handicap.Dto.Response
 {
-    public class Player : BaseEntity{
+    public class PlayerResponse : BaseResponse
+    {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-
         public int Handicap { get; set; }
-        public bool HasFinishedMatchDay { get; set; }
     }
 }

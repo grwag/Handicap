@@ -9,6 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
@@ -16,6 +18,8 @@
     <ProjectReference Include="..\Handicap.Application\Handicap.Application.csproj" />
     <ProjectReference Include="..\Handicap.Data\Handicap.Data.csproj" />
     <ProjectReference Include="..\Handicap.Domain\Handicap.Domain.csproj" />
+    <ProjectReference Include="..\Handicap.Dto\Handicap.Dto.csproj" />
+    <ProjectReference Include="..\Handicap.Mapping\Handicap.Mapping.csproj" />
   </ItemGroup>
 
 </Project>

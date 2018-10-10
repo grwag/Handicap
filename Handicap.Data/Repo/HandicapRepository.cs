@@ -59,7 +59,6 @@ namespace Handicap.Data.Repo
                 throw new EntityAlreadyExistsException($"Entity '{entity}' already exists.");
             }
 
-            entity.DateCreated = DateTimeOffset.Now;
             _entities.Add(entity);
             return entity;
         }

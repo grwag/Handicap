@@ -5,15 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="2.1.4" />
-    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.1.2" />
+    <PackageReference Include="AutoMapper" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Handicap.Dbo\Handicap.Dbo.csproj" />
     <ProjectReference Include="..\Handicap.Domain\Handicap.Domain.csproj" />
-    <ProjectReference Include="..\Handicap.Mapping\Handicap.Mapping.csproj" />
+    <ProjectReference Include="..\Handicap.Dto\Handicap.Dto.csproj" />
   </ItemGroup>
 
 </Project>

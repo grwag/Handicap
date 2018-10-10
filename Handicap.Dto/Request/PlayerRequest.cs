@@ -1,15 +1,13 @@
-﻿using Handicap.Domain.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Handicap.Domain.Dbo
+namespace Handicap.Dto.Request
 {
-    public class PlayerDbo : BaseEntity
+    public class PlayerRequest
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int Handicap { get; set; }
-        public virtual ICollection<GameDbo> Games { get; set; }
     }
 }

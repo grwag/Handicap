@@ -11,24 +11,11 @@ namespace Handicap.Api.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private readonly IMatchDayService _matchDayService;
-
-        public ValuesController(IMatchDayService matchDayService)
-        {
-            _matchDayService = matchDayService;
-        }
         // GET api/values
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var md = await _matchDayService.CreateMatchDay(4);
-            
-            if(md != null)
-            {
-                return Ok(md);
-            }
-
-            return BadRequest();
+            return Ok("Values Controller...");
         }
 
         // GET api/values/5
