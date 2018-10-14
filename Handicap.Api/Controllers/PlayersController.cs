@@ -5,6 +5,8 @@ using Handicap.Domain.Models;
 using Handicap.Dto.Request;
 using Handicap.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Handicap.Api.Controllers
@@ -24,11 +26,26 @@ namespace Handicap.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(PagingParameters pagingParameters)
         {
-            var players = await _playerService.FindAsync(
-                null,
+            var players = await _playerService.All(
                 pagingParameters);
 
             return Ok(players);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var player = await _playerService.GetById(id);
+
+            return Ok(_mapper.Map<PlayerResponse>(player));
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _playerService.Delete(id);
+
+            return NoContent();
         }
 
         [HttpPost]

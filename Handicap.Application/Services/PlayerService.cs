@@ -7,44 +7,66 @@ using System.Linq;
 using System;
 using Handicap.Dto.Response.Paging;
 using System.Linq.Expressions;
+using AutoMapper;
+using Handicap.Dbo;
+using System.Collections.Generic;
 
 namespace Handicap.Application.Services
 {
     public class PlayerService : IPlayerService
     {
         private readonly IPlayerRepository _playerRepository;
+        private readonly IMapper _mapper;
 
-        public PlayerService(IPlayerRepository playerRepository)
+        public PlayerService(IPlayerRepository playerRepository,
+            IMapper mapper)
         {
             _playerRepository = playerRepository;
+            _mapper = mapper;
         }
 
         public async Task<Player> InsertPlayer(Player player)
         {
-            var checkPlayer = await _playerRepository.FindAsync(
-                p => p.FirstName == player.FirstName && p.LastName == player.LastName,
-                p => p.LastName,
-                new PagingParameters());
+            var playerDbo = _mapper.Map<PlayerDbo>(player);
 
-            if(checkPlayer.Any())
-            {
-                throw new EntityAlreadyExistsException($"Player {player.FirstName} {player.LastName} already exists.");
-            }
+            await _playerRepository.Insert(playerDbo);
 
-            player = await _playerRepository.Insert(player);
-
-            return player;
+            return _mapper.Map<Player>(playerDbo);
         }
 
-        public async Task<PagedList<Player>> FindAsync(Expression<Func<Player, bool>> expression, PagingParameters pagingParameters)
+        public async Task<Player> GetById(Guid id)
         {
-            var result = await _playerRepository.FindAsync(
-                expression,
-                o => o.LastName,
+            var playerDbo = await _playerRepository.GetById(id);
+
+            if (playerDbo == null)
+            {
+                throw new EntityNotFoundException($"Player with id {id} does not exist.");
+            }
+
+            return _mapper.Map<Player>(playerDbo);
+        }
+
+        public async Task Delete(Guid id)
+        {
+            var playerDbo = await _playerRepository.GetById(id);
+
+            if (playerDbo == null)
+            {
+                throw new EntityNotFoundException($"Player with id {id} does not exist.");
+            }
+
+            _playerRepository.Delete(playerDbo);
+            await _playerRepository.SaveChangesAsync();
+        }
+
+        public async Task<PagedList<Player>> All(PagingParameters pagingParameters)
+        {
+            var result = await _playerRepository.All(
                 pagingParameters,
                 false);
 
-            return result;
+            var query = _mapper.Map<IEnumerable<Player>>(result).AsQueryable();
+            return PagedList<Player>.Create(query, pagingParameters.PageNumber, pagingParameters.PageSize);
         }
     }
 }

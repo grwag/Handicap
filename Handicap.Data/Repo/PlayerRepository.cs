@@ -3,14 +3,9 @@ using Handicap.Data.Exceptions;
 using Handicap.Data.Infrastructure;
 using Handicap.Data.Paging;
 using Handicap.Dbo;
-using Handicap.Domain.Models;
-using Handicap.Dto.Response.Paging;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Handicap.Data.Repo
@@ -28,53 +23,55 @@ namespace Handicap.Data.Repo
             _entities = context.Set<PlayerDbo>();
         }
 
-        public async Task<Player> Insert(Player player)
+        public async Task Insert(PlayerDbo playerDbo)
         {
-            var playerDbo = _mapper.Map<Player, PlayerDbo>(player);
-
-            if (_entities.Find(player.Id) != null)
+            if (_entities.Find(playerDbo.Id) != null)
             {
-                throw new EntityAlreadyExistsException($"Player '{player.FirstName} {player.LastName}' already exists.");
+                throw new EntityAlreadyExistsException($"Player '{playerDbo.FirstName} {playerDbo.LastName}' already exists.");
+            }
+
+            var checkPlayer = _entities.Where(
+                p => p.FirstName == playerDbo.FirstName
+                && p.LastName == playerDbo.LastName);
+
+            if (checkPlayer.Any())
+            {
+                throw new EntityAlreadyExistsException($"Player {playerDbo.FirstName} {playerDbo.LastName} already exists.");
             }
 
             _entities.Add(playerDbo);
             await SaveChangesAsync();
-
-            return _mapper.Map<Player>(playerDbo);
         }
 
-        public async Task<PagedList<Player>> FindAsync<P>(
-            Expression<Func<Player, bool>> expression,
-            Expression<Func<Player, P>> expressionProperty,
+        public async Task<IQueryable<PlayerDbo>> All(
             PagingParameters pagingParameters,
             bool desc = true,
             params string[] navigationProperties)
         {
-            var query = _mapper.Map<IEnumerable<Player>>(_entities).AsQueryable();
+            var query = _entities.AsQueryable();
 
             foreach (string navigationProperty in navigationProperties)
                 query = query.Include(navigationProperty);
 
-            if (expression != null)
-            {
-                query = query.Where(expression);
-            }
-
-            if (desc)
-            {
-                query = query.OrderByDescending(expressionProperty);
-            }
-            else
-            {
-                query = query.OrderBy(expressionProperty);
-            }
-
-            return PagedList<Player>.Create(query, pagingParameters.PageNumber, pagingParameters.PageSize);
+            return query;
         }
 
         public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<PlayerDbo> GetById(Guid id)
+        {
+            var playerDbo = _entities.Where(
+                p => p.Id == id);
+
+            return playerDbo.FirstOrDefault();
+        }
+
+        public void Delete(PlayerDbo playerDbo)
+        {
+            _entities.Remove(playerDbo);
         }
     }
 }

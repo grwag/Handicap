@@ -50,8 +50,7 @@ namespace Handicap.Mapping.Tests
                 Id = playerId,
                 FirstName = "hans",
                 LastName = "maulwurf",
-                Handicap = 55,
-                HasFinishedMatchDay = false
+                Handicap = 55
             };
 
             var mapper = this.provider.GetService<IMapper>();

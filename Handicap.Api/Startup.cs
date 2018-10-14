@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
+using Handicap.Api.Middleware;
 using Handicap.Application.Services;
 using Handicap.Data.Infrastructure;
 using Handicap.Data.Repo;
@@ -41,6 +42,7 @@ namespace Handicap.Api
 
             services.AddScoped(typeof(IPlayerRepository), typeof(PlayerRepository));
             services.AddScoped<IPlayerService, PlayerService>();
+            services.AddScoped<IHandicapContext, HandicapContext>();
 
             services.AddAutoMapper(exp =>
             {
@@ -60,6 +62,8 @@ namespace Handicap.Api
             {
                 app.UseHsts();
             }
+
+            app.UseMiddleware(typeof(ExceptionHandling));
 
             app.UseHttpsRedirection();
             app.UseMvc();

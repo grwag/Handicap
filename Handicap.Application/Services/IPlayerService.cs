@@ -10,6 +10,8 @@ namespace Handicap.Application.Services
     public interface IPlayerService
     {
         Task<Player> InsertPlayer(Player player);
-        Task<PagedList<Player>> FindAsync(Expression<Func<Player, bool>> expression, PagingParameters pagingParameters);
+        Task<Player> GetById(Guid id);
+        Task Delete(Guid id);
+        Task<PagedList<Player>> All(PagingParameters pagingParameters);
     }
 }

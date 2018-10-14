@@ -8,6 +8,5 @@ namespace Handicap.Domain.Models
         public string LastName { get; set; }
 
         public int Handicap { get; set; }
-        public bool HasFinishedMatchDay { get; set; }
     }
 }

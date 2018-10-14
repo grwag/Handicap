@@ -22,8 +22,7 @@ namespace Handicap.Mapping
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dst => dst.FirstName, opt => opt.MapFrom(src => src.FirstName))
                 .ForMember(dst => dst.LastName, opt => opt.MapFrom(src => src.LastName))
-                .ForMember(dst => dst.Handicap, opt => opt.MapFrom(src => src.Handicap))
-                .ForMember(dst => dst.HasFinishedMatchDay, opt => opt.Ignore());
+                .ForMember(dst => dst.Handicap, opt => opt.MapFrom(src => src.Handicap));
         }
     }
 }
