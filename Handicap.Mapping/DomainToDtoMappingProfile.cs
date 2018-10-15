@@ -13,6 +13,7 @@ namespace Handicap.Mapping
         public DomainToDtoMappingProfile()
         {
             CreateMap<PlayerRequest, Player>(MemberList.Destination)
+                .ForMember(dst => dst.Id, opt => opt.Ignore())
                 .ForMember(dst => dst.FirstName, opt => opt.MapFrom(p => p.FirstName))
                 .ForMember(dst => dst.LastName, opt => opt.MapFrom(p => p.LastName))
                 .ForMember(dst => dst.Handicap, opt => opt.MapFrom(p => p.Handicap));

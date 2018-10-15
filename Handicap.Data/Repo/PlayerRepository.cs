@@ -3,8 +3,10 @@ using Handicap.Data.Exceptions;
 using Handicap.Data.Infrastructure;
 using Handicap.Data.Paging;
 using Handicap.Dbo;
+using Handicap.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -23,27 +25,29 @@ namespace Handicap.Data.Repo
             _entities = context.Set<PlayerDbo>();
         }
 
-        public async Task Insert(PlayerDbo playerDbo)
+        public async Task Insert(Player player)
         {
-            if (_entities.Find(playerDbo.Id) != null)
+            if (_entities.Find(player.Id) != null)
             {
-                throw new EntityAlreadyExistsException($"Player '{playerDbo.FirstName} {playerDbo.LastName}' already exists.");
+                throw new EntityAlreadyExistsException($"Player '{player.FirstName} {player.LastName}' already exists.");
             }
 
             var checkPlayer = _entities.Where(
-                p => p.FirstName == playerDbo.FirstName
-                && p.LastName == playerDbo.LastName);
+                p => p.FirstName == player.FirstName
+                && p.LastName == player.LastName);
 
             if (checkPlayer.Any())
             {
-                throw new EntityAlreadyExistsException($"Player {playerDbo.FirstName} {playerDbo.LastName} already exists.");
+                throw new EntityAlreadyExistsException($"Player {player.FirstName} {player.LastName} already exists.");
             }
 
+            var playerDbo = _mapper.Map<PlayerDbo>(player);
             _entities.Add(playerDbo);
+
             await SaveChangesAsync();
         }
 
-        public async Task<IQueryable<PlayerDbo>> All(
+        public async Task<IQueryable<Player>> All(
             PagingParameters pagingParameters,
             bool desc = true,
             params string[] navigationProperties)
@@ -53,7 +57,7 @@ namespace Handicap.Data.Repo
             foreach (string navigationProperty in navigationProperties)
                 query = query.Include(navigationProperty);
 
-            return query;
+            return _mapper.Map<IEnumerable<Player>>(query).AsQueryable();
         }
 
         public async Task SaveChangesAsync()
@@ -61,16 +65,17 @@ namespace Handicap.Data.Repo
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PlayerDbo> GetById(Guid id)
+        public async Task<Player> GetById(Guid id)
         {
             var playerDbo = _entities.Where(
                 p => p.Id == id);
 
-            return playerDbo.FirstOrDefault();
+            return _mapper.Map<Player>(playerDbo.FirstOrDefault());
         }
 
-        public void Delete(PlayerDbo playerDbo)
+        public void Delete(Player player)
         {
+            var playerDbo = _mapper.Map<PlayerDbo>(player);
             _entities.Remove(playerDbo);
         }
     }

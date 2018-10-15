@@ -12,14 +12,14 @@ namespace Handicap.Data.Repo
 {
     public interface IPlayerRepository
     {
-        Task<IQueryable<PlayerDbo>> All(
+        Task<IQueryable<Player>> All(
             PagingParameters pagingParameters,
             bool desc = true,
             params string[] navigationProperties);
 
-        Task Insert(PlayerDbo playerDbo);
-        void Delete(PlayerDbo playerDbo);
-        Task<PlayerDbo> GetById(Guid id);
+        Task Insert(Player player);
+        void Delete(Player player);
+        Task<Player> GetById(Guid id);
         Task SaveChangesAsync();
     }
 }

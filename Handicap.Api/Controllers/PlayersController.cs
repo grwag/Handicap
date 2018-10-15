@@ -7,6 +7,7 @@ using Handicap.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Handicap.Api.Controllers
@@ -53,9 +54,10 @@ namespace Handicap.Api.Controllers
         {
             var player = _mapper.Map<Player>(playerRequest);
             player = await _playerService.InsertPlayer(player);
+
             var playerResponse = _mapper.Map<PlayerResponse>(player);
 
-            return Ok(playerResponse);
+            return StatusCode((int)HttpStatusCode.Created, playerResponse);
         }
     }
 }

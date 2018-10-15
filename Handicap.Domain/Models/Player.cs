@@ -8,5 +8,13 @@ namespace Handicap.Domain.Models
         public string LastName { get; set; }
 
         public int Handicap { get; set; }
+
+        public Player()
+        {
+            Id = Guid.NewGuid();
+            FirstName = string.Empty;
+            LastName = string.Empty;
+            Handicap = 0;
+        }
     }
 }
