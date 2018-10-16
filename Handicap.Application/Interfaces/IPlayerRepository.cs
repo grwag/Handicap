@@ -11,6 +11,7 @@ namespace Handicap.Application.Interfaces {
         Task Insert(Player player);
         void Delete(Player player);
         Task<Player> GetById(Guid id);
+        Task Update(Player player);
         Task SaveChangesAsync();
     }
 }

@@ -53,5 +53,14 @@ namespace Handicap.Application.Services
 
             return result;
         }
+
+        public async Task<Player> Update(Player player)
+        {
+            await _playerRepository.Update(player);
+
+            var updatedPlayer = await _playerRepository.GetById(player.Id);
+
+            return updatedPlayer;
+        }
     }
 }

@@ -81,5 +81,23 @@ namespace Handicap.Data.Repo
             var playerDbo = _mapper.Map<PlayerDbo>(player);
             _entities.Remove(playerDbo);
         }
+
+        public async Task Update(Player player)
+        {
+            var playerDbo = _entities.Where(p => p.Id == player.Id).SingleOrDefault();
+
+            if(playerDbo == null)
+            {
+                throw new EntityNotFoundException($"Player with id {player.Id} does not exist.");
+            }
+
+            playerDbo.FirstName = player.FirstName;
+            playerDbo.LastName = player.LastName;
+            playerDbo.Handicap = player.Handicap;
+
+            _context.Entry(playerDbo).State = EntityState.Modified;
+
+            await SaveChangesAsync();
+        }
     }
 }

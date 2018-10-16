@@ -66,5 +66,16 @@ namespace Handicap.Api.Controllers
 
             return StatusCode((int)HttpStatusCode.Created, playerResponse);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePlayer(Guid id, [FromBody]PlayerRequest playerRequest)
+        {
+            var player = _mapper.Map<Player>(playerRequest);
+            player.Id = id;
+
+            player = await _playerService.Update(player);
+
+            return Ok(_mapper.Map<PlayerResponse>(player));
+        }
     }
 }
