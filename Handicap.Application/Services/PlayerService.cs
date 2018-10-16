@@ -1,10 +1,8 @@
-﻿using Handicap.Data.Repo;
-using Handicap.Domain.Models;
+﻿using Handicap.Domain.Models;
 using System.Threading.Tasks;
-using Handicap.Data.Paging;
-using Handicap.Data.Exceptions;
 using System;
-using Handicap.Dto.Response.Paging;
+using Handicap.Application.Interfaces;
+using System.Linq;
 
 namespace Handicap.Application.Services
 {
@@ -28,10 +26,10 @@ namespace Handicap.Application.Services
         {
             var player = await _playerRepository.GetById(id);
 
-            if (player == null)
-            {
-                throw new EntityNotFoundException($"Player with id {id} does not exist.");
-            }
+            //if (player == null)
+            //{
+            //    throw new EntityNotFoundException($"Player with id {id} does not exist.");
+            //}
 
             return player;
         }
@@ -40,22 +38,20 @@ namespace Handicap.Application.Services
         {
             var player = await _playerRepository.GetById(id);
 
-            if (player == null)
-            {
-                throw new EntityNotFoundException($"Player with id {id} does not exist.");
-            }
+            //if (player == null)
+            //{
+            //    throw new EntityNotFoundException($"Player with id {id} does not exist.");
+            //}
 
             _playerRepository.Delete(player);
             await _playerRepository.SaveChangesAsync();
         }
 
-        public async Task<PagedList<Player>> All(PagingParameters pagingParameters)
+        public async Task<IQueryable<Player>> All()
         {
-            var result = await _playerRepository.All(
-                pagingParameters,
-                false);
+            var result = await _playerRepository.All();
 
-            return PagedList<Player>.Create(result, pagingParameters.PageNumber, pagingParameters.PageSize);
+            return result;
         }
     }
 }

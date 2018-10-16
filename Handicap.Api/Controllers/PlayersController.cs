@@ -4,8 +4,11 @@ using Handicap.Data.Paging;
 using Handicap.Domain.Models;
 using Handicap.Dto.Request;
 using Handicap.Dto.Response;
+using Handicap.Dto.Response.Paging;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -27,10 +30,14 @@ namespace Handicap.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(PagingParameters pagingParameters)
         {
-            var players = await _playerService.All(
-                pagingParameters);
+            var players = await _playerService.All();
 
-            return Ok(players);
+            var pagedResponse = PagedList<PlayerResponse>.Create(
+                _mapper.Map<IEnumerable<PlayerResponse>>(players).AsQueryable(),
+                pagingParameters.PageNumber,
+                pagingParameters.PageSize);
+
+            return Ok(pagedResponse);
         }
 
         [HttpGet("{id}")]

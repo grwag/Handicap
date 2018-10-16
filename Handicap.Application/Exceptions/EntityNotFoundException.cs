@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Handicap.Data.Exceptions
+namespace Handicap.Application.Exceptions
 {
     public class EntityNotFoundException : Exception
     {

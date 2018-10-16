@@ -5,6 +5,6 @@ namespace Handicap.Application.Services
 {
     public interface IMatchDayService
     {
-        Task<MatchDay> CreateMatchDay(int numberOfTables);
+        //Task<MatchDay> CreateMatchDay(int numberOfTables);
     }
 }

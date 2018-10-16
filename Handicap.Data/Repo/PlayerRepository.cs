@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Handicap.Data.Exceptions;
+using Handicap.Application.Exceptions;
+using Handicap.Application.Interfaces;
 using Handicap.Data.Infrastructure;
 using Handicap.Data.Paging;
 using Handicap.Dbo;
@@ -47,10 +48,7 @@ namespace Handicap.Data.Repo
             await SaveChangesAsync();
         }
 
-        public async Task<IQueryable<Player>> All(
-            PagingParameters pagingParameters,
-            bool desc = true,
-            params string[] navigationProperties)
+        public async Task<IQueryable<Player>> All(params string[] navigationProperties)
         {
             var query = _entities.AsQueryable();
 
@@ -69,6 +67,11 @@ namespace Handicap.Data.Repo
         {
             var playerDbo = _entities.Where(
                 p => p.Id == id);
+
+            if (!playerDbo.Any())
+            {
+                throw new EntityNotFoundException($"Player with id {id} does not exist.");
+            }
 
             return _mapper.Map<Player>(playerDbo.FirstOrDefault());
         }

@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Handicap.Application\Handicap.Application.csproj" />
     <ProjectReference Include="..\Handicap.Dbo\Handicap.Dbo.csproj" />
     <ProjectReference Include="..\Handicap.Domain\Handicap.Domain.csproj" />
     <ProjectReference Include="..\Handicap.Mapping\Handicap.Mapping.csproj" />
