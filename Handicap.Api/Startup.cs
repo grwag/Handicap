@@ -35,7 +35,9 @@ namespace Handicap.Api
             });
 
             services.AddScoped(typeof(IPlayerRepository), typeof(PlayerRepository));
+            services.AddScoped(typeof(IGameRepository), typeof(GameRepository));
             services.AddScoped<IPlayerService, PlayerService>();
+            services.AddScoped<IGameService, GameService>();
             services.AddScoped<IHandicapContext, HandicapContext>();
 
             services.AddAutoMapper(exp =>

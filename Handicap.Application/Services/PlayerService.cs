@@ -26,22 +26,12 @@ namespace Handicap.Application.Services
         {
             var player = await _playerRepository.GetById(id);
 
-            //if (player == null)
-            //{
-            //    throw new EntityNotFoundException($"Player with id {id} does not exist.");
-            //}
-
             return player;
         }
 
         public async Task Delete(Guid id)
         {
             var player = await _playerRepository.GetById(id);
-
-            //if (player == null)
-            //{
-            //    throw new EntityNotFoundException($"Player with id {id} does not exist.");
-            //}
 
             _playerRepository.Delete(player);
             await _playerRepository.SaveChangesAsync();

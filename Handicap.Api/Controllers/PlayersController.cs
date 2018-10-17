@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 namespace Handicap.Api.Controllers
 {
     [Route("api/[controller]")]
-    public class PlayersController : Controller
+    public class PlayersController : ControllerBase
     {
         private readonly IPlayerService _playerService;
         private readonly IMapper _mapper;

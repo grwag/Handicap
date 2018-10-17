@@ -14,7 +14,8 @@ namespace Handicap.Mapping.Tests
     public class MapperTests
     {
         private readonly IServiceProvider provider;
-        private readonly Guid playerId = Guid.Parse("{9E923FF8-1EFE-4E13-B4CE-2BF3D3260244}");
+        private readonly Guid playerOneId = Guid.Parse("{9E923FF8-1EFE-4E13-B4CE-2BF3D3260244}");
+        private readonly Guid playerTwoId = Guid.Parse("{9E923FF8-1EFE-4E13-B4CE-2BF3D3260244}");
 
         public MapperTests()
         {
@@ -47,7 +48,7 @@ namespace Handicap.Mapping.Tests
         {
             var player = new Player()
             {
-                Id = playerId,
+                Id = playerOneId,
                 FirstName = "hans",
                 LastName = "maulwurf",
                 Handicap = 55
@@ -62,5 +63,37 @@ namespace Handicap.Mapping.Tests
             mappedPlayerResponse.LastName.Should().BeEquivalentTo(player.LastName);
             mappedPlayerResponse.Handicap.Should().Be(player.Handicap);
         }
+
+        //[Test]
+        //public void Game_MapsTo_GameResponse()
+        //{
+        //    var game = new Game()
+        //    {
+        //        Date = DateTimeOffset.Now,
+        //        Id = Guid.NewGuid(),
+        //        PlayerOne = new Player()
+        //        {
+        //            Id = playerOneId,
+        //            FirstName = "hans",
+        //            LastName = "maulwurf",
+        //            Handicap = 20
+        //        },
+        //        PlayerTwo = new Player()
+        //        {
+        //            Id = playerTwoId,
+        //            FirstName = "bart",
+        //            LastName = "simpson",
+        //            Handicap = 50
+        //        },
+        //        PlayerOnePoints = 30,
+        //        PlayerOneRequiredPoints = 30,
+        //        PlayerTwoPoints = 35,
+        //        PlayerTwoRequiredPoints = 55
+        //    };
+
+        //    var mapper = this.provider.GetService<IMapper>();
+
+        //    var gameResponse = mapper.Map<GameResponse>(game);
+        //}
     }
 }
