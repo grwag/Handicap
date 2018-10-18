@@ -47,9 +47,10 @@ namespace Handicap.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateGame([FromBody]GameRequest gameRequest)
         {
-            var game = _mapper.Map<Game>(gameRequest);
+            var game = await _gameService.Insert(
+                gameRequest.PlayerOneId,
+                gameRequest.PlayerTwoId);
 
-            await _gameService.Insert(game);
             var gameResponse = _mapper.Map<GameResponse>(game);
 
             return StatusCode((int)HttpStatusCode.Created, gameResponse);

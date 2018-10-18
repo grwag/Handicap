@@ -3,11 +3,8 @@
 namespace Handicap.Domain.Models
 {
     public class Game : BaseEntity {
-        private readonly Random _rnd;
         public Player PlayerOne { get; set; }
-        public Guid PlayerOneId { get; set; }
         public Player PlayerTwo { get; set; }
-        public Guid PlayerTwoId { get; set; }
         public GameType Type { get; }
         public int PlayerOneRequiredPoints { get; set; }
         public int PlayerOnePoints { get; set; }
@@ -18,7 +15,6 @@ namespace Handicap.Domain.Models
         public Game()
         {
             Id = Guid.NewGuid();
-            _rnd = new Random();
             PlayerOne = new Player();
             PlayerOnePoints = 0;
             PlayerOneRequiredPoints = 0;
@@ -26,7 +22,15 @@ namespace Handicap.Domain.Models
             PlayerTwoPoints = 0;
             PlayerTwoRequiredPoints = 0;
             Date = DateTimeOffset.Now;
-            Type = GameType.Eightball;
+            Type = GetGameType();
+        }
+
+        private GameType GetGameType()
+        {
+            var values = Enum.GetValues(typeof(GameType));
+            var rnd = new Random();
+
+            return (GameType)values.GetValue(rnd.Next(values.Length));
         }
     }
 }

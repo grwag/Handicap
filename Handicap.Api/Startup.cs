@@ -39,6 +39,7 @@ namespace Handicap.Api
             services.AddScoped<IPlayerService, PlayerService>();
             services.AddScoped<IGameService, GameService>();
             services.AddScoped<IHandicapContext, HandicapContext>();
+            services.AddScoped<IHandicapCalculator, HandicapCalculator>();
 
             services.AddAutoMapper(exp =>
             {

@@ -9,7 +9,7 @@ namespace Handicap.Application.Services
 {
     public interface IGameService
     {
-        Task<Game> Insert(Game game);
+        Task<Game> Insert(Guid PlayerOneId, Guid PlayerTwoId);
         Task Delete(Guid Id);
         Task<Game> Update(Game game);
         Task<IQueryable<Game>> All();

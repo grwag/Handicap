@@ -25,75 +25,10 @@ namespace Handicap.Mapping.Tests
         }
 
         [Test]
-        public void PlayerRequest_MapsTo_Player()
+        public void ShouldAssertConfigurationIsValid()
         {
-            var playerRequest = new PlayerRequest()
-            {
-                FirstName = "hans",
-                LastName = "maulwurf",
-                Handicap = 55
-            };
-
             var mapper = this.provider.GetService<IMapper>();
-
-            var mappedDomainPlayer = mapper.Map<PlayerRequest, Player>(playerRequest);
-
-            mappedDomainPlayer.FirstName.Should().BeEquivalentTo(playerRequest.FirstName);
-            mappedDomainPlayer.LastName.Should().BeEquivalentTo(playerRequest.LastName);
-            mappedDomainPlayer.Handicap.Should().Be(playerRequest.Handicap);
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
         }
-
-        [Test]
-        public void Player_MapsTo_PlayerResponse()
-        {
-            var player = new Player()
-            {
-                Id = playerOneId,
-                FirstName = "hans",
-                LastName = "maulwurf",
-                Handicap = 55
-            };
-
-            var mapper = this.provider.GetService<IMapper>();
-
-            var mappedPlayerResponse = mapper.Map<Player, PlayerResponse>(player);
-
-            mappedPlayerResponse.Id.Should().Be(player.Id);
-            mappedPlayerResponse.FirstName.Should().BeEquivalentTo(player.FirstName);
-            mappedPlayerResponse.LastName.Should().BeEquivalentTo(player.LastName);
-            mappedPlayerResponse.Handicap.Should().Be(player.Handicap);
-        }
-
-        //[Test]
-        //public void Game_MapsTo_GameResponse()
-        //{
-        //    var game = new Game()
-        //    {
-        //        Date = DateTimeOffset.Now,
-        //        Id = Guid.NewGuid(),
-        //        PlayerOne = new Player()
-        //        {
-        //            Id = playerOneId,
-        //            FirstName = "hans",
-        //            LastName = "maulwurf",
-        //            Handicap = 20
-        //        },
-        //        PlayerTwo = new Player()
-        //        {
-        //            Id = playerTwoId,
-        //            FirstName = "bart",
-        //            LastName = "simpson",
-        //            Handicap = 50
-        //        },
-        //        PlayerOnePoints = 30,
-        //        PlayerOneRequiredPoints = 30,
-        //        PlayerTwoPoints = 35,
-        //        PlayerTwoRequiredPoints = 55
-        //    };
-
-        //    var mapper = this.provider.GetService<IMapper>();
-
-        //    var gameResponse = mapper.Map<GameResponse>(game);
-        //}
     }
 }

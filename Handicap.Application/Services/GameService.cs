@@ -11,10 +11,16 @@ namespace Handicap.Application.Services
     public class GameService : IGameService
     {
         private readonly IGameRepository _gameRepository;
+        private readonly IPlayerRepository _playerRepository;
+        private readonly IHandicapCalculator _handicapCalculator;
 
-        public GameService(IGameRepository gameRepository)
+        public GameService(IGameRepository gameRepository,
+            IPlayerRepository playerRepository,
+            IHandicapCalculator handicapCalculator)
         {
             _gameRepository = gameRepository;
+            _playerRepository = playerRepository;
+            _handicapCalculator = handicapCalculator;
         }
 
         public async Task<IQueryable<Game>> All()
@@ -39,8 +45,22 @@ namespace Handicap.Application.Services
             return game;
         }
 
-        public async Task<Game> Insert(Game game)
+        public async Task<Game> Insert(Guid PlayerOneId, Guid PlayerTwoId)
         {
+            var playerOne = await _playerRepository.GetById(PlayerOneId);
+            var playerTwo = await _playerRepository.GetById(PlayerTwoId);
+
+            var game = new Game();
+
+            game.PlayerOne = playerOne;
+            game.PlayerTwo = playerTwo;
+
+            game.PlayerOneRequiredPoints = _handicapCalculator.Calculate(
+                game.PlayerOne.Handicap, game.Type);
+
+            game.PlayerTwoRequiredPoints = _handicapCalculator.Calculate(
+                game.PlayerTwo.Handicap, game.Type);
+
             await _gameRepository.Insert(game);
 
             return await _gameRepository.GetById(game.Id);
