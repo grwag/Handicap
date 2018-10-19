@@ -51,7 +51,13 @@ namespace Handicap.Data.Repo
 
         public async Task<Game> GetById(Guid id)
         {
-            var gameDbo = _games.Where(g => g.Id == id)
+            var query = _games.AsQueryable();
+            query = query
+                .Include($"{nameof(Game.PlayerOne)}")
+                .Include($"{nameof(Game.PlayerTwo)}")
+                ;
+
+            var gameDbo = query.Where(g => g.Id == id)
                 .SingleOrDefault();
 
             if(gameDbo == null)

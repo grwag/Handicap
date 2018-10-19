@@ -51,6 +51,7 @@ namespace Handicap.Application.Services
             var playerTwo = await _playerRepository.GetById(PlayerTwoId);
 
             var game = new Game();
+            game.SetGameType();
 
             game.PlayerOne = playerOne;
             game.PlayerTwo = playerTwo;

@@ -5,7 +5,7 @@ namespace Handicap.Domain.Models
     public class Game : BaseEntity {
         public Player PlayerOne { get; set; }
         public Player PlayerTwo { get; set; }
-        public GameType Type { get; }
+        public GameType Type { get; set; }
         public int PlayerOneRequiredPoints { get; set; }
         public int PlayerOnePoints { get; set; }
         public int PlayerTwoRequiredPoints { get; set; }
@@ -22,15 +22,16 @@ namespace Handicap.Domain.Models
             PlayerTwoPoints = 0;
             PlayerTwoRequiredPoints = 0;
             Date = DateTimeOffset.Now;
-            Type = GetGameType();
+            Type = GameType.Eightball;
         }
 
-        private GameType GetGameType()
+        public void SetGameType()
         {
             var values = Enum.GetValues(typeof(GameType));
             var rnd = new Random();
 
-            return (GameType)values.GetValue(rnd.Next(values.Length));
+            var type = (GameType)values.GetValue(rnd.Next(values.Length));
+            this.Type = type;
         }
     }
 }

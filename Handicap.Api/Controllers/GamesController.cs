@@ -44,6 +44,14 @@ namespace Handicap.Api.Controllers
             return Ok(pagedResponse);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var game = await _gameService.GetById(id);
+
+            return Ok(_mapper.Map<GameResponse>(game));
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateGame([FromBody]GameRequest gameRequest)
         {
@@ -53,7 +61,10 @@ namespace Handicap.Api.Controllers
 
             var gameResponse = _mapper.Map<GameResponse>(game);
 
-            return StatusCode((int)HttpStatusCode.Created, gameResponse);
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = gameResponse.Id },
+                gameResponse);
         }
     }
 }

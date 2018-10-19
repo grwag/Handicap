@@ -64,7 +64,10 @@ namespace Handicap.Api.Controllers
 
             var playerResponse = _mapper.Map<PlayerResponse>(player);
 
-            return StatusCode((int)HttpStatusCode.Created, playerResponse);
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = playerResponse.Id },
+                playerResponse);
         }
 
         [HttpPut("{id}")]
