@@ -17,7 +17,9 @@ namespace Handicap.Mapping
 
             CreateMap<Game, GameDbo>();
 
-            CreateMap<GameDbo, Game>();
+            CreateMap<GameDbo, Game>()
+                .ForMember(dst => dst.Type, opt => opt.MapFrom(
+                    src => (GameType)src.Type));
         }
     }
 }

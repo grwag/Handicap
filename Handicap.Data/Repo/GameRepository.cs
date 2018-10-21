@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Handicap.Application.Exceptions;
 using Handicap.Application.Interfaces;
 using Handicap.Data.Infrastructure;
@@ -80,13 +81,8 @@ namespace Handicap.Data.Repo
                 query = query.Include(navigationProperty);
             }
 
-            var dboExpression = _mapper.Map<Expression<Func<GameDbo, bool>>>(expression);
-            var dboResult = query.Where(dboExpression);
-
-            var dboQuery = _mapper.Map<IEnumerable<Game>>(dboResult);
-            //var result = _mapper.Map<IEnumerable<Game>>(dboResult).AsQueryable();
-
-            return dboQuery.AsQueryable();
+            return query.ProjectTo<Game>(_mapper.ConfigurationProvider)
+                .Where(expression);
         }
 
         public async Task Insert(Game game)

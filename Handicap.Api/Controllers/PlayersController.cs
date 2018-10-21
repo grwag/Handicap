@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Handicap.Application.Services;
 using Handicap.Data.Paging;
 using Handicap.Domain.Models;
