@@ -87,9 +87,22 @@ namespace Handicap.Data.Repo
             await _context.SaveChangesAsync();
         }
 
-        public Task Update(Game game)
+        public async Task Update(GameUpdate gameUpdate)
         {
-            throw new NotImplementedException();
+            var gameDbo = _games.Where(g => g.Id == gameUpdate.Id).SingleOrDefault();
+
+            if(gameDbo == null)
+            {
+                throw new EntityNotFoundException($"Game with id {gameUpdate.Id} not found.");
+            }
+
+            gameDbo.IsFinished = gameUpdate.IsFinished;
+            gameDbo.PlayerOnePoints = gameUpdate.PlayerOnePoints;
+            gameDbo.PlayerTwoPoints = gameUpdate.PlayerTwoPoints;
+
+            _context.Entry(gameDbo).State = EntityState.Modified;
+
+            await SaveChangesAsync();
         }
     }
 }

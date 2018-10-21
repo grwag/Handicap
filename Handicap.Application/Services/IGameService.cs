@@ -11,7 +11,7 @@ namespace Handicap.Application.Services
     {
         Task<Game> Insert(Guid PlayerOneId, Guid PlayerTwoId);
         Task Delete(Guid Id);
-        Task<Game> Update(Game game);
+        Task Update(GameUpdate gameUpdate);
         Task<IQueryable<Game>> All();
         Task<Game> GetById(Guid Id);
     }

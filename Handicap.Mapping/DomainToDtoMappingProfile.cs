@@ -21,7 +21,9 @@ namespace Handicap.Mapping
 
             CreateMap<GameTypeDto, GameType>();
 
-            CreateMap<Game, GameResponse>(MemberList.Destination);
+            CreateMap<Game, GameResponse>();
+
+            CreateMap<GameUpdateDto, GameUpdate>();
         }
     }
 }

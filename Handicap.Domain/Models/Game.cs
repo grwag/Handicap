@@ -11,6 +11,7 @@ namespace Handicap.Domain.Models
         public int PlayerTwoRequiredPoints { get; set; }
         public int PlayerTwoPoints { get; set; }
         public DateTimeOffset Date { get; set; }
+        public bool IsFinished { get; set; }
 
         public Game()
         {
@@ -23,6 +24,7 @@ namespace Handicap.Domain.Models
             PlayerTwoRequiredPoints = 0;
             Date = DateTimeOffset.Now;
             Type = GameType.Eightball;
+            IsFinished = false;
         }
 
         public void SetGameType()

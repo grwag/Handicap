@@ -67,9 +67,9 @@ namespace Handicap.Application.Services
             return await _gameRepository.GetById(game.Id);
         }
 
-        public Task<Game> Update(Game game)
+        public async Task Update(GameUpdate gameUpdate)
         {
-            throw new NotImplementedException();
+            await _gameRepository.Update(gameUpdate);
         }
     }
 }

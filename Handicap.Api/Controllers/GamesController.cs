@@ -66,5 +66,14 @@ namespace Handicap.Api.Controllers
                 new { id = gameResponse.Id },
                 gameResponse);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody]GameUpdateDto gameUpdateDto)
+        {
+            var gameUpdate = _mapper.Map<GameUpdate>(gameUpdateDto);
+            await _gameService.Update(gameUpdate);
+
+            return NoContent();
+        }
     }
 }

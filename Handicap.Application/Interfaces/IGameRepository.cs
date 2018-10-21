@@ -11,7 +11,7 @@ namespace Handicap.Application.Interfaces
     {
         Task Insert(Game game);
         Task<Game> GetById(Guid id);
-        Task Update(Game game);
+        Task Update(GameUpdate gameUpdate);
         Task Delete(Game game);
         Task<IQueryable<Game>> All(params string[] navigationProperties);
         Task SaveChangesAsync();
