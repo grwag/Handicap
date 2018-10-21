@@ -19,11 +19,15 @@ namespace Handicap.Api.Controllers
     public class PlayersController : ControllerBase
     {
         private readonly IPlayerService _playerService;
+        private readonly IGameService _gameService;
         private readonly IMapper _mapper;
 
-        public PlayersController(IPlayerService playerService, IMapper mapper)
+        public PlayersController(IPlayerService playerService,
+            IGameService gameService,
+            IMapper mapper)
         {
             _playerService = playerService;
+            _gameService = gameService;
             _mapper = mapper;
         }
 
@@ -46,6 +50,19 @@ namespace Handicap.Api.Controllers
             var player = await _playerService.GetById(id);
 
             return Ok(_mapper.Map<PlayerResponse>(player));
+        }
+
+        [HttpGet("{id}/games")]
+        public async Task<IActionResult> GetGamesForPlayer(Guid id, PagingParameters pagingParameters)
+        {
+            var games = await _gameService.GetGamesForPlayer(id);
+
+            var pagedResponse = PagedList<GameResponse>.Create(
+                _mapper.Map<IEnumerable<GameResponse>>(games).AsQueryable(),
+                pagingParameters.PageNumber,
+                pagingParameters.PageSize);
+
+            return Ok(pagedResponse);
         }
 
         [HttpDelete("{id}")]

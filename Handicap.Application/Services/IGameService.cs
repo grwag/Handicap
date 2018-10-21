@@ -14,5 +14,6 @@ namespace Handicap.Application.Services
         Task Update(GameUpdate gameUpdate);
         Task<IQueryable<Game>> All();
         Task<Game> GetById(Guid Id);
+        Task<IQueryable<Game>> GetGamesForPlayer(Guid playerId);
     }
 }

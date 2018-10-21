@@ -9,6 +9,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Handicap.Data.Repo
@@ -25,8 +26,8 @@ namespace Handicap.Data.Repo
         {
             _context = context;
             _mapper = mapper;
-            _games = _context.Set<GameDbo>();
-            _players = _context.Set<PlayerDbo>();
+            _games = context.Set<GameDbo>();
+            _players = context.Set<PlayerDbo>();
         }
 
         public async Task<IQueryable<Game>> All(params string[] navigationProperties)
@@ -68,6 +69,26 @@ namespace Handicap.Data.Repo
             return _mapper.Map<Game>(gameDbo);
         }
 
+        public async Task<IQueryable<Game>> Find(
+            Expression<Func<Game, bool>> expression,
+            params string[] navigationProperties)
+        {
+            var query = _games.AsQueryable();
+
+            foreach(var navigationProperty in navigationProperties)
+            {
+                query = query.Include(navigationProperty);
+            }
+
+            var dboExpression = _mapper.Map<Expression<Func<GameDbo, bool>>>(expression);
+            var dboResult = query.Where(dboExpression);
+
+            var dboQuery = _mapper.Map<IEnumerable<Game>>(dboResult);
+            //var result = _mapper.Map<IEnumerable<Game>>(dboResult).AsQueryable();
+
+            return dboQuery.AsQueryable();
+        }
+
         public async Task Insert(Game game)
         {
             if(_games.Find(game.Id) != null)
@@ -89,11 +110,22 @@ namespace Handicap.Data.Repo
 
         public async Task Update(GameUpdate gameUpdate)
         {
-            var gameDbo = _games.Where(g => g.Id == gameUpdate.Id).SingleOrDefault();
+            var gameDbo = _games.Where(
+                g => g.Id == gameUpdate.Id)
+                .SingleOrDefault();
 
             if(gameDbo == null)
             {
-                throw new EntityNotFoundException($"Game with id {gameUpdate.Id} not found.");
+                throw new EntityNotFoundException(
+                    $"Game with id {gameUpdate.Id} not found."
+                    );
+            }
+
+            if (gameDbo.IsFinished)
+            {
+                throw new EntityClosedForUpdateException(
+                    $"Game {gameDbo.Id} cannot be updated. It is already finished."
+                    );
             }
 
             gameDbo.IsFinished = gameUpdate.IsFinished;

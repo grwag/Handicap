@@ -45,6 +45,18 @@ namespace Handicap.Application.Services
             return game;
         }
 
+        public async Task<IQueryable<Game>> GetGamesForPlayer(Guid playerId)
+        {
+            var player = await _playerRepository.GetById(playerId);
+
+            var games = await _gameRepository.Find(
+                g => g.PlayerOne.Id == player.Id || g.PlayerTwo.Id == player.Id,
+                $"{nameof(Game.PlayerOne)}",
+                $"{nameof(Game.PlayerTwo)}");
+
+            return games;
+        }
+
         public async Task<Game> Insert(Guid PlayerOneId, Guid PlayerTwoId)
         {
             var playerOne = await _playerRepository.GetById(PlayerOneId);

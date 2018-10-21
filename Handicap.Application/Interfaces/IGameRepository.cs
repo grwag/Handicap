@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +15,9 @@ namespace Handicap.Application.Interfaces
         Task Update(GameUpdate gameUpdate);
         Task Delete(Game game);
         Task<IQueryable<Game>> All(params string[] navigationProperties);
+        Task<IQueryable<Game>> Find(
+            Expression<Func<Game, bool>> expression,
+            params string[] navigationProperties);
         Task SaveChangesAsync();
     }
 }
