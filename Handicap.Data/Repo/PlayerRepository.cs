@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Handicap.Application.Exceptions;
 using Handicap.Application.Interfaces;
 using Handicap.Data.Infrastructure;
@@ -55,7 +56,7 @@ namespace Handicap.Data.Repo
             foreach (string navigationProperty in navigationProperties)
                 query = query.Include(navigationProperty);
 
-            return _mapper.Map<IEnumerable<Player>>(query).AsQueryable();
+            return query.ProjectTo<Player>(_mapper.ConfigurationProvider);
         }
 
         public async Task SaveChangesAsync()

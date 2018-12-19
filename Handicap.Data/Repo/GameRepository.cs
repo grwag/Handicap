@@ -81,8 +81,14 @@ namespace Handicap.Data.Repo
                 query = query.Include(navigationProperty);
             }
 
-            return query.ProjectTo<Game>(_mapper.ConfigurationProvider)
-                .Where(expression);
+            var domainQuery = query.ProjectTo<Game>(_mapper.ConfigurationProvider);
+
+            if(expression != null)
+            {
+                domainQuery = domainQuery.Where(expression);
+            }
+
+            return domainQuery;
         }
 
         public async Task Insert(Game game)
