@@ -1,4 +1,5 @@
-﻿using Handicap.Domain.Models;
+﻿using Handicap.Application.Interfaces;
+using Handicap.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,34 +10,34 @@ namespace Handicap.Application.Services
 {
     public class MatchDayService : IMatchDayService
     {
-        //private readonly IRepository<MatchDay> _matchDayRepository;
+        private readonly IMatchDayRepository _matchDayRepository;
 
-        //public MatchDayService(IRepository<MatchDay> matchDayRepository)
-        //{
-        //    _matchDayRepository = matchDayRepository;
-        //}
+        public MatchDayService(IMatchDayRepository matchDayRepository)
+        {
+            _matchDayRepository = matchDayRepository;
+        }
 
-        //public async Task<MatchDay> CreateMatchDay(int numberOfTables)
-        //{
-        //    var tables = new bool[numberOfTables];
-        //    for(var i = 0; i < tables.Length; i++)
-        //    {
-        //        tables[i] = true;
-        //    }
+        public async Task<MatchDay> AddPlayer(MatchDay matchDay, Player player)
+        {
+            matchDay.Players.Add(player);
+            await _matchDayRepository.SaveChangesAsync();
 
-        //    var md = new MatchDay()
-        //    {
-        //        Players = new List<Player>(),
-        //        PriorityQueue = new List<Player>(),
-        //        Queue = new List<Player>(),
-        //        Games = new List<Game>(),
-        //        Tables = tables
-        //    };
+            return matchDay;
+        }
 
-        //    _matchDayRepository.Insert(md);
-        //    await _matchDayRepository.SaveChangesAsync();
+        public async Task<MatchDay> CreateMatchDay()
+        {
+            var matchDay = new MatchDay();
+            await _matchDayRepository.Insert(matchDay);
 
-        //    return md;
-        //}
+            return matchDay;
+        }
+
+        public async Task<MatchDay> GetById(Guid id)
+        {
+            var matchDay = await _matchDayRepository.GetById(id);
+
+            return matchDay;
+        }
     }
 }

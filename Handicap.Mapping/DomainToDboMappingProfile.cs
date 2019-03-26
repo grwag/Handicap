@@ -20,6 +20,10 @@ namespace Handicap.Mapping
             CreateMap<GameDbo, Game>()
                 .ForMember(dst => dst.Type, opt => opt.MapFrom(
                     src => (GameType)src.Type));
+
+            CreateMap<MatchDay, MatchDayDbo>();
+
+            CreateMap<MatchDayDbo, MatchDay>();
         }
     }
 }

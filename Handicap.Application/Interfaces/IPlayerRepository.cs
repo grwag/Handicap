@@ -9,7 +9,7 @@ namespace Handicap.Application.Interfaces {
         Task<IQueryable<Player>> All(params string[] navigationProperties);
 
         Task Insert(Player player);
-        void Delete(Player player);
+        void Delete(Guid id);
         Task<Player> GetById(Guid id);
         Task Update(Player player);
         Task SaveChangesAsync();

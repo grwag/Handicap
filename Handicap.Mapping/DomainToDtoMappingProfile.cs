@@ -24,6 +24,8 @@ namespace Handicap.Mapping
             CreateMap<Game, GameResponse>();
 
             CreateMap<GameUpdateDto, GameUpdate>();
+
+            CreateMap<MatchDay, MatchDayResponse>();
         }
     }
 }

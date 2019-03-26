@@ -33,7 +33,7 @@ namespace Handicap.Application.Services
         {
             var player = await _playerRepository.GetById(id);
 
-            _playerRepository.Delete(player);
+            _playerRepository.Delete(id);
             await _playerRepository.SaveChangesAsync();
         }
 

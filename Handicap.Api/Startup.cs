@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Handicap.Api
 {
@@ -29,6 +30,11 @@ namespace Handicap.Api
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddSeq(Configuration.GetSection("Seq"));
+            });
+
             services.AddEntityFrameworkMySql().AddDbContext<HandicapContext>(opts =>
             {
                 opts.UseInMemoryDatabase("InMemoryDb");
@@ -40,6 +46,8 @@ namespace Handicap.Api
             services.AddScoped<IGameService, GameService>();
             services.AddScoped<IHandicapContext, HandicapContext>();
             services.AddScoped<IHandicapCalculator, HandicapCalculator>();
+            services.AddScoped<IMatchDayRepository, MatchDayRepository>();
+            services.AddScoped<IMatchDayService, MatchDayService>();
 
             services.AddAutoMapper(exp =>
             {

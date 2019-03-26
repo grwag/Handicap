@@ -77,10 +77,14 @@ namespace Handicap.Data.Repo
             return _mapper.Map<Player>(playerDbo.FirstOrDefault());
         }
 
-        public void Delete(Player player)
+        public void Delete(Guid id)
         {
-            var playerDbo = _mapper.Map<PlayerDbo>(player);
-            _entities.Remove(playerDbo);
+            var playerDbo = _entities.Where(p => p.Id == id).SingleOrDefault();
+
+            if (playerDbo != null)
+            {
+                _entities.Remove(playerDbo); 
+            }
         }
 
         public async Task Update(Player player)

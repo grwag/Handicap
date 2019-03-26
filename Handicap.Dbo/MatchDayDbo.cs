@@ -8,7 +8,7 @@ namespace Handicap.Dbo
         public ICollection<PlayerDbo> PriorityQueue { get; set; }
         public ICollection<PlayerDbo> Queue { get; set; }
         public ICollection<GameDbo> Games { get; set; }
-        public ICollection<GameDbo> QueuedGames { get; set; }
-        public string Tables { get; set; }
+        //public ICollection<GameDbo> QueuedGames { get; set; }
+        //public string Tables { get; set; }
     }
 }

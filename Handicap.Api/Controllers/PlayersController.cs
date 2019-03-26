@@ -7,6 +7,8 @@ using Handicap.Dto.Request;
 using Handicap.Dto.Response;
 using Handicap.Dto.Response.Paging;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,14 +24,17 @@ namespace Handicap.Api.Controllers
         private readonly IPlayerService _playerService;
         private readonly IGameService _gameService;
         private readonly IMapper _mapper;
+        private readonly ILogger<PlayersController> _logger;
 
         public PlayersController(IPlayerService playerService,
             IGameService gameService,
-            IMapper mapper)
+            IMapper mapper,
+            ILogger<PlayersController> logger)
         {
             _playerService = playerService;
             _gameService = gameService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -42,6 +47,7 @@ namespace Handicap.Api.Controllers
                 pagingParameters.PageNumber,
                 pagingParameters.PageSize);
 
+            _logger.LogInformation("Get Players: {@PlayerResponse}", pagedResponse);
             return Ok(pagedResponse);
         }
 
@@ -77,6 +83,7 @@ namespace Handicap.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePlayer([FromBody]PlayerRequest playerRequest)
         {
+            _logger.LogInformation("Creating player {@PlayerRequest}", playerRequest);
             var player = _mapper.Map<Player>(playerRequest);
             player = await _playerService.InsertPlayer(player);
 

@@ -4,8 +4,8 @@ using System.Text;
 
 namespace Handicap.Dto.Request
 {
-    public class MatchDayRequest
+    public class AddPlayerToMatchDayRequest
     {
-        public int NumberOfTables { get; set; }
+        public Guid PlayerId { get; set; }
     }
 }
