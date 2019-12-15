@@ -43,12 +43,12 @@ namespace Handicap.Api.Controllers
         }
 
         [HttpPost("{id}/players")]
-        public async Task<IActionResult> AddPlayer(Guid id, [FromBody]AddPlayerToMatchDayRequest addPlayerRequest)
+        public async Task<IActionResult> AddPlayer(string id, [FromBody]AddPlayerToMatchDayRequest addPlayerRequest)
         {
-            var player = await _playerService.GetById(addPlayerRequest.PlayerId);
+            //var player = await _playerService.GetById(addPlayerRequest.PlayerId);
             var matchDay = await _matchDayService.GetById(id);
 
-            await _matchDayService.AddPlayer(matchDay, player);
+            //await _matchDayService.AddPlayer(matchDay, player);
 
             return Ok(_mapper.Map<MatchDayResponse>(matchDay));
         }
