@@ -50,7 +50,7 @@ namespace Handicap.Data.Repo
             throw new NotImplementedException();
         }
 
-        public async Task<MatchDay> GetById(Guid id)
+        public async Task<MatchDay> GetById(string id)
         {
             var query = _matchDays.AsQueryable();
             query = query

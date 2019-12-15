@@ -10,6 +10,6 @@ namespace Handicap.Application.Services
     {
         Task<MatchDay> CreateMatchDay();
         Task<MatchDay> AddPlayer(MatchDay matchDay, Player player);
-        Task<MatchDay> GetById(Guid id);
+        Task<MatchDay> GetById(string id);
     }
 }

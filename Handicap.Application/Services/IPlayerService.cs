@@ -9,8 +9,8 @@ namespace Handicap.Application.Services
     public interface IPlayerService
     {
         Task<Player> InsertPlayer(Player player);
-        Task<Player> GetById(Guid id);
-        Task Delete(Guid id);
+        Task<Player> GetById(string id);
+        Task Delete(string id);
         Task<Player> Update(Player player);
         Task<IQueryable<Player>> All();
     }

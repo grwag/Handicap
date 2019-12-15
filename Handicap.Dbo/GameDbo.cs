@@ -4,8 +4,10 @@ namespace Handicap.Dbo
 {
     public class GameDbo : BaseDbo
     {
-        public PlayerDbo PlayerOne { get; set; }
-        public PlayerDbo PlayerTwo { get; set; }
+        public string PlayerOneId { get; set; }
+        public virtual PlayerDbo PlayerOne { get; set; }
+        public string PlayerTwoId { get; set; }
+        public virtual PlayerDbo PlayerTwo { get; set; }
         public int Type { get; set; }
         public int PlayerOneRequiredPoints { get; set; }
         public int PlayerOnePoints { get; set; }

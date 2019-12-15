@@ -33,7 +33,7 @@ namespace Handicap.Application.Services
             return matchDay;
         }
 
-        public async Task<MatchDay> GetById(Guid id)
+        public async Task<MatchDay> GetById(string id)
         {
             var matchDay = await _matchDayRepository.GetById(id);
 

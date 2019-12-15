@@ -15,11 +15,11 @@ namespace Handicap.Domain.Models
 
         public Game()
         {
-            Id = Guid.NewGuid();
-            PlayerOne = new Player();
+            Id = Guid.NewGuid().ToString();
+            PlayerOne = null;
             PlayerOnePoints = 0;
             PlayerOneRequiredPoints = 0;
-            PlayerTwo = new Player();
+            PlayerTwo = null;
             PlayerTwoPoints = 0;
             PlayerTwoRequiredPoints = 0;
             Date = DateTimeOffset.Now;

@@ -7,9 +7,12 @@ namespace Handicap.Application.Services
     {
         public int Calculate(int handicap, GameType gameType)
         {
-            var max = (int)gameType;
+            var max = (double)gameType;
+            var adjustment = ((max / 100) * handicap);
 
-            return (int)Math.Ceiling((double)(max - ((max / 100) * handicap)));
+            var adjustedValue = (double)(max - adjustment);
+
+            return (int)Math.Ceiling(adjustedValue);
         }
     }
 }

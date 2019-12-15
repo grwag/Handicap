@@ -15,7 +15,7 @@ namespace Handicap.Domain.Models
 
         public MatchDay()
         {
-            Id = Guid.NewGuid();
+            Id = Guid.NewGuid().ToString();
             Players = new List<Player>();
             PriorityQueue = new List<Player>();
             Queue = new List<Player>();

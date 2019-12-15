@@ -1,93 +1,92 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Handicap.Application.Services;
-using Handicap.Data.Paging;
+using Handicap.Api.Paging;
+using Handicap.Application.Exceptions;
+using Handicap.Application.Interfaces;
 using Handicap.Domain.Models;
 using Handicap.Dto.Request;
 using Handicap.Dto.Response;
-using Handicap.Dto.Response.Paging;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+using Handicap.Api.Extensions;
+using Handicap.Application.Services;
 
 namespace Handicap.Api.Controllers
 {
     [Route("api/[controller]")]
+    [ApiController]
+    [Authorize("read_write")]
     public class PlayersController : ControllerBase
     {
-        private readonly IPlayerService _playerService;
+        private readonly IPlayerRepository _playerRepository;
         private readonly IGameService _gameService;
-        private readonly IMapper _mapper;
         private readonly ILogger<PlayersController> _logger;
+        private readonly IMapper _mapper;
 
-        public PlayersController(IPlayerService playerService,
+        public PlayersController(
+            IPlayerRepository playerRepository,
             IGameService gameService,
-            IMapper mapper,
-            ILogger<PlayersController> logger)
+            ILogger<PlayersController> logger,
+            IMapper mapper)
         {
-            _playerService = playerService;
+            _playerRepository = playerRepository;
             _gameService = gameService;
-            _mapper = mapper;
             _logger = logger;
+            _mapper = mapper;
         }
 
+        #region CRUD
         [HttpGet]
-        public async Task<IActionResult> Get(PagingParameters pagingParameters)
+        public async Task<IActionResult> Get(
+            [FromQuery]string orderBy = "LastName",
+            [FromQuery]bool desc = false,
+            [FromQuery]int pageSize = 10,
+            [FromQuery]int page = 0
+            )
         {
-            var players = await _playerService.All();
+            var tenantId = this.GetTenantId();
 
-            var pagedResponse = PagedList<PlayerResponse>.Create(
-                _mapper.Map<IEnumerable<PlayerResponse>>(players).AsQueryable(),
-                pagingParameters.PageNumber,
-                pagingParameters.PageSize);
+            var query = await _playerRepository.Find(p => p.TenantId == tenantId);
+            
+            var responseQuery = query.ProjectTo<PlayerResponse>(_mapper.ConfigurationProvider);
+            responseQuery = desc ?
+                responseQuery.OrderByDescending(orderBy)
+                : responseQuery.OrderBy(orderBy);
 
-            _logger.LogInformation("Get Players: {@PlayerResponse}", pagedResponse);
-            return Ok(pagedResponse);
+            var response = new HandicapResponse<PlayerResponse>(responseQuery, null, page, pageSize);
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<IActionResult> GetById(string id)
         {
-            var player = await _playerService.GetById(id);
+            var tenantId = this.GetTenantId();
 
-            return Ok(_mapper.Map<PlayerResponse>(player));
-        }
+            var query = await _playerRepository.Find(p => p.TenantId == tenantId);
+            query = query.Where(p => p.Id == id);
 
-        [HttpGet("{id}/games")]
-        public async Task<IActionResult> GetGamesForPlayer(Guid id, PagingParameters pagingParameters)
-        {
-            var games = await _gameService.GetGamesForPlayer(id);
+            var playerResponse = _mapper.Map<PlayerResponse>(query.FirstOrDefault());
 
-            var pagedResponse = PagedList<GameResponse>.Create(
-                _mapper.Map<IEnumerable<GameResponse>>(games).AsQueryable(),
-                pagingParameters.PageNumber,
-                pagingParameters.PageSize);
+            if(playerResponse == null)
+            {
+                throw new EntityNotFoundException($"Player with id {id} not found.");
+            }
 
-            return Ok(pagedResponse);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            await _playerService.Delete(id);
-
-            return NoContent();
+            return Ok(playerResponse);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePlayer([FromBody]PlayerRequest playerRequest)
+        public async Task<IActionResult> Post([FromBody]PlayerRequest playerRequest)
         {
-            _logger.LogInformation("Creating player {@PlayerRequest}", playerRequest);
-            var player = _mapper.Map<Player>(playerRequest);
-            player = await _playerService.InsertPlayer(player);
+            var tenantId = this.GetTenantId();
 
-            var playerResponse = _mapper.Map<PlayerResponse>(player);
+            var player = _mapper.Map<Player>(playerRequest);
+            player.TenantId = tenantId;
+
+            var playerResponse = await _playerRepository.AddOrUpdate(player);
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -96,14 +95,47 @@ namespace Handicap.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePlayer(Guid id, [FromBody]PlayerRequest playerRequest)
+        public async Task<IActionResult> Put([FromRoute]string id, [FromBody]PlayerRequest playerRequest)
         {
+            var tenantId = this.GetTenantId();
+
             var player = _mapper.Map<Player>(playerRequest);
             player.Id = id;
+            player.TenantId = tenantId;
 
-            player = await _playerService.Update(player);
+            player = await _playerRepository.AddOrUpdate(player);
 
             return Ok(_mapper.Map<PlayerResponse>(player));
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await _playerRepository.Delete(id);
+
+            return NoContent();
+        }
+        #endregion
+
+        [HttpGet("{id}/games")]
+        public async Task<IActionResult> GetGamesFromPlayer(
+            [FromRoute]string id,
+            [FromQuery]string orderBy = "Date",
+            [FromQuery]bool desc = false,
+            [FromQuery]int pageSize = 10,
+            [FromQuery]int page = 0)
+        {
+            var tenantId = this.GetTenantId();
+
+            var games = await _gameService.Find(g => g.TenantId == tenantId);
+            games = games.Where(g => g.PlayerOne.Id == id || g.PlayerTwo.Id == id);
+            games = desc ?
+                games.OrderByDescending(orderBy)
+                : games.OrderBy(orderBy);
+
+            var response = new HandicapResponse<Game>(games, null, page, pageSize);
+
+            return Ok(response);
         }
     }
 }

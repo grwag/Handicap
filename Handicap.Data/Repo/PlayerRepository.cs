@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Extensions.ExpressionMapping;
 using AutoMapper.QueryableExtensions;
 using Handicap.Application.Exceptions;
 using Handicap.Application.Interfaces;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Handicap.Data.Repo
@@ -17,46 +19,42 @@ namespace Handicap.Data.Repo
     public class PlayerRepository : IPlayerRepository
     {
         private readonly HandicapContext _context;
-        private readonly DbSet<PlayerDbo> _entities;
+        private readonly DbSet<PlayerDbo> _players;
         private readonly IMapper _mapper;
 
         public PlayerRepository(HandicapContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _entities = context.Set<PlayerDbo>();
+            _players = context.Set<PlayerDbo>();
         }
 
-        public async Task Insert(Player player)
+        public async Task<Player> AddOrUpdate(Player player)
         {
-            if (_entities.Find(player.Id) != null)
+            if (PlayerExists(player))
             {
-                throw new EntityAlreadyExistsException($"Player '{player.FirstName} {player.LastName}' already exists.");
+                return await Update(player);
             }
-
-            var checkPlayer = _entities.Where(
-                p => p.FirstName == player.FirstName
-                && p.LastName == player.LastName);
-
-            if (checkPlayer.Any())
+            else
             {
-                throw new EntityAlreadyExistsException($"Player {player.FirstName} {player.LastName} already exists.");
+                return await Add(player);
             }
-
-            var playerDbo = _mapper.Map<PlayerDbo>(player);
-            _entities.Add(playerDbo);
-
-            await SaveChangesAsync();
         }
 
-        public async Task<IQueryable<Player>> All(params string[] navigationProperties)
+        public async Task<IQueryable<Player>> Find(Expression<Func<Player, bool>> expression = null)
         {
-            var query = _entities.AsQueryable();
+            var query = _players
+                .AsQueryable()
+                .AsNoTracking()
+                .ProjectTo<Player>(_mapper.ConfigurationProvider);
 
-            foreach (string navigationProperty in navigationProperties)
-                query = query.Include(navigationProperty);
+            if (expression != null)
+            {
+                query = query
+                    .Where(expression);
+            }
 
-            return query.ProjectTo<Player>(_mapper.ConfigurationProvider);
+            return query;
         }
 
         public async Task SaveChangesAsync()
@@ -64,45 +62,50 @@ namespace Handicap.Data.Repo
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Player> GetById(Guid id)
+        public async Task Delete(string id)
         {
-            var playerDbo = _entities.Where(
-                p => p.Id == id);
-
-            if (!playerDbo.Any())
-            {
-                throw new EntityNotFoundException($"Player with id {id} does not exist.");
-            }
-
-            return _mapper.Map<Player>(playerDbo.FirstOrDefault());
-        }
-
-        public void Delete(Guid id)
-        {
-            var playerDbo = _entities.Where(p => p.Id == id).SingleOrDefault();
+            var playerDbo = _players.Where(p => p.Id == id).SingleOrDefault();
 
             if (playerDbo != null)
             {
-                _entities.Remove(playerDbo); 
+                _players.Remove(playerDbo);
+                await SaveChangesAsync();
             }
         }
-
-        public async Task Update(Player player)
+        private async Task<Player> Add(Player player)
         {
-            var playerDbo = _entities.Where(p => p.Id == player.Id).SingleOrDefault();
+            var playerDbo = _mapper.Map<PlayerDbo>(player);
 
-            if(playerDbo == null)
-            {
-                throw new EntityNotFoundException($"Player with id {player.Id} does not exist.");
-            }
-
-            playerDbo.FirstName = player.FirstName;
-            playerDbo.LastName = player.LastName;
-            playerDbo.Handicap = player.Handicap;
-
-            _context.Entry(playerDbo).State = EntityState.Modified;
-
+            _players.Add(playerDbo);
             await SaveChangesAsync();
+
+            return _mapper.Map<Player>(playerDbo);
+        }
+
+        private async Task<Player> Update(Player player)
+        {
+            var playerDbo = _mapper.Map<PlayerDbo>(player);
+
+            _context.Update(playerDbo);
+            await SaveChangesAsync();
+
+            return _mapper.Map<Player>(playerDbo);
+        }
+
+
+        private bool PlayerExists(Player player)
+        {
+            var query = _players
+                .AsNoTracking();
+
+            if (query.Where(p => p.Id == player.Id).FirstOrDefault() != null) { return true; }
+
+            var exists = query.Where(
+                p => p.FirstName == player.FirstName
+                && p.LastName == player.LastName)
+                .FirstOrDefault();
+
+            return exists != null;
         }
     }
 }

@@ -10,14 +10,10 @@ namespace Handicap.Application.Interfaces
 {
     public interface IGameRepository
     {
-        Task Insert(Game game);
-        Task<Game> GetById(Guid id);
-        Task Update(GameUpdate gameUpdate);
-        Task Delete(Game game);
-        Task<IQueryable<Game>> All(params string[] navigationProperties);
-        Task<IQueryable<Game>> Find(
-            Expression<Func<Game, bool>> expression,
+        Task<Game> AddOrUpdate(Game game);
+        Task<IQueryable<Game>> Find(Expression<Func<Game, bool>> expression = null,
             params string[] navigationProperties);
+        Task Delete(string id);
         Task SaveChangesAsync();
     }
 }

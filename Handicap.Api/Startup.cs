@@ -1,4 +1,3 @@
-﻿using System.Reflection;
 using AutoMapper;
 using Handicap.Api.Middleware;
 using Handicap.Application.Interfaces;
@@ -6,12 +5,14 @@ using Handicap.Application.Services;
 using Handicap.Data.Infrastructure;
 using Handicap.Data.Repo;
 using Handicap.Mapping;
+using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Handicap.Api
@@ -28,57 +29,70 @@ namespace Handicap.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-            services.AddLogging(loggingBuilder =>
+            services.AddLogging(logBuilder =>
             {
-                loggingBuilder.AddSeq(Configuration.GetSection("Seq"));
+                logBuilder.AddSeq(Configuration.GetSection("Seq"));
             });
+
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                .AddIdentityServerAuthentication(options =>
+                {
+                    options.Authority = "https://id.greshawag.com";
+                    options.ApiName = "handicap_test";
+                });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("read_write", policy => policy.RequireScope("read_write"));
+                options.AddPolicy("read", policy => policy.RequireScope("read"));
+            });
+
+            services.AddControllers();
 
             services.AddEntityFrameworkMySql().AddDbContext<HandicapContext>(opts =>
             {
                 opts.UseInMemoryDatabase("InMemoryDb");
             });
 
-            services.AddScoped(typeof(IPlayerRepository), typeof(PlayerRepository));
-            services.AddScoped(typeof(IGameRepository), typeof(GameRepository));
-            services.AddScoped<IPlayerService, PlayerService>();
+            services.AddScoped<IPlayerRepository, PlayerRepository>();
+            services.AddScoped<IGameRepository, GameRepository>();
             services.AddScoped<IGameService, GameService>();
-            services.AddScoped<IHandicapContext, HandicapContext>();
             services.AddScoped<IHandicapCalculator, HandicapCalculator>();
-            services.AddScoped<IMatchDayRepository, MatchDayRepository>();
-            services.AddScoped<IMatchDayService, MatchDayService>();
 
-            services.AddAutoMapper(exp =>
-            {
-                exp.AddProfiles(Assembly.GetAssembly(typeof(DomainToDtoMappingProfile)));
-                exp.AddProfiles(Assembly.GetAssembly(typeof(DomainToDboMappingProfile)));
-            });
+
+            services.AddAutoMapper(
+                typeof(DomainToDboMappingProfile),
+                typeof(DomainToDtoMappingProfile)
+                );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseAuthentication();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseHsts();
-            }
 
             app.UseMiddleware(typeof(ExceptionHandling));
-
             app.UseHttpsRedirection();
-            app.UseMvc();
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetService<HandicapContext>();
                 context.Database.EnsureCreated();
-                //context.Database.Migrate();
             }
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }

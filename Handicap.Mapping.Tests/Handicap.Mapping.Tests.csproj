@@ -1,26 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <IsPackable>false</IsPackable>
-
-    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="7.0.1" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="5.0.1" />
-    <PackageReference Include="FluentAssertions" Version="5.4.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
-    <PackageReference Include="NUnit" Version="3.11.0" />
-    <PackageReference Include="NUnit.Runners" Version="3.9.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0"/>
+    <PackageReference Include="xunit" Version="2.4.0"/>
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0"/>
+    <PackageReference Include="coverlet.collector" Version="1.0.1"/>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.1"/>
+    <PackageReference Include="FluentAssertions" Version="5.9.0"/>
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\Handicap.Mapping\Handicap.Mapping.csproj" />
+    <ProjectReference Include="..\Handicap.Mapping\Handicap.Mapping.csproj"/>
   </ItemGroup>
-
 </Project>

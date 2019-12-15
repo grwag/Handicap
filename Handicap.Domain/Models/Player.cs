@@ -11,7 +11,8 @@ namespace Handicap.Domain.Models
 
         public Player()
         {
-            Id = Guid.NewGuid();
+            Id = Guid.NewGuid().ToString();
+            TenantId = Guid.NewGuid().ToString();
             FirstName = string.Empty;
             LastName = string.Empty;
             Handicap = 0;

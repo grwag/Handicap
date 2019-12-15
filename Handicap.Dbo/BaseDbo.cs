@@ -6,6 +6,7 @@ namespace Handicap.Dbo
 {
     public class BaseDbo
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
+        public string TenantId { get; set; }
     }
 }

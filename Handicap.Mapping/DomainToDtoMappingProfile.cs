@@ -12,8 +12,10 @@ namespace Handicap.Mapping
     {
         public DomainToDtoMappingProfile()
         {
+            //DisableConstructorMapping();
             CreateMap<PlayerRequest, Player>()
-                .ForMember(dst => dst.Id, opt => opt.Ignore());
+                .ForMember(dst => dst.Id, opt => opt.Ignore())
+                .ForMember(dst => dst.TenantId, opt => opt.Ignore());
 
             CreateMap<Player, PlayerResponse>();
 

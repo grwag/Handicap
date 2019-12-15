@@ -1,8 +1,11 @@
-﻿using Handicap.Application.Exceptions;
+﻿using Handicap.Api.Paging;
+using Handicap.Application.Exceptions;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Handicap.Api.Middleware
@@ -31,25 +34,30 @@ namespace Handicap.Api.Middleware
         private static Task HandleExceptionsAsync(HttpContext context, Exception ex)
         {
             var responseCode = HttpStatusCode.InternalServerError;
+            var errorCode = 0;
 
             if (ex is EntityNotFoundException)
             {
                 responseCode = HttpStatusCode.NotFound;
-            }
-            else if (ex is EntityAlreadyExistsException)
-            {
-                responseCode = HttpStatusCode.Conflict;
+                errorCode = 404;
             }
 
-            var result = JsonConvert.SerializeObject(
-                new
+            var result = JsonSerializer.Serialize(
+                new HandicapResponse<ExceptionHandling>
                 {
-                    errors = new[]
+                    Cursor = 0,
+                    Error = new HandicapError
                     {
-                        $"Exception: {ex.GetType()}",
-                        $"Message: {ex.Message}"
-                    }
+                        ErrorMessage = $"Message: {ex.Message}",
+                        ErrorCode = errorCode
+                    },
+                    HasNext = false,
+                    HasPrevious = false,
+                    PageSize = 0,
+                    Payload = null,
+                    TotalCount = 0
                 });
+
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)responseCode;
 

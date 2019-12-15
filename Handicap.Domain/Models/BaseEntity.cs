@@ -2,6 +2,7 @@
 
 namespace Handicap.Domain.Models{
     public class BaseEntity{
-        public Guid Id { get; set; }
+        public string Id { get; set; }
+        public string TenantId { get; set; }
     }
 }

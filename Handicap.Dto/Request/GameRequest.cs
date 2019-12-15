@@ -6,7 +6,7 @@ namespace Handicap.Dto.Request
 {
     public class GameRequest
     {
-        public Guid PlayerOneId { get; set; }
-        public Guid PlayerTwoId { get; set; }
+        public string PlayerOneId { get; set; }
+        public string PlayerTwoId { get; set; }
     }
 }

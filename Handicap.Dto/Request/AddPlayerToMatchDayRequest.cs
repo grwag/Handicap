@@ -6,6 +6,6 @@ namespace Handicap.Dto.Request
 {
     public class AddPlayerToMatchDayRequest
     {
-        public Guid PlayerId { get; set; }
+        public IEnumerable<string> PlayerIds { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace Handicap.Application.Interfaces
         Task<IQueryable<MatchDay>> All(params string[] navigationProperties);
         Task Insert(MatchDay matchDay);
         Task Update(MatchDay matchDay);
-        Task<MatchDay> GetById(Guid id);
+        Task<MatchDay> GetById(string id);
         void Delete(MatchDay matchDay);
         Task SaveChangesAsync();
     }

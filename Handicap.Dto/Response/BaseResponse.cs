@@ -6,6 +6,7 @@ namespace Handicap.Dto.Response
 {
     public class BaseResponse
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
+        public string TenantId { get; set; }
     }
 }
