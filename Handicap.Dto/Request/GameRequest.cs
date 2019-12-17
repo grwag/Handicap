@@ -8,5 +8,6 @@ namespace Handicap.Dto.Request
     {
         public string PlayerOneId { get; set; }
         public string PlayerTwoId { get; set; }
+        public string MatchDayId { get; set; }
     }
 }

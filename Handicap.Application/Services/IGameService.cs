@@ -10,7 +10,7 @@ namespace Handicap.Application.Services
 {
     public interface IGameService
     {
-        Task<Game> CreateGame(string PlayerOneId, string PlayerTwoId, string TenantId);
+        Task<Game> CreateGame(string PlayerOneId, string PlayerTwoId, string TenantId, string MatchDayId);
         Task Delete(string id);
         Task<Game> Add(Game game);
         Task<Game> Update(GameUpdate gameUpdate);

@@ -121,6 +121,7 @@ namespace Handicap.Mapping.Tests
                 PlayerOneRequiredPoints = 10,
                 PlayerTwoPoints = 1,
                 PlayerTwoRequiredPoints = 11,
+                MatchDayId = "a",
                 TenantId = "123",
                 Type = GameType.Eightball,
                 PlayerOne = new Player
@@ -153,6 +154,7 @@ namespace Handicap.Mapping.Tests
                 PlayerOneRequiredPoints = 10,
                 PlayerTwoPoints = 1,
                 PlayerTwoRequiredPoints = 11,
+                MatchDayId = "a",
                 TenantId = "123",
                 Type = GameTypeDto.Eightball,
                 PlayerOne = new PlayerResponse

@@ -92,7 +92,10 @@ namespace Handicap.Api.Controllers
             var game = await _gameService.CreateGame(
                 tenantId,
                 gameRequest.PlayerOneId,
-                gameRequest.PlayerTwoId);
+                gameRequest.PlayerTwoId,
+                gameRequest.MatchDayId);
+
+            game = await _gameService.Add(game);
 
             return CreatedAtAction(
                 nameof(GetById),

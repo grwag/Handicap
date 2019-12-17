@@ -60,7 +60,7 @@ namespace Handicap.Application.Services
             return games;
         }
 
-        public async Task<Game> CreateGame(string TenantId, string PlayerOneId, string PlayerTwoId)
+        public async Task<Game> CreateGame(string TenantId, string PlayerOneId, string PlayerTwoId, string MatchDayId)
         {
             var playerOne = (await _playerRepository.Find(p => p.Id == PlayerOneId)).FirstOrDefault();
             var playerTwo = (await _playerRepository.Find(p => p.Id == PlayerTwoId)).FirstOrDefault();
@@ -68,6 +68,7 @@ namespace Handicap.Application.Services
             var game = new Game();
             game.TenantId = TenantId;
             game.SetGameType();
+            game.MatchDayId = MatchDayId;
 
             game.PlayerOne = playerOne;
             game.PlayerTwo = playerTwo;
@@ -77,9 +78,6 @@ namespace Handicap.Application.Services
 
             game.PlayerTwoRequiredPoints = _handicapCalculator.Calculate(
                 game.PlayerTwo.Handicap, game.Type);
-
-            //return game;
-            game = await _gameRepository.AddOrUpdate(game);
 
             return game;
         }
