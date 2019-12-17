@@ -8,7 +8,6 @@ namespace Handicap.Dbo
         public virtual PlayerDbo PlayerOne { get; set; }
         public string PlayerTwoId { get; set; }
         public virtual PlayerDbo PlayerTwo { get; set; }
-        public string MatchDayId { get; set; }
         public int Type { get; set; }
         public int PlayerOneRequiredPoints { get; set; }
         public int PlayerOnePoints { get; set; }

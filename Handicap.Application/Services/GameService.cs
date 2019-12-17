@@ -68,7 +68,6 @@ namespace Handicap.Application.Services
             var game = new Game();
             game.TenantId = TenantId;
             game.SetGameType();
-            game.MatchDayId = MatchDayId;
 
             game.PlayerOne = playerOne;
             game.PlayerTwo = playerTwo;

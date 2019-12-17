@@ -17,6 +17,7 @@ namespace Handicap.Mapping.Tests
     public class MapperTests
     {
         private readonly IServiceProvider provider;
+        private readonly string tenantId = "tenantId";
         private readonly Guid playerOneId = Guid.Parse("{9E923FF8-1EFE-4E13-B4CE-2BF3D3260244}");
         private readonly Guid playerTwoId = Guid.Parse("{9E923FF8-1EFE-4E13-B4CE-2BF3D3260244}");
 
@@ -59,9 +60,62 @@ namespace Handicap.Mapping.Tests
         }
 
         [Fact]
-        public void ExpressionsAreMappedCorrectly()
+        public void PlayerIsMappedToMatchDayPlayer()
         {
+            var mapper = this.provider.GetService<IMapper>();
+            var player = new Player
+            {
+                TenantId = tenantId,
+                FirstName = "a",
+                LastName = "b",
+                Handicap = 25,
+                Id = "11"
+            };
 
+            var playerDbo = new PlayerDbo
+            {
+                TenantId = tenantId,
+                FirstName = "a",
+                LastName = "b",
+                Handicap = 25,
+                Id = "11"
+            };
+
+            var expectedMatchDayPlayer = new MatchDayPlayer
+            {
+                Player = playerDbo,
+                PlayerId = player.Id,
+                MatchDay = null,
+                MatchDayId = null
+            };
+
+            var actual = mapper.Map<MatchDayPlayer>(player);
+
+            actual.Should().BeEquivalentTo(expectedMatchDayPlayer);
+        }
+
+        [Fact]
+        public void MatchDayIsMappedToMatchDayDbo()
+        {
+            var mapper = this.provider.GetService<IMapper>();
+            var players = GetPlayerQuery().ToList();
+            var game = GetGame();
+            var matchDay = new MatchDay
+            {
+                Id = "alf",
+                TenantId = tenantId,
+                Players = players,
+                Games = new List<Game>()
+                {
+                    game
+                }
+            };
+
+            var mapped = mapper.Map<MatchDayDbo>(matchDay);
+
+            mapped.MatchDayGames.Should().NotBeNull();
+            mapped.MatchDayPlayers.Should().NotBeNull();
+            mapped.MatchDayPlayers.Count.Should().Be(2);
         }
 
         private IQueryable<Player> GetPlayerQuery()
@@ -73,14 +127,16 @@ namespace Handicap.Mapping.Tests
                     FirstName = "alf",
                     Handicap = 25,
                     LastName = "ralf",
-                    Id = "111"
+                    Id = "111",
+                    TenantId = tenantId
                 },
                 new Player
                 {
                     FirstName = "hans",
                     Handicap = 25,
                     LastName = "maulwurf",
-                    Id = "222"
+                    Id = "222",
+                    TenantId = tenantId
                 }
             };
 
@@ -112,6 +168,8 @@ namespace Handicap.Mapping.Tests
 
         private Game GetGame()
         {
+            var players = GetPlayerQuery().ToList();
+
             return new Game
             {
                 Id = "1",
@@ -121,25 +179,10 @@ namespace Handicap.Mapping.Tests
                 PlayerOneRequiredPoints = 10,
                 PlayerTwoPoints = 1,
                 PlayerTwoRequiredPoints = 11,
-                MatchDayId = "a",
-                TenantId = "123",
+                TenantId = tenantId,
                 Type = GameType.Eightball,
-                PlayerOne = new Player
-                {
-                    TenantId = "123",
-                    FirstName = "a",
-                    LastName = "b",
-                    Handicap = 25,
-                    Id = "11"
-                },
-                PlayerTwo = new Player
-                {
-                    TenantId = "123",
-                    FirstName = "c",
-                    LastName = "d",
-                    Handicap = 55,
-                    Id = "22"
-                }
+                PlayerOne = players[0],
+                PlayerTwo = players[1]
             };
         }
 
@@ -154,8 +197,7 @@ namespace Handicap.Mapping.Tests
                 PlayerOneRequiredPoints = 10,
                 PlayerTwoPoints = 1,
                 PlayerTwoRequiredPoints = 11,
-                MatchDayId = "a",
-                TenantId = "123",
+                TenantId = tenantId,
                 Type = GameTypeDto.Eightball,
                 PlayerOne = new PlayerResponse
                 {

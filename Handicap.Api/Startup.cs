@@ -56,7 +56,10 @@ namespace Handicap.Api
 
             services.AddScoped<IPlayerRepository, PlayerRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
+            services.AddScoped<IMatchDayRepository, MatchDayRepository>();
+            services.AddScoped<IPlayerService, PlayerService>();
             services.AddScoped<IGameService, GameService>();
+            services.AddScoped<IMatchDayService, MatchDayService>();
             services.AddScoped<IHandicapCalculator, HandicapCalculator>();
 
 

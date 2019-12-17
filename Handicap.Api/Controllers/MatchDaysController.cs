@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using Handicap.Api.Extensions;
+using Handicap.Api.Paging;
 using Handicap.Application.Services;
+using Handicap.Domain.Models;
 using Handicap.Dto.Request;
 using Handicap.Dto.Response;
 using Microsoft.AspNetCore.Mvc;
@@ -34,10 +37,28 @@ namespace Handicap.Api.Controllers
             _logger = logger;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get(
+            [FromQuery]string orderBy = "Date",
+            [FromQuery]bool desc = false,
+            [FromQuery]int pageSize = 10,
+            [FromQuery]int page = 0)
+        {
+            var tenantId = this.GetTenantId();
+            var matchDayQuery = await _matchDayService.Find(m => m.TenantId == tenantId,
+                $"{nameof(MatchDay.Games)}",
+                $"{nameof(MatchDay.Players)}");
+
+            var response = new HandicapResponse<MatchDay>(matchDayQuery, null, page, pageSize);
+            
+            return Ok(response);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post()
         {
-            var matchDay = await _matchDayService.CreateMatchDay();
+            var tenantId = this.GetTenantId();
+            var matchDay = await _matchDayService.CreateMatchDay(tenantId);
 
             return Ok(_mapper.Map<MatchDayResponse>(matchDay));
         }
@@ -45,10 +66,8 @@ namespace Handicap.Api.Controllers
         [HttpPost("{id}/players")]
         public async Task<IActionResult> AddPlayer(string id, [FromBody]AddPlayerToMatchDayRequest addPlayerRequest)
         {
-            //var player = await _playerService.GetById(addPlayerRequest.PlayerId);
             var matchDay = await _matchDayService.GetById(id);
-
-            //await _matchDayService.AddPlayer(matchDay, player);
+            matchDay = await _matchDayService.AddPlayers(matchDay, addPlayerRequest.PlayerIds);
 
             return Ok(_mapper.Map<MatchDayResponse>(matchDay));
         }

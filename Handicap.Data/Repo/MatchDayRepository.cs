@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Handicap.Application.Exceptions;
 using Handicap.Application.Interfaces;
 using Handicap.Data.Infrastructure;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,16 +35,23 @@ namespace Handicap.Data.Repo
             _matchDays = context.Set<MatchDayDbo>();
         }
 
-        public async Task<IQueryable<MatchDay>> All(params string[] navigationProperties)
+        public async Task<IQueryable<MatchDay>> Find(
+            Expression<Func<MatchDay, bool>> expression,
+            params string[] navigationProperties)
         {
-            var query = _matchDays.AsQueryable();
+            var query = _matchDays
+                .AsQueryable()
+                .AsNoTracking();
+
 
             foreach (var navigationProperty in navigationProperties)
             {
                 query = query.Include(navigationProperty);
             }
 
-            return _mapper.Map<IEnumerable<MatchDay>>(query).AsQueryable();
+            var domainQuery = query.ProjectTo<MatchDay>(_mapper.ConfigurationProvider, expression);
+
+            return domainQuery;
         }
 
         public void Delete(MatchDay matchDay)
@@ -54,10 +63,8 @@ namespace Handicap.Data.Repo
         {
             var query = _matchDays.AsQueryable();
             query = query
-                .Include($"{nameof(MatchDayDbo.Games)}")
-                .Include($"{nameof(MatchDayDbo.Players)}")
-                .Include($"{nameof(MatchDayDbo.Queue)}")
-                .Include($"{nameof(MatchDayDbo.PriorityQueue)}")
+                .Include($"{nameof(MatchDayDbo.MatchDayGames)}")
+                .Include($"{nameof(MatchDayDbo.MatchDayPlayers)}")
                 ;
 
             var matchDayDbo = query.SingleOrDefault(md => md.Id == id);
@@ -88,7 +95,7 @@ namespace Handicap.Data.Repo
             await _context.SaveChangesAsync();
         }
 
-        public async Task Update(MatchDay matchDay)
+        public async Task<MatchDay> Update(MatchDay matchDay)
         {
             var matchDayDbo = _matchDays.SingleOrDefault(md => md.Id == matchDay.Id);
 
@@ -97,14 +104,13 @@ namespace Handicap.Data.Repo
                 throw new EntityNotFoundException($"Matchday with id {matchDay.Id} does not exist.");
             }
 
-            matchDayDbo.Games = _mapper.Map<ICollection<GameDbo>>(matchDay.Games);
-            matchDayDbo.Players = _mapper.Map<ICollection<PlayerDbo>>(matchDay.Players);
-            matchDayDbo.PriorityQueue = _mapper.Map<ICollection<PlayerDbo>>(matchDay.PriorityQueue);
-            matchDayDbo.Queue = _mapper.Map<ICollection<PlayerDbo>>(matchDay.Queue);
+            //matchDayDbo.Games = _mapper.Map<ICollection<GameDbo>>(matchDay.Games);
+            //matchDayDbo.MatchDayPlayers = _mapper.Map<ICollection<PlayerDbo>>(matchDay.Players);
 
-            //_context.Entry(matchDayDbo).State = EntityState.Modified;
+            _context.Update(matchDayDbo);
 
             await SaveChangesAsync();
+            return _mapper.Map<MatchDay>(matchDayDbo);
         }
     }
 }

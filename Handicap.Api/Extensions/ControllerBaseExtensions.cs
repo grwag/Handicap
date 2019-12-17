@@ -15,7 +15,14 @@ namespace Handicap.Api.Extensions
                 return string.Empty;
             }
 
-            return controller.User.Claims.First(c => c.Type == "sub").Value ?? string.Empty;
+            var sub = controller.User.Claims.FirstOrDefault(c => c.Type == "sub");
+
+            if(sub == null)
+            {
+                return string.Empty;
+            }
+
+            return sub.Value ?? string.Empty;
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Handicap.Dbo
 {
     public class MatchDayDbo : BaseDbo
     {
-        public virtual ICollection<PlayerDbo> Players { get; set; }
-        public virtual ICollection<GameDbo> Games { get; set; }
+        public virtual ICollection<MatchDayPlayer> MatchDayPlayers { get; set; }
+        public virtual ICollection<MatchDayGame> MatchDayGames { get; set; }
     }
 }

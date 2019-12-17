@@ -11,7 +11,6 @@ namespace Handicap.Dto.Response
         public int PlayerOnePoints { get; set; }
         public int PlayerTwoRequiredPoints { get; set; }
         public int PlayerTwoPoints { get; set; }
-        public string MatchDayId { get; set; }
         public DateTimeOffset Date { get; set; }
         public bool IsFinished { get; set; }
     }
