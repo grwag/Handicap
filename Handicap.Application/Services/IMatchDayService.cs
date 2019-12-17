@@ -16,5 +16,6 @@ namespace Handicap.Application.Services
         Task<MatchDay> CreateMatchDay(string tenantId);
         Task<MatchDay> AddPlayers(MatchDay matchDay, IEnumerable<string> playerIds);
         Task<MatchDay> GetById(string id);
+        Task<MatchDay> AddGame(string matchDayId, Game game);
     }
 }

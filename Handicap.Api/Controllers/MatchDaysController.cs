@@ -71,5 +71,19 @@ namespace Handicap.Api.Controllers
 
             return Ok(_mapper.Map<MatchDayResponse>(matchDay));
         }
+
+        [HttpPost("{id}/games")]
+        public async Task<IActionResult> AddGame([FromRoute]string id,[FromBody]GameRequest gameRequest)
+        {
+            var tenantId = this.GetTenantId();
+            var game = await _gameService.CreateGame(
+                tenantId,
+                gameRequest.PlayerOneId,
+                gameRequest.PlayerTwoId,
+                id);
+
+            var matchDay = await _matchDayService.AddGame(id, game);
+            return Ok(_mapper.Map<MatchDayResponse>(matchDay));
+        }
     }
 }

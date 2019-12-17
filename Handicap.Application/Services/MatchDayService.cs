@@ -1,4 +1,5 @@
-﻿using Handicap.Application.Interfaces;
+﻿using Handicap.Application.Exceptions;
+using Handicap.Application.Interfaces;
 using Handicap.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -56,6 +57,22 @@ namespace Handicap.Application.Services
         public async Task<MatchDay> GetById(string id)
         {
             var matchDay = await _matchDayRepository.GetById(id);
+
+            return matchDay;
+        }
+
+        public async Task<MatchDay> AddGame(string matchDayId, Game game)
+        {
+            var matchDay = (await _matchDayRepository.Find(md => md.Id == matchDayId)).FirstOrDefault();
+
+            if(matchDay == null)
+            {
+                throw new EntityNotFoundException($"MatchDay with id: {matchDayId} not found.");
+            }
+
+            matchDay.Games.Add(game);
+
+            matchDay = await _matchDayRepository.Update(matchDay);
 
             return matchDay;
         }

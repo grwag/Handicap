@@ -51,7 +51,9 @@ namespace Handicap.Api
 
             services.AddEntityFrameworkMySql().AddDbContext<HandicapContext>(opts =>
             {
-                opts.UseInMemoryDatabase("InMemoryDb");
+                //opts.UseInMemoryDatabase("InMemoryDb");
+                //opts.UseSqlite("Data Source=database.db");
+                opts.UseMySql("Server=localhost;Database=handicap;User=root;Password=xyIVoRWPngF5AMFzE8DxiJt9");
             });
 
             services.AddScoped<IPlayerRepository, PlayerRepository>();

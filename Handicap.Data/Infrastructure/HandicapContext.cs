@@ -1,5 +1,6 @@
 ﻿using Handicap.Dbo;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -84,6 +85,39 @@ namespace Handicap.Data.Infrastructure
                     Handicap = 55
                 }
                 );
+
+            builder.Entity<MatchDayGame>(ConfigureMatchDayGames);
+            builder.Entity<MatchDayPlayer>(ConfigureMatchDayPlayers);
+        }
+
+        private void ConfigureMatchDayGames(EntityTypeBuilder<MatchDayGame> config)
+        {
+            config.HasKey(x => new
+            {
+                x.GameId,
+                x.MatchDayId
+            });
+
+            config.HasOne(x => x.MatchDay)
+                .WithMany(x => x.MatchDayGames)
+                .HasForeignKey(x => x.MatchDayId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+        }
+
+        private void ConfigureMatchDayPlayers(EntityTypeBuilder<MatchDayPlayer> config)
+        {
+            config.HasKey(x => new
+            {
+                x.PlayerId,
+                x.MatchDayId
+            });
+
+            config.HasOne(x => x.MatchDay)
+                .WithMany(x => x.MatchDayPlayers)
+                .HasForeignKey(x => x.MatchDayId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Handicap.Api.Middleware
         private static Task HandleExceptionsAsync(HttpContext context, Exception ex)
         {
             var responseCode = HttpStatusCode.InternalServerError;
-            var errorCode = 0;
+            var errorCode = 500;
 
             if (ex is EntityNotFoundException)
             {

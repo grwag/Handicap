@@ -24,30 +24,30 @@ namespace Handicap.Mapping
                 .ForMember(dst => dst.PlayerTwoId, opt => opt.MapFrom(
                     src => src.PlayerTwo.Id));
 
-            CreateMap<MatchDay, MatchDayDbo>()
+            CreateMap<MatchDay, MatchDayDbo>(MemberList.Source)
                 .ForMember(dst => dst.MatchDayPlayers, opt => opt.MapFrom(src => src.Players))
                 .ForMember(dst => dst.MatchDayGames, opt => opt.MapFrom(src => src.Games));
 
-            CreateMap<Player, MatchDayPlayer>()
+            CreateMap<Player, MatchDayPlayer>(MemberList.Destination)
                 .ForMember(dst => dst.Player, opt => opt.MapFrom(src => src))
                 .ForMember(dst => dst.PlayerId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dst => dst.MatchDay, opt => opt.Ignore())
                 .ForMember(dst => dst.MatchDayId, opt => opt.Ignore())
                 ;
 
-            CreateMap<MatchDay, MatchDayPlayer>()
+            CreateMap<MatchDay, MatchDayPlayer>(MemberList.Destination)
                 .ForMember(dst => dst.MatchDay, opt => opt.MapFrom(src => src))
                 .ForMember(dst => dst.MatchDayId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dst => dst.Player, opt => opt.Ignore())
                 .ForMember(dst => dst.PlayerId, opt => opt.Ignore());
 
-            CreateMap<MatchDay, MatchDayGame>()
+            CreateMap<MatchDay, MatchDayGame>(MemberList.Destination)
                 .ForMember(dst => dst.MatchDay, opt => opt.MapFrom(src => src))
                 .ForMember(dst => dst.MatchDayId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dst => dst.Game, opt => opt.Ignore())
                 .ForMember(dst => dst.GameId, opt => opt.Ignore());
 
-            CreateMap<Game, MatchDayGame>()
+            CreateMap<Game, MatchDayGame>(MemberList.Destination)
                 .ForMember(dst => dst.Game, opt => opt.MapFrom(src => src))
                 .ForMember(dst => dst.GameId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dst => dst.MatchDay, opt => opt.Ignore())
@@ -87,7 +87,7 @@ namespace Handicap.Mapping
                 .ForMember(dst => dst.PlayerTwoPoints, opt => opt.MapFrom(src => src.Game.PlayerTwoPoints))
                 .ForMember(dst => dst.PlayerTwoRequiredPoints, opt => opt.MapFrom(src => src.Game.PlayerTwoRequiredPoints))
                 .ForMember(dst => dst.TenantId, opt => opt.MapFrom(src => src.Game.TenantId))
-                .ForMember(dst => dst.Type, opt => opt.MapFrom(src => src.Game.Type));
+                .ForMember(dst => dst.Type, opt => opt.MapFrom(src => (GameType)src.Game.Type));
 
             CreateMap<MatchDayDbo, MatchDay>(MemberList.Destination)
                 .ForMember(dst => dst.Players, opt => opt.MapFrom(src => src.MatchDayPlayers))

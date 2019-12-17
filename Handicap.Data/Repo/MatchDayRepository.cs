@@ -41,13 +41,15 @@ namespace Handicap.Data.Repo
         {
             var query = _matchDays
                 .AsQueryable()
-                .AsNoTracking();
+                .AsNoTracking()
+                .Include(md => md.MatchDayGames)
+                .Include(md => md.MatchDayPlayers);
 
 
-            foreach (var navigationProperty in navigationProperties)
-            {
-                query = query.Include(navigationProperty);
-            }
+            //foreach (var navigationProperty in navigationProperties)
+            //{
+            //    query = query.Include(navigationProperty);
+            //}
 
             var domainQuery = query.ProjectTo<MatchDay>(_mapper.ConfigurationProvider, expression);
 
@@ -97,20 +99,42 @@ namespace Handicap.Data.Repo
 
         public async Task<MatchDay> Update(MatchDay matchDay)
         {
-            var matchDayDbo = _matchDays.SingleOrDefault(md => md.Id == matchDay.Id);
+            var entity = _matchDays
+                .Include(md => md.MatchDayGames)
+                .Include(md => md.MatchDayPlayers)
+                .SingleOrDefault(md => md.Id == matchDay.Id);
 
-            if(matchDayDbo == null)
+            if(entity == null)
             {
                 throw new EntityNotFoundException($"Matchday with id {matchDay.Id} does not exist.");
             }
 
-            //matchDayDbo.Games = _mapper.Map<ICollection<GameDbo>>(matchDay.Games);
-            //matchDayDbo.MatchDayPlayers = _mapper.Map<ICollection<PlayerDbo>>(matchDay.Players);
+            var matchDayDbo = _mapper.Map<MatchDayDbo>(matchDay);
+            foreach(var matchDayGame in matchDayDbo.MatchDayGames)
+            {
+                var gameExists = entity.MatchDayGames.Where(x => x.GameId == matchDayGame.GameId).SingleOrDefault();
+                if (gameExists == null)
+                {
+                    _context.Attach(matchDayGame.Game.PlayerOne);
+                    _context.Attach(matchDayGame.Game.PlayerTwo);
+                    _context.Attach(matchDayGame.Game);
+                    entity.MatchDayGames.Add(matchDayGame);
+                }
+            }
 
-            _context.Update(matchDayDbo);
+            foreach (var matchDayPlayer in matchDayDbo.MatchDayPlayers)
+            {
+                var playerExists = entity.MatchDayPlayers.Where(x => x.PlayerId == matchDayPlayer.PlayerId).SingleOrDefault();
+                if (playerExists == null)
+                {
+                    entity.MatchDayPlayers.Add(matchDayPlayer);
+                }
+            }
+
+            _context.Update(entity);
 
             await SaveChangesAsync();
-            return _mapper.Map<MatchDay>(matchDayDbo);
+            return _mapper.Map<MatchDay>(entity);
         }
     }
 }
