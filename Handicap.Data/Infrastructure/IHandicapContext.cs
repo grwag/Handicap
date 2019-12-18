@@ -1,13 +1,13 @@
-﻿using Handicap.Dbo;
+﻿using Handicap.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Handicap.Data.Infrastructure
 {
     public interface IHandicapContext
     {
-        DbSet<GameDbo> Games { get; set; }
-        DbSet<MatchDayDbo> MatchDays { get; set; }
-        DbSet<PlayerDbo> Players { get; set; }
+        DbSet<Game> Games { get; set; }
+        DbSet<MatchDay> MatchDays { get; set; }
+        DbSet<Player> Players { get; set; }
         int SaveChanges();
     }
 }

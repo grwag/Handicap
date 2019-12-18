@@ -17,7 +17,10 @@ namespace Handicap.Application.Services
 
         public async Task<Player> InsertPlayer(Player player)
         {
-            return await _playerRepository.AddOrUpdate(player);
+            await _playerRepository.AddOrUpdate(player);
+            await _playerRepository.SaveChangesAsync();
+
+            return player;
         }
 
         public async Task<Player> GetById(string id)
@@ -32,6 +35,7 @@ namespace Handicap.Application.Services
             var player = (await _playerRepository.Find(p => p.Id == id)).FirstOrDefault();
 
             await _playerRepository.Delete(id);
+            await _playerRepository.SaveChangesAsync();
         }
 
         public async Task<IQueryable<Player>> All()
@@ -44,6 +48,7 @@ namespace Handicap.Application.Services
         public async Task<Player> Update(Player player)
         {
             var updatedPlayer = await _playerRepository.AddOrUpdate(player);
+            await _playerRepository.SaveChangesAsync();
 
             return updatedPlayer;
         }

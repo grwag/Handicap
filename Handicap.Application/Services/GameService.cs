@@ -89,7 +89,10 @@ namespace Handicap.Application.Services
 
         public async Task<Game> Add(Game game)
         {
-            return await _gameRepository.AddOrUpdate(game);
+            await _gameRepository.AddOrUpdate(game);
+            await _gameRepository.SaveChangesAsync();
+
+            return game;
         }
 
         public async Task<Game> Update(GameUpdate gameUpdate)
@@ -123,6 +126,7 @@ namespace Handicap.Application.Services
             }
 
             game = await _gameRepository.AddOrUpdate(game);
+            await _gameRepository.SaveChangesAsync();
 
             return game;
         }

@@ -5,7 +5,6 @@ using Handicap.Application.Exceptions;
 using Handicap.Application.Interfaces;
 using Handicap.Data.Infrastructure;
 using Handicap.Data.Paging;
-using Handicap.Dbo;
 using Handicap.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,14 +18,12 @@ namespace Handicap.Data.Repo
     public class PlayerRepository : IPlayerRepository
     {
         private readonly HandicapContext _context;
-        private readonly DbSet<PlayerDbo> _players;
-        private readonly IMapper _mapper;
+        private readonly DbSet<Player> _players;
 
-        public PlayerRepository(HandicapContext context, IMapper mapper)
+        public PlayerRepository(HandicapContext context)
         {
             _context = context;
-            _mapper = mapper;
-            _players = context.Set<PlayerDbo>();
+            _players = context.Set<Player>();
         }
 
         public async Task<Player> AddOrUpdate(Player player)
@@ -46,7 +43,7 @@ namespace Handicap.Data.Repo
             var query = _players
                 .AsQueryable()
                 .AsNoTracking()
-                .ProjectTo<Player>(_mapper.ConfigurationProvider);
+                ;
 
             if (expression != null)
             {
@@ -69,27 +66,20 @@ namespace Handicap.Data.Repo
             if (playerDbo != null)
             {
                 _players.Remove(playerDbo);
-                await SaveChangesAsync();
             }
         }
         private async Task<Player> Add(Player player)
         {
-            var playerDbo = _mapper.Map<PlayerDbo>(player);
+            _players.Add(player);
 
-            _players.Add(playerDbo);
-            await SaveChangesAsync();
-
-            return _mapper.Map<Player>(playerDbo);
+            return player;
         }
 
         private async Task<Player> Update(Player player)
         {
-            var playerDbo = _mapper.Map<PlayerDbo>(player);
+            _context.Update(player);
 
-            _context.Update(playerDbo);
-            await SaveChangesAsync();
-
-            return _mapper.Map<Player>(playerDbo);
+            return player;
         }
 
 

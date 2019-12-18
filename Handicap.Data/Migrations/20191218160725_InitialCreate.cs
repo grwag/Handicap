@@ -28,11 +28,18 @@ namespace Handicap.Data.Migrations
                     TenantId = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
-                    Handicap = table.Column<int>(nullable: false)
+                    Handicap = table.Column<int>(nullable: false),
+                    MatchDayId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Players", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Players_MatchDays_MatchDayId",
+                        column: x => x.MatchDayId,
+                        principalTable: "MatchDays",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,15 +57,14 @@ namespace Handicap.Data.Migrations
                     PlayerTwoRequiredPoints = table.Column<int>(nullable: false),
                     PlayerTwoPoints = table.Column<int>(nullable: false),
                     Date = table.Column<DateTimeOffset>(nullable: false),
-                    IsFinished = table.Column<bool>(nullable: false),
-                    MatchDayDboId = table.Column<string>(nullable: true)
+                    IsFinished = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Games", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Games_MatchDays_MatchDayDboId",
-                        column: x => x.MatchDayDboId,
+                        name: "FK_Games_MatchDays_MatchDayId",
+                        column: x => x.MatchDayId,
                         principalTable: "MatchDays",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -78,23 +84,23 @@ namespace Handicap.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Players",
-                columns: new[] { "Id", "FirstName", "Handicap", "LastName", "TenantId" },
+                columns: new[] { "Id", "FirstName", "Handicap", "LastName", "MatchDayId", "TenantId" },
                 values: new object[,]
                 {
-                    { "1", "alf", 65, "ralf", "816ef7d5-4589-4408-b64c-87594e2075bb" },
-                    { "2", "hans", 35, "maulwurf", "816ef7d5-4589-4408-b64c-87594e2075bb" },
-                    { "3", "karl", 30, "klammer", "816ef7d5-4589-4408-b64c-87594e2075bb" },
-                    { "4", "bart", 55, "simpson", "816ef7d5-4589-4408-b64c-87594e2075bb" },
-                    { "5", "nasen", 25, "baer", "" },
-                    { "6", "eier", 5, "kopf", "" },
-                    { "7", "rudi", 30, "rakete", "" },
-                    { "8", "homer", 55, "simpson", "" }
+                    { "1", "alf", 65, "ralf", null, "816ef7d5-4589-4408-b64c-87594e2075bb" },
+                    { "2", "hans", 35, "maulwurf", null, "816ef7d5-4589-4408-b64c-87594e2075bb" },
+                    { "3", "karl", 30, "klammer", null, "816ef7d5-4589-4408-b64c-87594e2075bb" },
+                    { "4", "bart", 55, "simpson", null, "816ef7d5-4589-4408-b64c-87594e2075bb" },
+                    { "5", "nasen", 25, "baer", null, "" },
+                    { "6", "eier", 5, "kopf", null, "" },
+                    { "7", "rudi", 30, "rakete", null, "" },
+                    { "8", "homer", 55, "simpson", null, "" }
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Games_MatchDayDboId",
+                name: "IX_Games_MatchDayId",
                 table: "Games",
-                column: "MatchDayDboId");
+                column: "MatchDayId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Games_PlayerOneId",
@@ -105,6 +111,11 @@ namespace Handicap.Data.Migrations
                 name: "IX_Games_PlayerTwoId",
                 table: "Games",
                 column: "PlayerTwoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Players_MatchDayId",
+                table: "Players",
+                column: "MatchDayId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -113,10 +124,10 @@ namespace Handicap.Data.Migrations
                 name: "Games");
 
             migrationBuilder.DropTable(
-                name: "MatchDays");
+                name: "Players");
 
             migrationBuilder.DropTable(
-                name: "Players");
+                name: "MatchDays");
         }
     }
 }

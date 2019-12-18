@@ -8,7 +8,6 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Handicap.Dbo\Handicap.Dbo.csproj" />
     <ProjectReference Include="..\Handicap.Domain\Handicap.Domain.csproj" />
     <ProjectReference Include="..\Handicap.Dto\Handicap.Dto.csproj" />
   </ItemGroup>

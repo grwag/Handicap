@@ -17,7 +17,7 @@ namespace Handicap.Data.Migrations
                 .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Handicap.Dbo.GameDbo", b =>
+            modelBuilder.Entity("Handicap.Domain.Models.Game", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
@@ -28,11 +28,8 @@ namespace Handicap.Data.Migrations
                     b.Property<bool>("IsFinished")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("MatchDayDboId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
                     b.Property<string>("MatchDayId")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
                     b.Property<string>("PlayerOneId")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
@@ -60,7 +57,7 @@ namespace Handicap.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MatchDayDboId");
+                    b.HasIndex("MatchDayId");
 
                     b.HasIndex("PlayerOneId");
 
@@ -69,7 +66,7 @@ namespace Handicap.Data.Migrations
                     b.ToTable("Games");
                 });
 
-            modelBuilder.Entity("Handicap.Dbo.MatchDayDbo", b =>
+            modelBuilder.Entity("Handicap.Domain.Models.MatchDay", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
@@ -85,7 +82,7 @@ namespace Handicap.Data.Migrations
                     b.ToTable("MatchDays");
                 });
 
-            modelBuilder.Entity("Handicap.Dbo.PlayerDbo", b =>
+            modelBuilder.Entity("Handicap.Domain.Models.Player", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
@@ -99,10 +96,15 @@ namespace Handicap.Data.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<string>("MatchDayId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
                     b.Property<string>("TenantId")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MatchDayId");
 
                     b.ToTable("Players");
 
@@ -173,19 +175,26 @@ namespace Handicap.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Handicap.Dbo.GameDbo", b =>
+            modelBuilder.Entity("Handicap.Domain.Models.Game", b =>
                 {
-                    b.HasOne("Handicap.Dbo.MatchDayDbo", null)
+                    b.HasOne("Handicap.Domain.Models.MatchDay", null)
                         .WithMany("Games")
-                        .HasForeignKey("MatchDayDboId");
+                        .HasForeignKey("MatchDayId");
 
-                    b.HasOne("Handicap.Dbo.PlayerDbo", "PlayerOne")
+                    b.HasOne("Handicap.Domain.Models.Player", "PlayerOne")
                         .WithMany()
                         .HasForeignKey("PlayerOneId");
 
-                    b.HasOne("Handicap.Dbo.PlayerDbo", "PlayerTwo")
+                    b.HasOne("Handicap.Domain.Models.Player", "PlayerTwo")
                         .WithMany()
                         .HasForeignKey("PlayerTwoId");
+                });
+
+            modelBuilder.Entity("Handicap.Domain.Models.Player", b =>
+                {
+                    b.HasOne("Handicap.Domain.Models.MatchDay", null)
+                        .WithMany("Players")
+                        .HasForeignKey("MatchDayId");
                 });
 #pragma warning restore 612, 618
         }

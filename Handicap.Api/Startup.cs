@@ -66,7 +66,7 @@ namespace Handicap.Api
 
 
             services.AddAutoMapper(
-                typeof(DomainToDboMappingProfile),
+                //typeof(DomainToDboMappingProfile),
                 typeof(DomainToDtoMappingProfile)
                 );
         }

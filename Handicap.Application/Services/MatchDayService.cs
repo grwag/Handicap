@@ -48,7 +48,7 @@ namespace Handicap.Application.Services
             matchDay.TenantId = tenantId;
 
             await _matchDayRepository.Insert(matchDay);
-
+            await _matchDayRepository.SaveChangesAsync();
             return matchDay;
         }
 
@@ -70,15 +70,36 @@ namespace Handicap.Application.Services
                 .Find(md => md.Id == matchDayId, nameof(MatchDay.Games)))
                 .FirstOrDefault();
 
-            var game = (await _gameRepository.Find(g => g.Id == gameId)).FirstOrDefault();
+            var game = (await _gameRepository.Find(
+                g => g.Id == gameId,
+                nameof(Game.PlayerOne),
+                nameof(Game.PlayerTwo))).FirstOrDefault();
+
             if(matchDay == null)
             {
                 throw new EntityNotFoundException($"MatchDay with id: {matchDayId} not found.");
             }
 
             matchDay.Games.Add(game);
+            matchDay = AddPlayers(matchDay, game);
 
             matchDay = await _matchDayRepository.Update(matchDay);
+            await _matchDayRepository.SaveChangesAsync();
+
+            return matchDay;
+        }
+
+        private MatchDay AddPlayers(MatchDay matchDay, Game game)
+        {
+            if(matchDay.Players.Where(p => p.Id == game.PlayerOne.Id).FirstOrDefault() == null)
+            {
+                matchDay.Players.Add(game.PlayerOne);
+            }
+
+            if (matchDay.Players.Where(p => p.Id == game.PlayerTwo.Id).FirstOrDefault() == null)
+            {
+                matchDay.Players.Add(game.PlayerTwo);
+            }
 
             return matchDay;
         }

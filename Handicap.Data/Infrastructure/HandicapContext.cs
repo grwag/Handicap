@@ -1,4 +1,4 @@
-﻿using Handicap.Dbo;
+﻿using Handicap.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -9,9 +9,9 @@ namespace Handicap.Data.Infrastructure
 {
     public class HandicapContext : DbContext, IHandicapContext
     {
-        public DbSet<PlayerDbo> Players { get; set; }
-        public DbSet<GameDbo> Games { get; set; }
-        public DbSet<MatchDayDbo> MatchDays { get; set; }
+        public DbSet<Player> Players { get; set; }
+        public DbSet<Game> Games { get; set; }
+        public DbSet<MatchDay> MatchDays { get; set; }
 
         public HandicapContext(DbContextOptions<HandicapContext> options) : base(options)
         {
@@ -19,8 +19,8 @@ namespace Handicap.Data.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder builder) 
         {
-            builder.Entity<PlayerDbo>().HasData(
-                new PlayerDbo
+            builder.Entity<Player>().HasData(
+                new Player
                 {
                     Id = "1",
                     TenantId = "816ef7d5-4589-4408-b64c-87594e2075bb",
@@ -28,7 +28,7 @@ namespace Handicap.Data.Infrastructure
                     LastName = "ralf",
                     Handicap = 65
                 },
-                new PlayerDbo
+                new Player
                 {
                     Id = "2",
                     TenantId = "816ef7d5-4589-4408-b64c-87594e2075bb",
@@ -36,7 +36,7 @@ namespace Handicap.Data.Infrastructure
                     LastName = "maulwurf",
                     Handicap = 35
                 },
-                new PlayerDbo
+                new Player
                 {
                     Id = "3",
                     TenantId = "816ef7d5-4589-4408-b64c-87594e2075bb",
@@ -44,7 +44,7 @@ namespace Handicap.Data.Infrastructure
                     LastName = "klammer",
                     Handicap = 30
                 },
-                new PlayerDbo
+                new Player
                 {
                     Id = "4",
                     TenantId = "816ef7d5-4589-4408-b64c-87594e2075bb",
@@ -52,7 +52,7 @@ namespace Handicap.Data.Infrastructure
                     LastName = "simpson",
                     Handicap = 55
                 },
-                new PlayerDbo
+                new Player
                 {
                     Id = "5",
                     TenantId = "",
@@ -60,7 +60,7 @@ namespace Handicap.Data.Infrastructure
                     LastName = "baer",
                     Handicap = 25
                 },
-                new PlayerDbo
+                new Player
                 {
                     Id = "6",
                     TenantId = "",
@@ -68,7 +68,7 @@ namespace Handicap.Data.Infrastructure
                     LastName = "kopf",
                     Handicap = 5
                 },
-                new PlayerDbo
+                new Player
                 {
                     Id = "7",
                     TenantId = "",
@@ -76,7 +76,7 @@ namespace Handicap.Data.Infrastructure
                     LastName = "rakete",
                     Handicap = 30
                 },
-                new PlayerDbo
+                new Player
                 {
                     Id = "8",
                     TenantId = "",
