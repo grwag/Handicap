@@ -14,15 +14,18 @@ namespace Handicap.Application.Services
     {
         private readonly IGameRepository _gameRepository;
         private readonly IPlayerRepository _playerRepository;
+        private readonly IMatchDayService _matchDayService;
         private readonly IHandicapCalculator _handicapCalculator;
 
         public GameService(
             IGameRepository gameRepository,
             IPlayerRepository playerRepository,
+            IMatchDayService matchDayService,
             IHandicapCalculator handicapCalculator)
         {
             _gameRepository = gameRepository;
             _playerRepository = playerRepository;
+            _matchDayService = matchDayService;
             _handicapCalculator = handicapCalculator;
         }
 
@@ -77,6 +80,9 @@ namespace Handicap.Application.Services
 
             game.PlayerTwoRequiredPoints = _handicapCalculator.Calculate(
                 game.PlayerTwo.Handicap, game.Type);
+
+            //game.MatchDay = matchDay;
+            //game.MatchDayId = MatchDayId;
 
             return game;
         }

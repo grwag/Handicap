@@ -46,8 +46,9 @@ namespace Handicap.Api.Controllers
         {
             var tenantId = this.GetTenantId();
             var matchDayQuery = await _matchDayService.Find(m => m.TenantId == tenantId,
-                $"{nameof(MatchDay.Games)}",
-                $"{nameof(MatchDay.Players)}");
+                $"{nameof(MatchDay.Games)}")
+                //$"{nameof(MatchDay.Players)}")
+                ;
 
             var response = new HandicapResponse<MatchDay>(matchDayQuery, null, page, pageSize);
             
@@ -72,17 +73,17 @@ namespace Handicap.Api.Controllers
             return Ok(_mapper.Map<MatchDayResponse>(matchDay));
         }
 
-        [HttpPost("{id}/games")]
-        public async Task<IActionResult> AddGame([FromRoute]string id,[FromBody]GameRequest gameRequest)
+        [HttpPost("{id}/games/{gameId}")]
+        public async Task<IActionResult> AddGame([FromRoute]string id,[FromRoute]string gameId)
         {
             var tenantId = this.GetTenantId();
-            var game = await _gameService.CreateGame(
-                tenantId,
-                gameRequest.PlayerOneId,
-                gameRequest.PlayerTwoId,
-                id);
+            //var game = await _gameService.CreateGame(
+            //    tenantId,
+            //    gameRequest.PlayerOneId,
+            //    gameRequest.PlayerTwoId,
+            //    id);
 
-            var matchDay = await _matchDayService.AddGame(id, game);
+            var matchDay = await _matchDayService.AddGame(id, gameId);
             return Ok(_mapper.Map<MatchDayResponse>(matchDay));
         }
     }

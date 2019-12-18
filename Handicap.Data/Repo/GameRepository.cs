@@ -32,7 +32,7 @@ namespace Handicap.Data.Repo
         public async Task<Game> AddOrUpdate(Game game)
         {
             var gameDbo = _mapper.Map<GameDbo>(game);
-
+            //_context.MatchDays.Attach(gameDbo.MatchDay);
 
             if (GameExists(gameDbo))
             {

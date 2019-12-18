@@ -28,6 +28,12 @@ namespace Handicap.Data.Migrations
                     b.Property<bool>("IsFinished")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<string>("MatchDayDboId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("MatchDayId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<string>("PlayerOneId")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
@@ -54,6 +60,8 @@ namespace Handicap.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MatchDayDboId");
+
                     b.HasIndex("PlayerOneId");
 
                     b.HasIndex("PlayerTwoId");
@@ -66,42 +74,15 @@ namespace Handicap.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
+                    b.Property<DateTimeOffset>("Date")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("TenantId")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
                     b.ToTable("MatchDays");
-                });
-
-            modelBuilder.Entity("Handicap.Dbo.MatchDayGame", b =>
-                {
-                    b.Property<string>("GameId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                    b.Property<string>("MatchDayId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                    b.HasKey("GameId", "MatchDayId");
-
-                    b.HasIndex("MatchDayId");
-
-                    b.ToTable("MatchDayGame");
-                });
-
-            modelBuilder.Entity("Handicap.Dbo.MatchDayPlayer", b =>
-                {
-                    b.Property<string>("PlayerId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                    b.Property<string>("MatchDayId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                    b.HasKey("PlayerId", "MatchDayId");
-
-                    b.HasIndex("MatchDayId");
-
-                    b.ToTable("MatchDayPlayer");
                 });
 
             modelBuilder.Entity("Handicap.Dbo.PlayerDbo", b =>
@@ -164,7 +145,7 @@ namespace Handicap.Data.Migrations
                             FirstName = "nasen",
                             Handicap = 25,
                             LastName = "baer",
-                            TenantId = "def"
+                            TenantId = ""
                         },
                         new
                         {
@@ -172,7 +153,7 @@ namespace Handicap.Data.Migrations
                             FirstName = "eier",
                             Handicap = 5,
                             LastName = "kopf",
-                            TenantId = "def"
+                            TenantId = ""
                         },
                         new
                         {
@@ -180,7 +161,7 @@ namespace Handicap.Data.Migrations
                             FirstName = "rudi",
                             Handicap = 30,
                             LastName = "rakete",
-                            TenantId = "def"
+                            TenantId = ""
                         },
                         new
                         {
@@ -188,12 +169,16 @@ namespace Handicap.Data.Migrations
                             FirstName = "homer",
                             Handicap = 55,
                             LastName = "simpson",
-                            TenantId = "def"
+                            TenantId = ""
                         });
                 });
 
             modelBuilder.Entity("Handicap.Dbo.GameDbo", b =>
                 {
+                    b.HasOne("Handicap.Dbo.MatchDayDbo", null)
+                        .WithMany("Games")
+                        .HasForeignKey("MatchDayDboId");
+
                     b.HasOne("Handicap.Dbo.PlayerDbo", "PlayerOne")
                         .WithMany()
                         .HasForeignKey("PlayerOneId");
@@ -201,36 +186,6 @@ namespace Handicap.Data.Migrations
                     b.HasOne("Handicap.Dbo.PlayerDbo", "PlayerTwo")
                         .WithMany()
                         .HasForeignKey("PlayerTwoId");
-                });
-
-            modelBuilder.Entity("Handicap.Dbo.MatchDayGame", b =>
-                {
-                    b.HasOne("Handicap.Dbo.GameDbo", "Game")
-                        .WithMany()
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Handicap.Dbo.MatchDayDbo", "MatchDay")
-                        .WithMany("MatchDayGames")
-                        .HasForeignKey("MatchDayId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Handicap.Dbo.MatchDayPlayer", b =>
-                {
-                    b.HasOne("Handicap.Dbo.MatchDayDbo", "MatchDay")
-                        .WithMany("MatchDayPlayers")
-                        .HasForeignKey("MatchDayId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Handicap.Dbo.PlayerDbo", "Player")
-                        .WithMany()
-                        .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -5,6 +5,7 @@ namespace Handicap.Domain.Models
     public class Game : BaseEntity {
         public Player PlayerOne { get; set; }
         public Player PlayerTwo { get; set; }
+        public string MatchDayId { get; set; }
         public GameType Type { get; set; }
         public int PlayerOneRequiredPoints { get; set; }
         public int PlayerOnePoints { get; set; }

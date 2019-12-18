@@ -55,7 +55,7 @@ namespace Handicap.Data.Infrastructure
                 new PlayerDbo
                 {
                     Id = "5",
-                    TenantId = "def",
+                    TenantId = "",
                     FirstName = "nasen",
                     LastName = "baer",
                     Handicap = 25
@@ -63,7 +63,7 @@ namespace Handicap.Data.Infrastructure
                 new PlayerDbo
                 {
                     Id = "6",
-                    TenantId = "def",
+                    TenantId = "",
                     FirstName = "eier",
                     LastName = "kopf",
                     Handicap = 5
@@ -71,7 +71,7 @@ namespace Handicap.Data.Infrastructure
                 new PlayerDbo
                 {
                     Id = "7",
-                    TenantId = "def",
+                    TenantId = "",
                     FirstName = "rudi",
                     LastName = "rakete",
                     Handicap = 30
@@ -79,45 +79,45 @@ namespace Handicap.Data.Infrastructure
                 new PlayerDbo
                 {
                     Id = "8",
-                    TenantId = "def",
+                    TenantId = "",
                     FirstName = "homer",
                     LastName = "simpson",
                     Handicap = 55
                 }
                 );
 
-            builder.Entity<MatchDayGame>(ConfigureMatchDayGames);
-            builder.Entity<MatchDayPlayer>(ConfigureMatchDayPlayers);
+            //builder.Entity<MatchDayGame>(ConfigureMatchDayGames);
+            //builder.Entity<MatchDayPlayer>(ConfigureMatchDayPlayers);
         }
 
-        private void ConfigureMatchDayGames(EntityTypeBuilder<MatchDayGame> config)
-        {
-            config.HasKey(x => new
-            {
-                x.GameId,
-                x.MatchDayId
-            });
+        //private void ConfigureMatchDayGames(EntityTypeBuilder<MatchDayGame> config)
+        //{
+        //    config.HasKey(x => new
+        //    {
+        //        x.GameId,
+        //        x.MatchDayId
+        //    });
 
-            config.HasOne(x => x.MatchDay)
-                .WithMany(x => x.MatchDayGames)
-                .HasForeignKey(x => x.MatchDayId)
-                .OnDelete(DeleteBehavior.NoAction);
+        //    config.HasOne(x => x.MatchDay)
+        //        .WithMany(x => x.Games)
+        //        .HasForeignKey(x => x.MatchDayId)
+        //        .OnDelete(DeleteBehavior.NoAction);
 
-        }
+        //}
 
-        private void ConfigureMatchDayPlayers(EntityTypeBuilder<MatchDayPlayer> config)
-        {
-            config.HasKey(x => new
-            {
-                x.PlayerId,
-                x.MatchDayId
-            });
+        //private void ConfigureMatchDayPlayers(EntityTypeBuilder<MatchDayPlayer> config)
+        //{
+        //    config.HasKey(x => new
+        //    {
+        //        x.PlayerId,
+        //        x.MatchDayId
+        //    });
 
-            config.HasOne(x => x.MatchDay)
-                .WithMany(x => x.MatchDayPlayers)
-                .HasForeignKey(x => x.MatchDayId)
-                .OnDelete(DeleteBehavior.Cascade);
+        //    config.HasOne(x => x.MatchDay)
+        //        .WithMany(x => x.MatchDayPlayers)
+        //        .HasForeignKey(x => x.MatchDayId)
+        //        .OnDelete(DeleteBehavior.Cascade);
 
-        }
+        //}
     }
 }

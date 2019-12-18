@@ -42,8 +42,9 @@ namespace Handicap.Data.Repo
             var query = _matchDays
                 .AsQueryable()
                 .AsNoTracking()
-                .Include(md => md.MatchDayGames)
-                .Include(md => md.MatchDayPlayers);
+                .Include(md => md.Games)
+                //.Include(md => md.MatchDayPlayers)
+                ;
 
 
             //foreach (var navigationProperty in navigationProperties)
@@ -65,8 +66,8 @@ namespace Handicap.Data.Repo
         {
             var query = _matchDays.AsQueryable();
             query = query
-                .Include($"{nameof(MatchDayDbo.MatchDayGames)}")
-                .Include($"{nameof(MatchDayDbo.MatchDayPlayers)}")
+                .Include($"{nameof(MatchDayDbo.Games)}")
+                //.Include($"{nameof(MatchDayDbo.MatchDayPlayers)}")
                 ;
 
             var matchDayDbo = query.SingleOrDefault(md => md.Id == id);
@@ -99,42 +100,16 @@ namespace Handicap.Data.Repo
 
         public async Task<MatchDay> Update(MatchDay matchDay)
         {
-            var entity = _matchDays
-                .Include(md => md.MatchDayGames)
-                .Include(md => md.MatchDayPlayers)
-                .SingleOrDefault(md => md.Id == matchDay.Id);
-
-            if(entity == null)
+            var matchDayDbo = _mapper.Map<MatchDayDbo>(matchDay);
+            if(matchDayDbo == null)
             {
                 throw new EntityNotFoundException($"Matchday with id {matchDay.Id} does not exist.");
             }
 
-            var matchDayDbo = _mapper.Map<MatchDayDbo>(matchDay);
-            foreach(var matchDayGame in matchDayDbo.MatchDayGames)
-            {
-                var gameExists = entity.MatchDayGames.Where(x => x.GameId == matchDayGame.GameId).SingleOrDefault();
-                if (gameExists == null)
-                {
-                    _context.Attach(matchDayGame.Game.PlayerOne);
-                    _context.Attach(matchDayGame.Game.PlayerTwo);
-                    _context.Attach(matchDayGame.Game);
-                    entity.MatchDayGames.Add(matchDayGame);
-                }
-            }
-
-            foreach (var matchDayPlayer in matchDayDbo.MatchDayPlayers)
-            {
-                var playerExists = entity.MatchDayPlayers.Where(x => x.PlayerId == matchDayPlayer.PlayerId).SingleOrDefault();
-                if (playerExists == null)
-                {
-                    entity.MatchDayPlayers.Add(matchDayPlayer);
-                }
-            }
-
-            _context.Update(entity);
+            _context.Update(matchDayDbo);
 
             await SaveChangesAsync();
-            return _mapper.Map<MatchDay>(entity);
+            return _mapper.Map<MatchDay>(matchDayDbo);
         }
     }
 }

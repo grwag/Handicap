@@ -13,12 +13,15 @@ namespace Handicap.Application.Services
     public class MatchDayService : IMatchDayService
     {
         private readonly IMatchDayRepository _matchDayRepository;
+        private readonly IGameRepository _gameRepository;
         private readonly IPlayerRepository _playerRepository;
 
         public MatchDayService(IMatchDayRepository matchDayRepository,
+            IGameRepository gameRepository,
             IPlayerRepository playerRepository)
         {
             _matchDayRepository = matchDayRepository;
+            _gameRepository = gameRepository;
             _playerRepository = playerRepository;
         }
 
@@ -29,7 +32,7 @@ namespace Handicap.Application.Services
                 var player = (await _playerRepository.Find(p => p.Id == playerId)).FirstOrDefault();
                 if(player != null)
                 {
-                    matchDay.Players.Add(player);
+                    //matchDay.Players.Add(player);
                 }
             }
 
@@ -61,10 +64,13 @@ namespace Handicap.Application.Services
             return matchDay;
         }
 
-        public async Task<MatchDay> AddGame(string matchDayId, Game game)
+        public async Task<MatchDay> AddGame(string matchDayId, string gameId)
         {
-            var matchDay = (await _matchDayRepository.Find(md => md.Id == matchDayId)).FirstOrDefault();
+            var matchDay = (await _matchDayRepository
+                .Find(md => md.Id == matchDayId, nameof(MatchDay.Games)))
+                .FirstOrDefault();
 
+            var game = (await _gameRepository.Find(g => g.Id == gameId)).FirstOrDefault();
             if(matchDay == null)
             {
                 throw new EntityNotFoundException($"MatchDay with id: {matchDayId} not found.");

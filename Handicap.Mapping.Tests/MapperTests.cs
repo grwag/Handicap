@@ -98,13 +98,13 @@ namespace Handicap.Mapping.Tests
         public void MatchDayIsMappedToMatchDayDbo()
         {
             var mapper = this.provider.GetService<IMapper>();
-            var players = GetPlayerQuery().ToList();
+            //var players = GetPlayerQuery().ToList();
             var game = GetGame();
             var matchDay = new MatchDay
             {
                 Id = "alf",
                 TenantId = tenantId,
-                Players = players,
+                //Players = players,
                 Games = new List<Game>()
                 {
                     game
@@ -113,9 +113,9 @@ namespace Handicap.Mapping.Tests
 
             var mapped = mapper.Map<MatchDayDbo>(matchDay);
 
-            mapped.MatchDayGames.Should().NotBeNull();
-            mapped.MatchDayPlayers.Should().NotBeNull();
-            mapped.MatchDayPlayers.Count.Should().Be(2);
+            mapped.Games.Should().NotBeNull();
+            //mapped.MatchDayPlayers.Should().NotBeNull();
+            //mapped.MatchDayPlayers.Count.Should().Be(2);
         }
 
         private IQueryable<Player> GetPlayerQuery()
