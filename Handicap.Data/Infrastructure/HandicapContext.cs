@@ -12,6 +12,7 @@ namespace Handicap.Data.Infrastructure
         public DbSet<Player> Players { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<MatchDay> MatchDays { get; set; }
+        public DbSet<MatchDayPlayer> MatchDayPlayers { get; set; }
 
         public HandicapContext(DbContextOptions<HandicapContext> options) : base(options)
         {
@@ -86,38 +87,23 @@ namespace Handicap.Data.Infrastructure
                 }
                 );
 
-            //builder.Entity<MatchDayGame>(ConfigureMatchDayGames);
-            //builder.Entity<MatchDayPlayer>(ConfigureMatchDayPlayers);
+            ConfigureMatchDayPlayers(builder);
         }
 
-        //private void ConfigureMatchDayGames(EntityTypeBuilder<MatchDayGame> config)
-        //{
-        //    config.HasKey(x => new
-        //    {
-        //        x.GameId,
-        //        x.MatchDayId
-        //    });
+        private void ConfigureMatchDayPlayers(ModelBuilder builder)
+        {
+            builder.Entity<MatchDayPlayer>()
+                .HasKey(mp => new { mp.MatchDayId, mp.PlayerId });
 
-        //    config.HasOne(x => x.MatchDay)
-        //        .WithMany(x => x.Games)
-        //        .HasForeignKey(x => x.MatchDayId)
-        //        .OnDelete(DeleteBehavior.NoAction);
+            builder.Entity<MatchDayPlayer>()
+                .HasOne(mp => mp.MatchDay)
+                .WithMany(m => m.MatchDayPlayers)
+                .HasForeignKey(mp => mp.MatchDayId);
 
-        //}
-
-        //private void ConfigureMatchDayPlayers(EntityTypeBuilder<MatchDayPlayer> config)
-        //{
-        //    config.HasKey(x => new
-        //    {
-        //        x.PlayerId,
-        //        x.MatchDayId
-        //    });
-
-        //    config.HasOne(x => x.MatchDay)
-        //        .WithMany(x => x.MatchDayPlayers)
-        //        .HasForeignKey(x => x.MatchDayId)
-        //        .OnDelete(DeleteBehavior.Cascade);
-
-        //}
+            builder.Entity<MatchDayPlayer>()
+                .HasOne(mp => mp.Player)
+                .WithMany(p => p.MatchDayPlayers)
+                .HasForeignKey(mp => mp.PlayerId);
+        }
     }
 }

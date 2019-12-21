@@ -35,88 +35,79 @@ namespace Handicap.Mapping.Tests
             mapper.ConfigurationProvider.AssertConfigurationIsValid();
         }
 
-        //[Fact]
-        //public void GameIsMappedToGameResponse()
-        //{
-        //    var mapper = this.provider.GetService<IMapper>();
-        //    var game = GetGame();
-        //    var expected = GetGameResponse();
+        [Fact]
+        public void MatchDayPlayerMapsToPlayerResponse()
+        {
+            var mapper = this.provider.GetService<IMapper>();
+            var player = GetPlayerQuery().ToList()[0];
 
-        //    var actual = mapper.Map<GameResponse>(game);
+            var matchDayPlayer = new MatchDayPlayer
+            {
+                MatchDay = new MatchDay(),
+                MatchDayId = "1",
+                Player = player,
+                PlayerId = player.Id
+            };
 
-        //    actual.Should().BeEquivalentTo(expected);
-        //}
+            var playerResponse = mapper.Map<PlayerResponse>(matchDayPlayer);
 
-        //[Fact]
-        //public void QueryablesAreMappedCorrectly()
-        //{
-        //    var mapper = this.provider.GetService<IMapper>();
-        //    var gameQuery = new List<Game> { GetGame() }.AsQueryable();
-        //    var expected = new List<GameResponse> { GetGameResponse() }.AsQueryable();
+            playerResponse.Should().NotBeNull();
+            playerResponse.FirstName.Should().Be(player.FirstName);
+            playerResponse.LastName.Should().Be(player.LastName);
+            playerResponse.Handicap.Should().Be(player.Handicap);
+            playerResponse.Id.Should().Be(player.Id);
+            playerResponse.TenantId.Should().Be(player.TenantId);
+        }
 
-        //    var actual = gameQuery.ProjectTo<GameResponse>(mapper.ConfigurationProvider);
+        [Fact]
+        public void MatchDayPlayerMapsToMatchDayResponse()
+        {
+            var mapper = this.provider.GetService<IMapper>();
+            var player = GetPlayerQuery().ToArray()[0];
+            var matchDay = GetMatchDay();
 
-        //    actual.Should().BeEquivalentTo(expected);
-        //}
+            var matchDayPlayer = GetMatchDayPlayer();
 
-        //[Fact]
-        //public void PlayerIsMappedToMatchDayPlayer()
-        //{
-        //    var mapper = this.provider.GetService<IMapper>();
-        //    var player = new Player
-        //    {
-        //        TenantId = tenantId,
-        //        FirstName = "a",
-        //        LastName = "b",
-        //        Handicap = 25,
-        //        Id = "11"
-        //    };
+            var matchDayResponse = mapper.Map<MatchDayResponse>(matchDayPlayer);
 
-        //    var playerDbo = new PlayerDbo
-        //    {
-        //        TenantId = tenantId,
-        //        FirstName = "a",
-        //        LastName = "b",
-        //        Handicap = 25,
-        //        Id = "11"
-        //    };
+            matchDayResponse.Should().NotBeNull();
+            matchDayResponse.Id.Should().Be(matchDay.Id);
+            matchDayResponse.TenantId.Should().Be(matchDay.TenantId);
+        }
 
-        //    var expectedMatchDayPlayer = new MatchDayPlayer
-        //    {
-        //        Player = playerDbo,
-        //        PlayerId = player.Id,
-        //        MatchDay = null,
-        //        MatchDayId = null
-        //    };
+        [Fact]
+        public void GameMapsToGameResponse()
+        {
+            var mapper = this.provider.GetService<IMapper>();
+            var game = GetGame();
 
-        //    var actual = mapper.Map<MatchDayPlayer>(player);
+            var mappedGameResponse = mapper.Map<GameResponse>(game);
 
-        //    actual.Should().BeEquivalentTo(expectedMatchDayPlayer);
-        //}
+            mappedGameResponse.Should().NotBeNull();
+            mappedGameResponse.IsFinished.Should().Be(game.IsFinished);
+            mappedGameResponse.Id.Should().Be(game.Id);
+            mappedGameResponse.MatchDayId.Should().Be(game.MatchDayId);
+            mappedGameResponse.PlayerOnePoints.Should().Be(game.PlayerOnePoints);
+            mappedGameResponse.PlayerOneRequiredPoints.Should().Be(game.PlayerOneRequiredPoints);
+            mappedGameResponse.PlayerTwoPoints.Should().Be(game.PlayerTwoPoints);
+            mappedGameResponse.PlayerTwoRequiredPoints.Should().Be(game.PlayerTwoRequiredPoints);
+        }
 
-        //[Fact]
-        //public void MatchDayIsMappedToMatchDayDbo()
-        //{
-        //    var mapper = this.provider.GetService<IMapper>();
-        //    //var players = GetPlayerQuery().ToList();
-        //    var game = GetGame();
-        //    var matchDay = new MatchDay
-        //    {
-        //        Id = "alf",
-        //        TenantId = tenantId,
-        //        //Players = players,
-        //        Games = new List<Game>()
-        //        {
-        //            game
-        //        }
-        //    };
+        [Fact]
+        public void PlayerMapsToPlayerResponse()
+        {
+            var mapper = this.provider.GetService<IMapper>();
+            var player = GetPlayerQuery().ToArray()[0];
 
-        //    var mapped = mapper.Map<MatchDayDbo>(matchDay);
+            var mappedPlayerResponse = mapper.Map<PlayerResponse>(player);
 
-        //    mapped.Games.Should().NotBeNull();
-        //    //mapped.MatchDayPlayers.Should().NotBeNull();
-        //    //mapped.MatchDayPlayers.Count.Should().Be(2);
-        //}
+            mappedPlayerResponse.Should().NotBeNull();
+            mappedPlayerResponse.FirstName.Should().Be(player.FirstName);
+            mappedPlayerResponse.LastName.Should().Be(player.LastName);
+            mappedPlayerResponse.Handicap.Should().Be(player.Handicap);
+            mappedPlayerResponse.Id.Should().Be(player.Id);
+            mappedPlayerResponse.TenantId.Should().Be(player.TenantId);
+        }
 
         private IQueryable<Player> GetPlayerQuery()
         {
@@ -143,48 +134,66 @@ namespace Handicap.Mapping.Tests
             return players.AsQueryable();
         }
 
-        //private IQueryable<PlayerDbo> GetPlayerDboQuery()
-        //{
-        //    var players = new List<PlayerDbo>()
-        //    {
-        //        new PlayerDbo
-        //        {
-        //            FirstName = "alf",
-        //            Handicap = 25,
-        //            LastName = "ralf",
-        //            Id = "111",
-        //        },
-        //        new PlayerDbo
-        //        {
-        //            FirstName = "hans",
-        //            Handicap = 25,
-        //            LastName = "maulwurf",
-        //            Id = "222"
-        //        }
-        //    };
+        private Game GetGame()
+        {
+            var players = GetPlayerQuery().ToList();
 
-        //    return players.AsQueryable();
-        //}
+            return new Game
+            {
+                Id = "1",
+                Date = new DateTimeOffset(),
+                IsFinished = false,
+                PlayerOnePoints = 0,
+                PlayerOneRequiredPoints = 10,
+                PlayerTwoPoints = 1,
+                PlayerTwoRequiredPoints = 11,
+                TenantId = tenantId,
+                Type = GameType.Eightball,
+                PlayerOne = players[0],
+                PlayerTwo = players[1]
+            };
+        }
 
-        //private Game GetGame()
-        //{
-        //    var players = GetPlayerQuery().ToList();
+        private MatchDayPlayer GetMatchDayPlayer()
+        {
+            var players = GetPlayerQuery().ToArray();
+            var matchDay = GetMatchDay();
 
-        //    return new Game
-        //    {
-        //        Id = "1",
-        //        Date = new DateTimeOffset(),
-        //        IsFinished = false,
-        //        PlayerOnePoints = 0,
-        //        PlayerOneRequiredPoints = 10,
-        //        PlayerTwoPoints = 1,
-        //        PlayerTwoRequiredPoints = 11,
-        //        TenantId = tenantId,
-        //        Type = GameType.Eightball,
-        //        PlayerOne = players[0],
-        //        PlayerTwo = players[1]
-        //    };
-        //}
+            var matchDayPlayer = new MatchDayPlayer
+            {
+                Player = players[0],
+                PlayerId = players[0].Id,
+                MatchDay = matchDay,
+                MatchDayId = matchDay.Id
+            };
+
+
+            return matchDayPlayer;
+        }
+
+        private MatchDay GetMatchDay()
+        {
+            var players = GetPlayerQuery().ToArray();
+            var matchDay = new MatchDay
+            {
+                Date = new DateTimeOffset(),
+                Games = new List<Game> { GetGame() },
+                Id = "123",
+                MatchDayPlayers = new List<MatchDayPlayer>
+                {
+                    new MatchDayPlayer
+                    {
+                        Player = players[0],
+                        PlayerId = players[0].Id,
+                        MatchDay = null,
+                        MatchDayId = null
+                    }
+                },
+                TenantId = tenantId
+            };
+
+            return matchDay;
+        }
 
         //private GameResponse GetGameResponse()
         //{

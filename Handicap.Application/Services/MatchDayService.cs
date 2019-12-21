@@ -67,7 +67,9 @@ namespace Handicap.Application.Services
         public async Task<MatchDay> AddGame(string matchDayId, string gameId)
         {
             var matchDay = (await _matchDayRepository
-                .Find(md => md.Id == matchDayId, nameof(MatchDay.Games)))
+                .Find(md => md.Id == matchDayId,
+                nameof(MatchDay.Games),
+                nameof(MatchDay.MatchDayPlayers)))
                 .FirstOrDefault();
 
             var game = (await _gameRepository.Find(
@@ -91,17 +93,50 @@ namespace Handicap.Application.Services
 
         private MatchDay AddPlayers(MatchDay matchDay, Game game)
         {
-            if(matchDay.Players.Where(p => p.Id == game.PlayerOne.Id).FirstOrDefault() == null)
+            if(matchDay.MatchDayPlayers.Where(mp => mp.PlayerId == game.PlayerOne.Id).FirstOrDefault() == null)
             {
-                matchDay.Players.Add(game.PlayerOne);
+                matchDay.MatchDayPlayers.Add(new MatchDayPlayer
+                {
+                    //MatchDayId = matchDay.Id,
+                    //PlayerId = game.PlayerOne.Id
+                    Player = game.PlayerOne
+                });
             }
 
-            if (matchDay.Players.Where(p => p.Id == game.PlayerTwo.Id).FirstOrDefault() == null)
+            if (matchDay.MatchDayPlayers.Where(mp => mp.PlayerId == game.PlayerTwo.Id).FirstOrDefault() == null)
             {
-                matchDay.Players.Add(game.PlayerTwo);
+                matchDay.MatchDayPlayers.Add(new MatchDayPlayer
+                {
+                    //MatchDayId = matchDay.Id,
+                    //PlayerId = game.PlayerTwo.Id
+                    Player = game.PlayerTwo
+                });
             }
 
             return matchDay;
+        }
+
+        public async Task<IQueryable<Player>> GetMatchDayPlayers(string matchDayId)
+        {
+            var matchDay = (await _matchDayRepository
+                .Find(md => md.Id == matchDayId))
+                .FirstOrDefault();
+
+            var playersQuery = matchDay.MatchDayPlayers.AsQueryable();
+            var players = playersQuery.Select(p => p.Player);
+
+            return players;
+        }
+
+        public async Task<IQueryable<Game>> GetMatchDayGames(string matchDayId)
+        {
+            var matchDay = (await _matchDayRepository.Find(md => md.Id == matchDayId,
+                nameof(MatchDay.Games),
+                $"{nameof(MatchDay.Games)}.{nameof(Game.PlayerOne)}",
+                $"{nameof(MatchDay.Games)}.{nameof(Game.PlayerTwo)}"))
+                .FirstOrDefault();
+
+            return matchDay.Games.AsQueryable();
         }
     }
 }

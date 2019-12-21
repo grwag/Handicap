@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Handicap.Api.Extensions;
 using Handicap.Api.Paging;
 using Handicap.Application.Services;
@@ -45,13 +46,52 @@ namespace Handicap.Api.Controllers
             [FromQuery]int page = 0)
         {
             var tenantId = this.GetTenantId();
-            var matchDayQuery = await _matchDayService.Find(m => m.TenantId == tenantId,
-                $"{nameof(MatchDay.Games)}")
-                //$"{nameof(MatchDay.Players)}")
-                ;
+            var matchDayQuery = await _matchDayService
+                .Find(m => m.TenantId == tenantId);
 
-            var response = new HandicapResponse<MatchDay>(matchDayQuery, null, page, pageSize);
+            var responseQuery = matchDayQuery.ProjectTo<MatchDayResponse>(_mapper.ConfigurationProvider);
+
+            var response = new HandicapResponse<MatchDayResponse>(responseQuery, null, page, pageSize);
             
+            return Ok(response);
+        }
+
+        [HttpGet("{id}/players")]
+        public async Task<IActionResult> GetMatchDayPlayers(
+            [FromRoute]string id,
+            [FromQuery]string orderBy = "Date",
+            [FromQuery]bool desc = false,
+            [FromQuery]int pageSize = 10,
+            [FromQuery]int page = 0)
+        {
+            var tenantId = this.GetTenantId();
+            var players = await _matchDayService.GetMatchDayPlayers(id);
+
+            var responseQuery = players.ProjectTo<PlayerResponse>(_mapper.ConfigurationProvider);
+
+            var response = new HandicapResponse<PlayerResponse>(responseQuery, null, page, pageSize);
+
+            return Ok(response);
+        }
+
+        [HttpGet("{id}/games")]
+        public async Task<IActionResult> GetMatchDayGames(
+            [FromRoute]string id,
+            [FromQuery]string orderBy = "Date",
+            [FromQuery]bool desc = false,
+            [FromQuery]int pageSize = 10,
+            [FromQuery]int page = 0)
+        {
+            var tenantId = this.GetTenantId();
+            var games = await _matchDayService.GetMatchDayGames(id);
+
+            // workaround
+            var gameResponse = _mapper.Map<List<GameResponse>>(games.ToList());
+
+            //var responseQuery = games.ProjectTo<GameResponse>(_mapper.ConfigurationProvider);
+
+            var response = new HandicapResponse<GameResponse>(gameResponse.AsQueryable(), null, page, pageSize);
+
             return Ok(response);
         }
 

@@ -82,6 +82,21 @@ namespace Handicap.Data.Migrations
                     b.ToTable("MatchDays");
                 });
 
+            modelBuilder.Entity("Handicap.Domain.Models.MatchDayPlayer", b =>
+                {
+                    b.Property<string>("MatchDayId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("PlayerId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.HasKey("MatchDayId", "PlayerId");
+
+                    b.HasIndex("PlayerId");
+
+                    b.ToTable("MatchDayPlayers");
+                });
+
             modelBuilder.Entity("Handicap.Domain.Models.Player", b =>
                 {
                     b.Property<string>("Id")
@@ -96,15 +111,10 @@ namespace Handicap.Data.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("MatchDayId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
                     b.Property<string>("TenantId")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MatchDayId");
 
                     b.ToTable("Players");
 
@@ -190,11 +200,19 @@ namespace Handicap.Data.Migrations
                         .HasForeignKey("PlayerTwoId");
                 });
 
-            modelBuilder.Entity("Handicap.Domain.Models.Player", b =>
+            modelBuilder.Entity("Handicap.Domain.Models.MatchDayPlayer", b =>
                 {
-                    b.HasOne("Handicap.Domain.Models.MatchDay", null)
-                        .WithMany("Players")
-                        .HasForeignKey("MatchDayId");
+                    b.HasOne("Handicap.Domain.Models.MatchDay", "MatchDay")
+                        .WithMany("MatchDayPlayers")
+                        .HasForeignKey("MatchDayId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Handicap.Domain.Models.Player", "Player")
+                        .WithMany("MatchDayPlayers")
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

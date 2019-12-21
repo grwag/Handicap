@@ -5,6 +5,7 @@ using Handicap.Application.Interfaces;
 using Handicap.Data.Infrastructure;
 using Handicap.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -36,12 +37,13 @@ namespace Handicap.Data.Repo
             params string[] navigationProperties)
         {
             var query = _matchDays
-                .AsQueryable()
+                .Include(md => md.MatchDayPlayers)
+                .ThenInclude(mp => mp.Player)
                 .AsNoTracking()
-                //.Include(md => md.MatchDayPlayers)
+                .AsQueryable()
                 ;
 
-            if(expression != null)
+            if (expression != null)
             {
                 query = query.Where(expression);
             }
@@ -61,10 +63,13 @@ namespace Handicap.Data.Repo
 
         public async Task<MatchDay> GetById(string id)
         {
-            var query = _matchDays.AsQueryable();
+            var query = _matchDays
+                .AsQueryable()
+                .AsNoTracking();
+
             query = query
                 .Include($"{nameof(MatchDay.Games)}")
-                //.Include($"{nameof(MatchDay.MatchDayPlayers)}")
+                .Include($"{nameof(MatchDay.MatchDayPlayers)}")
                 ;
 
             var matchDay = query.SingleOrDefault(md => md.Id == id);

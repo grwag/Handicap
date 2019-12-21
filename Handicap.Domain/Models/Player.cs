@@ -8,6 +8,7 @@ namespace Handicap.Domain.Models
         public string LastName { get; set; }
 
         public int Handicap { get; set; }
+        public ICollection<MatchDayPlayer> MatchDayPlayers { get; set; }
 
         public Player()
         {
@@ -16,6 +17,7 @@ namespace Handicap.Domain.Models
             FirstName = string.Empty;
             LastName = string.Empty;
             Handicap = 0;
+            MatchDayPlayers = new List<MatchDayPlayer>();
         }
     }
 }

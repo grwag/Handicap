@@ -7,7 +7,5 @@ namespace Handicap.Dto.Response
     public class MatchDayResponse : BaseResponse
     {
         public DateTimeOffset Date { get; set; }
-        public ICollection<PlayerResponse> Players { get; set; }
-        public ICollection<GameResponse> Games { get; set; }
     }
 }
