@@ -21,18 +21,18 @@ namespace Handicap.Api.Controllers
     //[Authorize("read_write")]
     public class PlayersController : ControllerBase
     {
-        private readonly IPlayerRepository _playerRepository;
+        private readonly IPlayerService _playerService;
         private readonly IGameService _gameService;
         private readonly ILogger<PlayersController> _logger;
         private readonly IMapper _mapper;
 
         public PlayersController(
-            IPlayerRepository playerRepository,
+            IPlayerService playerService,
             IGameService gameService,
             ILogger<PlayersController> logger,
             IMapper mapper)
         {
-            _playerRepository = playerRepository;
+            _playerService = playerService;
             _gameService = gameService;
             _logger = logger;
             _mapper = mapper;
@@ -49,7 +49,7 @@ namespace Handicap.Api.Controllers
         {
             var tenantId = this.GetTenantId();
 
-            var query = await _playerRepository.Find(p => p.TenantId == tenantId);
+            var query = await _playerService.Find(p => p.TenantId == tenantId);
             
             var responseQuery = query.ProjectTo<PlayerResponse>(_mapper.ConfigurationProvider);
             responseQuery = desc ?
@@ -65,15 +65,9 @@ namespace Handicap.Api.Controllers
         {
             var tenantId = this.GetTenantId();
 
-            var query = await _playerRepository.Find(p => p.TenantId == tenantId);
-            query = query.Where(p => p.Id == id);
+            var player = await _playerService.GetById(id, tenantId);
 
-            var playerResponse = _mapper.Map<PlayerResponse>(query.FirstOrDefault());
-
-            if(playerResponse == null)
-            {
-                throw new EntityNotFoundException($"Player with id {id} not found.");
-            }
+            var playerResponse = _mapper.Map<PlayerResponse>(player);
 
             return Ok(playerResponse);
         }
@@ -86,7 +80,7 @@ namespace Handicap.Api.Controllers
             var player = _mapper.Map<Player>(playerRequest);
             player.TenantId = tenantId;
 
-            var playerResponse = await _playerRepository.AddOrUpdate(player);
+            var playerResponse = await _playerService.AddOrUpdate(player);
 
             return CreatedAtAction(
                 nameof(GetById),
@@ -103,7 +97,7 @@ namespace Handicap.Api.Controllers
             player.Id = id;
             player.TenantId = tenantId;
 
-            player = await _playerRepository.AddOrUpdate(player);
+            player = await _playerService.AddOrUpdate(player);
 
             return Ok(_mapper.Map<PlayerResponse>(player));
         }
@@ -111,7 +105,8 @@ namespace Handicap.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            await _playerRepository.Delete(id);
+            var tenantId = this.GetTenantId();
+            await _playerService.Delete(id, tenantId);
 
             return NoContent();
         }

@@ -42,6 +42,12 @@ namespace Handicap.Api.Middleware
                 errorCode = 404;
             }
 
+            if (ex is TenantMissmatchException)
+            {
+                responseCode = HttpStatusCode.Conflict;
+                errorCode = 409;
+            }
+
             var result = JsonSerializer.Serialize(
                 new HandicapResponse<ExceptionHandling>
                 {
