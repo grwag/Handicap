@@ -13,6 +13,7 @@ namespace Handicap.Domain.Models
         public MatchDay()
         {
             Id = Guid.NewGuid().ToString();
+            Date = DateTimeOffset.Now;
             MatchDayPlayers = new List<MatchDayPlayer>();
             Games = new List<Game>();
         }

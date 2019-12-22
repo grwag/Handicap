@@ -104,6 +104,23 @@ namespace Handicap.Data.Repo
                 throw new EntityNotFoundException($"Matchday with id {matchDay.Id} does not exist.");
             }
 
+            var matchDayPlayers = _context.MatchDayPlayers
+                .Where(md => md.MatchDayId == matchDay.Id)
+                .AsNoTracking()
+                .ToList();
+
+            foreach(var matchDayPlayer in matchDayPlayers)
+            {
+                var existingMatchDayPlayer = matchDay.MatchDayPlayers
+                    .FirstOrDefault(md => md.PlayerId == matchDayPlayer.PlayerId);
+
+                if(existingMatchDayPlayer != null)
+                {
+                    continue;
+                }
+                _context.Remove(matchDayPlayer);
+            }
+
             _context.Update(matchDay);
             return matchDay;
         }
