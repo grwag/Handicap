@@ -41,8 +41,9 @@ namespace Handicap.Data.Repo
         public async Task<IQueryable<Player>> Find(Expression<Func<Player, bool>> expression = null)
         {
             var query = _players
-                .AsQueryable()
+                .Include(p => p.MatchDayPlayers)
                 .AsNoTracking()
+                .AsQueryable()
                 ;
 
             if (expression != null)

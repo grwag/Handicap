@@ -25,19 +25,48 @@ namespace Handicap.Application.Services
             _playerRepository = playerRepository;
         }
 
-        public async Task<MatchDay> AddPlayers(MatchDay matchDay, IEnumerable<string> playerIds)
+        public async Task<MatchDay> AddPlayers(string matchDayId, IEnumerable<string> playerIds)
         {
+            var matchDay = await GetById(matchDayId);
             foreach(var playerId in playerIds)
             {
                 var player = (await _playerRepository.Find(p => p.Id == playerId)).FirstOrDefault();
                 if(player != null)
                 {
-                    //matchDay.Players.Add(player);
+                    if(!MatchDayHasPlayer(matchDay, player))
+                    {
+                        matchDay.MatchDayPlayers.Add(new MatchDayPlayer
+                        {
+                            Player = player
+                        });
+                    }
                 }
             }
 
             await _matchDayRepository.Update(matchDay);
             await _matchDayRepository.SaveChangesAsync();
+
+            return matchDay;
+        }
+
+        public async Task<MatchDay> RemovePlayer(string matchDayId, string playerId)
+        {
+            var matchDay = await GetById(matchDayId);
+            var player = (await _playerRepository.Find(p => p.Id == playerId)).FirstOrDefault();
+            if(player != null)
+            {
+                if(MatchDayHasPlayer(matchDay, player))
+                {
+                    var mdp = matchDay.MatchDayPlayers.Where(md => md.PlayerId == player.Id).FirstOrDefault();
+
+                    if(mdp != null){
+                        matchDay.MatchDayPlayers.Remove(mdp);
+
+                        await _matchDayRepository.Update(matchDay);
+                        await _matchDayRepository.SaveChangesAsync();
+                    }
+                }
+            }
 
             return matchDay;
         }
@@ -137,6 +166,15 @@ namespace Handicap.Application.Services
                 .FirstOrDefault();
 
             return matchDay.Games.AsQueryable();
+        }
+
+        private bool MatchDayHasPlayer(MatchDay matchDay, Player player)
+        {
+            var tstPlayer = matchDay.MatchDayPlayers
+            .Where(p => p.PlayerId == player.Id)
+            .FirstOrDefault();
+
+            return tstPlayer != null;
         }
     }
 }

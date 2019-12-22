@@ -1,6 +1,6 @@
 {
     "dotnet-test-explorer.testProjectPath": "**/*Tests.csproj",
     "dotnet-test-explorer.enableTelemetry": false,
-    "dotnet-test-explorer.runInParallel": true,
-    "dotnet-test-explorer.pathForResultFile": "/tmp/test-explorer/"
+    "dotnet-test-explorer.runInParallel": false,
+    "dotnet-test-explorer.pathForResultFile": "/home/grwag/dotnet-test-results/"
 }

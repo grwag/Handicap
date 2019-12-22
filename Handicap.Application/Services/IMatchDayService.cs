@@ -14,7 +14,8 @@ namespace Handicap.Application.Services
             Expression<Func<MatchDay, bool>> expression,
             params string[] navigationProperties);
         Task<MatchDay> CreateMatchDay(string tenantId);
-        Task<MatchDay> AddPlayers(MatchDay matchDay, IEnumerable<string> playerIds);
+        Task<MatchDay> AddPlayers(string matchDayId, IEnumerable<string> playerIds);
+        Task<MatchDay> RemovePlayer(string matchDayId, string playerId);
         Task<MatchDay> GetById(string id);
         Task<MatchDay> AddGame(string matchDayId, string gameId);
         Task<IQueryable<Player>> GetMatchDayPlayers(string matchDayId);

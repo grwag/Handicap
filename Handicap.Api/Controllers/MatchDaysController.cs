@@ -107,8 +107,15 @@ namespace Handicap.Api.Controllers
         [HttpPost("{id}/players")]
         public async Task<IActionResult> AddPlayer(string id, [FromBody]AddPlayerToMatchDayRequest addPlayerRequest)
         {
-            var matchDay = await _matchDayService.GetById(id);
-            matchDay = await _matchDayService.AddPlayers(matchDay, addPlayerRequest.PlayerIds);
+            var matchDay = await _matchDayService.AddPlayers(id, addPlayerRequest.PlayerIds);
+
+            return Ok(_mapper.Map<MatchDayResponse>(matchDay));
+        }
+
+        [HttpDelete("{id}/players/{playerId}")]
+        public async Task<IActionResult> RemovePlayer([FromRoute]string id, [FromRoute]string playerId)
+        {
+            var matchDay = await _matchDayService.RemovePlayer(id, playerId);
 
             return Ok(_mapper.Map<MatchDayResponse>(matchDay));
         }
@@ -117,11 +124,6 @@ namespace Handicap.Api.Controllers
         public async Task<IActionResult> AddGame([FromRoute]string id,[FromRoute]string gameId)
         {
             var tenantId = this.GetTenantId();
-            //var game = await _gameService.CreateGame(
-            //    tenantId,
-            //    gameRequest.PlayerOneId,
-            //    gameRequest.PlayerTwoId,
-            //    id);
 
             var matchDay = await _matchDayService.AddGame(id, gameId);
             return Ok(_mapper.Map<MatchDayResponse>(matchDay));
