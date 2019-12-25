@@ -43,11 +43,11 @@ namespace Handicap.Data.Repo
 
         public async Task Delete(string id)
         {
-            var gameDbo = _games.Where(g => g.Id == id).FirstOrDefault();
+            var game = _games.Where(g => g.Id == id).FirstOrDefault();
 
-            if (gameDbo != null)
+            if (game != null)
             {
-                _games.Remove(gameDbo);
+                _games.Remove(game);
             }
         }
 

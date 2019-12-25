@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Handicap.Data.Migrations
 {
     [DbContext(typeof(HandicapContext))]
-    [Migration("20191221015957_Initial")]
+    [Migration("20191225011404_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

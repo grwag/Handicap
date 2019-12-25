@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Handicap.Api.Extensions;
 using Handicap.Application.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace Handicap.Api.Controllers
 {

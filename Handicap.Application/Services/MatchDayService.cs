@@ -97,16 +97,38 @@ namespace Handicap.Application.Services
         {
             var matchDay = (await _matchDayRepository
                 .Find(md => md.Id == matchDayId,
-                nameof(MatchDay.Games),
-                nameof(MatchDay.MatchDayPlayers)))
+                nameof(MatchDay.Games)))
+                //nameof(MatchDay.MatchDayPlayers)))
                 .FirstOrDefault();
 
             var game = (await _gameRepository.Find(
-                g => g.Id == gameId,
-                nameof(Game.PlayerOne),
-                nameof(Game.PlayerTwo))).FirstOrDefault();
+                g => g.Id == gameId))
+                //nameof(Game.PlayerOne),
+                //nameof(Game.PlayerTwo)))
+                .FirstOrDefault();
 
             if(matchDay == null)
+            {
+                throw new EntityNotFoundException($"MatchDay with id: {matchDayId} not found.");
+            }
+
+            matchDay.Games.Add(game);
+            //matchDay = AddPlayers(matchDay, game);
+
+            matchDay = await _matchDayRepository.Update(matchDay);
+            await _matchDayRepository.SaveChangesAsync();
+
+            return matchDay;
+        }
+
+        public async Task<MatchDay> AddGame(string matchDayId, Game game)
+        {
+            var matchDay = (await _matchDayRepository
+                .Find(md => md.Id == matchDayId,
+                nameof(MatchDay.Games)))
+                .FirstOrDefault();
+
+            if (matchDay == null)
             {
                 throw new EntityNotFoundException($"MatchDay with id: {matchDayId} not found.");
             }

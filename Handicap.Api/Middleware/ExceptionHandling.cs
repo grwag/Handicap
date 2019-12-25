@@ -48,6 +48,12 @@ namespace Handicap.Api.Middleware
                 errorCode = 409;
             }
 
+            if (ex is NotEnoughPlayersException)
+            {
+                responseCode = HttpStatusCode.BadRequest;
+                errorCode = 400;
+            }
+
             var result = JsonSerializer.Serialize(
                 new HandicapResponse<ExceptionHandling>
                 {

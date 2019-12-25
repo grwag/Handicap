@@ -95,6 +95,13 @@ namespace Handicap.Api.Controllers
             return Ok(response);
         }
 
+        [HttpGet("{id}/newGame")]
+        public async Task<IActionResult> GetNewGame([FromRoute]string id)
+        {
+            var newGame = await _gameService.CreateNewGameForMatchDay(id);
+            return Ok(_mapper.Map<GameResponse>(newGame));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post()
         {

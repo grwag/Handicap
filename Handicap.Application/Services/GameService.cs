@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Handicap.Application.Exceptions;
+using Handicap.Application.Extensions;
 using Handicap.Application.Interfaces;
 using Handicap.Domain.Models;
 
@@ -39,6 +40,7 @@ namespace Handicap.Application.Services
         public async Task Delete(string id)
         {
             await _gameRepository.Delete(id);
+            await _gameRepository.SaveChangesAsync();
         }
 
         public async Task<Game> GetById(string Id)
@@ -80,9 +82,6 @@ namespace Handicap.Application.Services
 
             game.PlayerTwoRequiredPoints = _handicapCalculator.Calculate(
                 game.PlayerTwo.Handicap, game.Type);
-
-            //game.MatchDay = matchDay;
-            //game.MatchDayId = MatchDayId;
 
             return game;
         }
@@ -127,6 +126,24 @@ namespace Handicap.Application.Services
 
             game = await _gameRepository.AddOrUpdate(game);
             await _gameRepository.SaveChangesAsync();
+
+            return game;
+        }
+
+        public async Task<Game> CreateNewGameForMatchDay(string matchDayId)
+        {
+            var matchDay = (await _matchDayService.Find(m => m.Id == matchDayId, nameof(MatchDay.Games))).FirstOrDefault();
+
+            if(matchDay == null)
+            {
+                throw new EntityNotFoundException($"MatchDay with id {matchDay} not found.");
+            }
+
+            var matchDayGames = (await _matchDayService.GetMatchDayGames(matchDayId)).ToList();
+            var nextPlayers = matchDay.GetNextPlayers(matchDayGames);
+
+            var game = await CreateGame(matchDay.TenantId, nextPlayers.PlayerOneId, nextPlayers.PlayerTwoId, matchDay.Id);
+            game = await Add(game);
 
             return game;
         }

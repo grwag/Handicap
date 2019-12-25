@@ -18,6 +18,7 @@ namespace Handicap.Application.Services
         Task<MatchDay> RemovePlayer(string matchDayId, string playerId);
         Task<MatchDay> GetById(string id);
         Task<MatchDay> AddGame(string matchDayId, string gameId);
+        Task<MatchDay> AddGame(string matchDayId, Game game);
         Task<IQueryable<Player>> GetMatchDayPlayers(string matchDayId);
         Task<IQueryable<Game>> GetMatchDayGames(string matchDayId);
     }

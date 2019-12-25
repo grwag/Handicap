@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace Handicap.Api
 {
@@ -49,6 +50,11 @@ namespace Handicap.Api
 
             services.AddControllers();
 
+            services.AddSwaggerGen(config =>
+            {
+                config.SwaggerDoc("v1", new OpenApiInfo { Title = "Handicap Api" });
+            });
+
             services.AddEntityFrameworkMySql().AddDbContext<HandicapContext>(opts =>
             {
                 //opts.UseInMemoryDatabase("InMemoryDb");
@@ -74,6 +80,12 @@ namespace Handicap.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger();
+            app.UseSwaggerUI(config =>
+            {
+                config.SwaggerEndpoint("/swagger/v1/swagger.json", "Handicap Api");
+            });
+
             app.UseAuthentication();
 
             if (env.IsDevelopment())
