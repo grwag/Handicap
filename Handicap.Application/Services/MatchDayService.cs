@@ -14,26 +14,38 @@ namespace Handicap.Application.Services
     {
         private readonly IMatchDayRepository _matchDayRepository;
         private readonly IGameRepository _gameRepository;
+        private readonly IHandicapConfigurationService _configService;
+        private readonly IHandicapUpdateService _handicapUpdateService;
         private readonly IPlayerRepository _playerRepository;
 
         public MatchDayService(IMatchDayRepository matchDayRepository,
             IGameRepository gameRepository,
+            IHandicapConfigurationService configService,
+            IHandicapUpdateService handicapUpdateService,
             IPlayerRepository playerRepository)
         {
             _matchDayRepository = matchDayRepository;
             _gameRepository = gameRepository;
+            _configService = configService;
+            _handicapUpdateService = handicapUpdateService;
             _playerRepository = playerRepository;
         }
 
         public async Task<MatchDay> AddPlayers(string matchDayId, IEnumerable<string> playerIds)
         {
             var matchDay = await GetById(matchDayId);
-            foreach(var playerId in playerIds)
+
+            if (matchDay.IsFinished)
+            {
+                throw new EntityClosedForUpdateException($"MatchDay with id {matchDayId} is already finished.");
+            }
+
+            foreach (var playerId in playerIds)
             {
                 var player = (await _playerRepository.Find(p => p.Id == playerId)).FirstOrDefault();
-                if(player != null)
+                if (player != null)
                 {
-                    if(!MatchDayHasPlayer(matchDay, player))
+                    if (!MatchDayHasPlayer(matchDay, player))
                     {
                         matchDay.MatchDayPlayers.Add(new MatchDayPlayer
                         {
@@ -43,7 +55,7 @@ namespace Handicap.Application.Services
                 }
             }
 
-            await _matchDayRepository.Update(matchDay);
+            await _matchDayRepository.UpdateMatchDayPlayers(matchDay);
             await _matchDayRepository.SaveChangesAsync();
 
             return matchDay;
@@ -52,17 +64,24 @@ namespace Handicap.Application.Services
         public async Task<MatchDay> RemovePlayer(string matchDayId, string playerId)
         {
             var matchDay = await GetById(matchDayId);
-            var player = (await _playerRepository.Find(p => p.Id == playerId)).FirstOrDefault();
-            if(player != null)
+
+            if (matchDay.IsFinished)
             {
-                if(MatchDayHasPlayer(matchDay, player))
+                throw new EntityClosedForUpdateException($"MatchDay with id {matchDayId} is already finished.");
+            }
+
+            var player = (await _playerRepository.Find(p => p.Id == playerId)).FirstOrDefault();
+            if (player != null)
+            {
+                if (MatchDayHasPlayer(matchDay, player))
                 {
                     var mdp = matchDay.MatchDayPlayers.Where(md => md.PlayerId == player.Id).FirstOrDefault();
 
-                    if(mdp != null){
+                    if (mdp != null)
+                    {
                         matchDay.MatchDayPlayers.Remove(mdp);
 
-                        await _matchDayRepository.Update(matchDay);
+                        await _matchDayRepository.UpdateMatchDayPlayers(matchDay);
                         await _matchDayRepository.SaveChangesAsync();
                     }
                 }
@@ -98,22 +117,23 @@ namespace Handicap.Application.Services
             var matchDay = (await _matchDayRepository
                 .Find(md => md.Id == matchDayId,
                 nameof(MatchDay.Games)))
-                //nameof(MatchDay.MatchDayPlayers)))
                 .FirstOrDefault();
 
             var game = (await _gameRepository.Find(
                 g => g.Id == gameId))
-                //nameof(Game.PlayerOne),
-                //nameof(Game.PlayerTwo)))
                 .FirstOrDefault();
 
-            if(matchDay == null)
+            if (matchDay == null)
             {
                 throw new EntityNotFoundException($"MatchDay with id: {matchDayId} not found.");
             }
 
+            if (matchDay.IsFinished)
+            {
+                throw new EntityClosedForUpdateException($"MatchDay with id {matchDayId} is already finished.");
+            }
+
             matchDay.Games.Add(game);
-            //matchDay = AddPlayers(matchDay, game);
 
             matchDay = await _matchDayRepository.Update(matchDay);
             await _matchDayRepository.SaveChangesAsync();
@@ -133,6 +153,11 @@ namespace Handicap.Application.Services
                 throw new EntityNotFoundException($"MatchDay with id: {matchDayId} not found.");
             }
 
+            if (matchDay.IsFinished)
+            {
+                throw new EntityClosedForUpdateException($"MatchDay with id {matchDayId} is already finished.");
+            }
+
             matchDay.Games.Add(game);
             matchDay = AddPlayers(matchDay, game);
 
@@ -144,12 +169,10 @@ namespace Handicap.Application.Services
 
         private MatchDay AddPlayers(MatchDay matchDay, Game game)
         {
-            if(matchDay.MatchDayPlayers.Where(mp => mp.PlayerId == game.PlayerOne.Id).FirstOrDefault() == null)
+            if (matchDay.MatchDayPlayers.Where(mp => mp.PlayerId == game.PlayerOne.Id).FirstOrDefault() == null)
             {
                 matchDay.MatchDayPlayers.Add(new MatchDayPlayer
                 {
-                    //MatchDayId = matchDay.Id,
-                    //PlayerId = game.PlayerOne.Id
                     Player = game.PlayerOne
                 });
             }
@@ -158,8 +181,6 @@ namespace Handicap.Application.Services
             {
                 matchDay.MatchDayPlayers.Add(new MatchDayPlayer
                 {
-                    //MatchDayId = matchDay.Id,
-                    //PlayerId = game.PlayerTwo.Id
                     Player = game.PlayerTwo
                 });
             }
@@ -170,7 +191,9 @@ namespace Handicap.Application.Services
         public async Task<IQueryable<Player>> GetMatchDayPlayers(string matchDayId)
         {
             var matchDay = (await _matchDayRepository
-                .Find(md => md.Id == matchDayId))
+                .Find(md => md.Id == matchDayId,
+                $"{nameof(MatchDay.MatchDayPlayers)}",
+                $"{nameof(MatchDay.MatchDayPlayers)}.{nameof(MatchDayPlayer.Player)}"))
                 .FirstOrDefault();
 
             var playersQuery = matchDay.MatchDayPlayers.AsQueryable();
@@ -190,6 +213,55 @@ namespace Handicap.Application.Services
             return matchDay.Games.AsQueryable();
         }
 
+        public async Task<MatchDay> FinalizeMatchDay(string matchDayId, string tenantId)
+        {
+            var matchDay = (await _matchDayRepository
+                .Find(md => md.Id == matchDayId,
+                nameof(MatchDay.Games)))
+                //$"{nameof(MatchDay.Games)}.{nameof(Game.PlayerOne)}",
+                //$"{nameof(MatchDay.Games)}.{nameof(Game.PlayerTwo)}"))
+                .FirstOrDefault();
+
+            if (matchDay == null)
+            {
+                throw new EntityNotFoundException($"MatchDay with id {matchDayId} not found.");
+            }
+
+            if (matchDay.TenantId != tenantId)
+            {
+                throw new TenantMissmatchException("Tenant does not match.");
+            }
+
+            if (matchDay.IsFinished)
+            {
+                throw new EntityClosedForUpdateException($"MatchDay with id {matchDayId} is already finished.");
+            }
+
+            var config = await _configService.Get(tenantId);
+
+            if (!config.UpdatePlayersImmediately)
+            {
+                var playerResults = GetPlayersResults(matchDay);
+
+                foreach (var playerResult in playerResults)
+                {
+                    var player = (await _playerRepository.Find(p => p.Id == playerResult.PlayerId)).FirstOrDefault();
+                    if (player != null)
+                    {
+                        player.Handicap += playerResult.HandicapToAdd;
+                        await _playerRepository.AddOrUpdate(player);
+                    }
+                }
+            }
+
+            matchDay.IsFinished = true;
+
+            await _matchDayRepository.Update(matchDay);
+            await _matchDayRepository.SaveChangesAsync();
+
+            return matchDay;
+        }
+
         private bool MatchDayHasPlayer(MatchDay matchDay, Player player)
         {
             var tstPlayer = matchDay.MatchDayPlayers
@@ -197,6 +269,55 @@ namespace Handicap.Application.Services
             .FirstOrDefault();
 
             return tstPlayer != null;
+        }
+
+        private List<(string PlayerId, int HandicapToAdd)> GetPlayersResults(MatchDay matchDay)
+        {
+            var results = new List<(string PlayerId, int HandicapToAdd)>();
+
+            var playerIds = matchDay.Games.Select(g => g.PlayerOneId).ToList();
+            playerIds.AddRange(matchDay.Games.Select(g => g.PlayerTwoId).ToList());
+
+            playerIds = playerIds.Distinct().ToList();
+
+
+
+            foreach (var playerId in playerIds)
+            {
+                var handicapToAdd = 0;
+                foreach (var game in matchDay.Games)
+                {
+                    handicapToAdd += HandicapToAdd(playerId, game);
+                }
+
+                results.Add((PlayerId: playerId, HandicapToAdd: handicapToAdd));
+            }
+
+            return results;
+        }
+
+        private int HandicapToAdd(string playerId, Game game)
+        {
+            if (game.PlayerOneId != playerId && game.PlayerTwoId != playerId) { return 0; }
+
+            if (game.PlayerOnePoints >= game.PlayerOneRequiredPoints)
+            {
+                if (playerId == game.PlayerOneId)
+                {
+                    return -5;
+                }
+
+                return 5;
+            }
+            else
+            {
+                if (playerId == game.PlayerTwoId)
+                {
+                    return -5;
+                }
+
+                return 5;
+            }
         }
     }
 }

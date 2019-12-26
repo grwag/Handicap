@@ -16,17 +16,23 @@ namespace Handicap.Application.Services
         private readonly IGameRepository _gameRepository;
         private readonly IPlayerRepository _playerRepository;
         private readonly IMatchDayService _matchDayService;
+        private readonly IHandicapUpdateService _handicapUpdateService;
+        private readonly IHandicapConfigurationService _configService;
         private readonly IHandicapCalculator _handicapCalculator;
 
         public GameService(
             IGameRepository gameRepository,
             IPlayerRepository playerRepository,
             IMatchDayService matchDayService,
+            IHandicapUpdateService handicapUpdateService,
+            IHandicapConfigurationService configService,
             IHandicapCalculator handicapCalculator)
         {
             _gameRepository = gameRepository;
             _playerRepository = playerRepository;
             _matchDayService = matchDayService;
+            _handicapUpdateService = handicapUpdateService;
+            _configService = configService;
             _handicapCalculator = handicapCalculator;
         }
 
@@ -115,13 +121,15 @@ namespace Handicap.Application.Services
                     );
             }
 
+            var config = await _configService.Get(game.TenantId);
+
             game.PlayerOnePoints = gameUpdate.PlayerOnePoints;
             game.PlayerTwoPoints = gameUpdate.PlayerTwoPoints;
             game.IsFinished = IsFinished(game);
 
-            if (game.IsFinished)
+            if (game.IsFinished && config.UpdatePlayersImmediately)
             {
-                game = await UpdatePlayerHandicap(game); 
+                game = _handicapUpdateService.UpdatePlayerHandicap(game); 
             }
 
             game = await _gameRepository.AddOrUpdate(game);
@@ -130,13 +138,18 @@ namespace Handicap.Application.Services
             return game;
         }
 
-        public async Task<Game> CreateNewGameForMatchDay(string matchDayId)
+        public async Task<Game> CreateNewGameForMatchDay(string matchDayId, string tenantId)
         {
             var matchDay = (await _matchDayService.Find(m => m.Id == matchDayId, nameof(MatchDay.Games))).FirstOrDefault();
 
             if(matchDay == null)
             {
                 throw new EntityNotFoundException($"MatchDay with id {matchDay} not found.");
+            }
+
+            if(matchDay.TenantId != tenantId)
+            {
+                throw new TenantMissmatchException($"Wrong tenant.");
             }
 
             var matchDayGames = (await _matchDayService.GetMatchDayGames(matchDayId)).ToList();
@@ -152,30 +165,6 @@ namespace Handicap.Application.Services
         {
             return ((game.PlayerOnePoints >= game.PlayerOneRequiredPoints)
                 || (game.PlayerTwoPoints >= game.PlayerTwoRequiredPoints));
-        }
-
-        private async Task<Game> UpdatePlayerHandicap(Game game)
-        {
-            if (game.PlayerOnePoints >= game.PlayerOneRequiredPoints)
-            {
-                game.PlayerOne.Handicap = (game.PlayerOne.Handicap - 5 < 5)
-                    ? game.PlayerOne.Handicap
-                    : game.PlayerOne.Handicap - 5;
-                game.PlayerTwo.Handicap = (game.PlayerTwo.Handicap + 5 > 100)
-                    ? game.PlayerTwo.Handicap
-                    : game.PlayerTwo.Handicap + 5;
-            }
-            else
-            {
-                game.PlayerOne.Handicap = (game.PlayerOne.Handicap + 5 > 100)
-                    ? game.PlayerOne.Handicap
-                    : game.PlayerOne.Handicap + 5;
-                game.PlayerTwo.Handicap = (game.PlayerTwo.Handicap - 5 < 5)
-                    ? game.PlayerTwo.Handicap
-                    : game.PlayerTwo.Handicap - 5;
-            }
-
-            return game;
         }
     }
 }

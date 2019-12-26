@@ -13,6 +13,7 @@ namespace Handicap.Data.Infrastructure
         public DbSet<Game> Games { get; set; }
         public DbSet<MatchDay> MatchDays { get; set; }
         public DbSet<MatchDayPlayer> MatchDayPlayers { get; set; }
+        public DbSet<HandicapConfiguration> HandicapConfigurations { get; set; }
 
         public HandicapContext(DbContextOptions<HandicapContext> options) : base(options)
         {
@@ -20,6 +21,14 @@ namespace Handicap.Data.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder builder) 
         {
+            builder.Entity<HandicapConfiguration>().HasData(
+                new HandicapConfiguration 
+                {
+                    Id = "99",
+                    TenantId = "",
+                    UpdatePlayersImmediately = false
+                });
+
             builder.Entity<Player>().HasData(
                 new Player
                 {

@@ -1,9 +1,7 @@
 ﻿using Handicap.Domain.Models;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Handicap.Application.Services
@@ -14,7 +12,7 @@ namespace Handicap.Application.Services
         Task Delete(string id);
         Task<Game> Add(Game game);
         Task<Game> Update(GameUpdate gameUpdate);
-        Task<Game> CreateNewGameForMatchDay(string matchDayId);
+        Task<Game> CreateNewGameForMatchDay(string matchDayId, string tenantId);
         Task<IQueryable<Game>> Find(
             Expression<Func<Game, bool>> expression,
             params string[] navigationProperties);

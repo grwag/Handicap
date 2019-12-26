@@ -119,7 +119,8 @@ namespace Handicap.Mapping.Tests
                     Handicap = 25,
                     LastName = "ralf",
                     Id = "111",
-                    TenantId = tenantId
+                    TenantId = tenantId,
+                    MatchDayPlayers = new List<MatchDayPlayer>()
                 },
                 new Player
                 {
@@ -127,7 +128,8 @@ namespace Handicap.Mapping.Tests
                     Handicap = 25,
                     LastName = "maulwurf",
                     Id = "222",
-                    TenantId = tenantId
+                    TenantId = tenantId,
+                    MatchDayPlayers = new List<MatchDayPlayer>()
                 }
             };
 

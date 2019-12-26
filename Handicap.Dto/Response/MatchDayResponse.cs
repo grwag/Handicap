@@ -7,5 +7,6 @@ namespace Handicap.Dto.Response
     public class MatchDayResponse : BaseResponse
     {
         public DateTimeOffset Date { get; set; }
+        public bool IsFinished { get; set; }
     }
 }

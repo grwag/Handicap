@@ -44,8 +44,8 @@ namespace Handicap.Api.Middleware
 
             if (ex is TenantMissmatchException)
             {
-                responseCode = HttpStatusCode.Conflict;
-                errorCode = 409;
+                responseCode = HttpStatusCode.Unauthorized;
+                errorCode = 401;
             }
 
             if (ex is NotEnoughPlayersException)
@@ -55,20 +55,27 @@ namespace Handicap.Api.Middleware
             }
 
             var result = JsonSerializer.Serialize(
-                new HandicapResponse<ExceptionHandling>
-                {
-                    Cursor = 0,
-                    Error = new HandicapError
+                //new HandicapResponse<ExceptionHandling, ExceptionHandling>
+                //{
+                //    Cursor = 0,
+                //    Error = new HandicapError
+                //    {
+                //        ErrorMessage = $"Message: {ex.Message}",
+                //        ErrorCode = errorCode
+                //    },
+                //    HasNext = false,
+                //    HasPrevious = false,
+                //    PageSize = 0,
+                //    Payload = null,
+                //    TotalCount = 0
+                //}
+                HandicapResponse<ExceptionHandling, ExceptionHandling>.CreateErrorResponse(
+                    new HandicapError
                     {
                         ErrorMessage = $"Message: {ex.Message}",
                         ErrorCode = errorCode
-                    },
-                    HasNext = false,
-                    HasPrevious = false,
-                    PageSize = 0,
-                    Payload = null,
-                    TotalCount = 0
-                });
+                    })
+                );
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)responseCode;

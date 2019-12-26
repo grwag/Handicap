@@ -8,6 +8,19 @@ namespace Handicap.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "HandicapConfigurations",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    TenantId = table.Column<string>(nullable: true),
+                    UpdatePlayersImmediately = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HandicapConfigurations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MatchDays",
                 columns: table => new
                 {
@@ -100,6 +113,11 @@ namespace Handicap.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "HandicapConfigurations",
+                columns: new[] { "Id", "TenantId", "UpdatePlayersImmediately" },
+                values: new object[] { "99", "", false });
+
+            migrationBuilder.InsertData(
                 table: "Players",
                 columns: new[] { "Id", "FirstName", "Handicap", "LastName", "TenantId" },
                 values: new object[,]
@@ -139,6 +157,9 @@ namespace Handicap.Data.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Games");
+
+            migrationBuilder.DropTable(
+                name: "HandicapConfigurations");
 
             migrationBuilder.DropTable(
                 name: "MatchDayPlayers");

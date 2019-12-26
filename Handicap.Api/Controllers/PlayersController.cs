@@ -57,7 +57,7 @@ namespace Handicap.Api.Controllers
                 responseQuery.OrderByDescending(orderBy)
                 : responseQuery.OrderBy(orderBy);
 
-            var response = new HandicapResponse<PlayerResponse>(responseQuery, null, page, pageSize);
+            var response = HandicapResponse<PlayerResponse, Player>.Create(query, null, page, pageSize, _mapper);
             return Ok(response);
         }
 
@@ -129,7 +129,7 @@ namespace Handicap.Api.Controllers
                 games.OrderByDescending(orderBy)
                 : games.OrderBy(orderBy);
 
-            var response = new HandicapResponse<Game>(games, null, page, pageSize);
+            var response = HandicapResponse<GameResponse, Game>.Create(games, null, page, pageSize, _mapper);
 
             return Ok(response);
         }

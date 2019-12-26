@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Handicap.Data.Migrations
 {
     [DbContext(typeof(HandicapContext))]
-    [Migration("20191225011404_Initial")]
-    partial class Initial
+    [Migration("20191226182129_UpdateMatchDay")]
+    partial class UpdateMatchDay
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -68,6 +68,30 @@ namespace Handicap.Data.Migrations
                     b.ToTable("Games");
                 });
 
+            modelBuilder.Entity("Handicap.Domain.Models.HandicapConfiguration", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("TenantId")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<bool>("UpdatePlayersImmediately")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HandicapConfigurations");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "99",
+                            TenantId = "",
+                            UpdatePlayersImmediately = false
+                        });
+                });
+
             modelBuilder.Entity("Handicap.Domain.Models.MatchDay", b =>
                 {
                     b.Property<string>("Id")
@@ -75,6 +99,9 @@ namespace Handicap.Data.Migrations
 
                     b.Property<DateTimeOffset>("Date")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsFinished")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("TenantId")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");

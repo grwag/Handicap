@@ -21,5 +21,6 @@ namespace Handicap.Application.Services
         Task<MatchDay> AddGame(string matchDayId, Game game);
         Task<IQueryable<Player>> GetMatchDayPlayers(string matchDayId);
         Task<IQueryable<Game>> GetMatchDayGames(string matchDayId);
+        Task<MatchDay> FinalizeMatchDay(string matchDayId, string tenantId);
     }
 }

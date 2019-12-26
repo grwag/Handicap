@@ -49,10 +49,8 @@ namespace Handicap.Api.Controllers
             var matchDayQuery = await _matchDayService
                 .Find(m => m.TenantId == tenantId);
 
-            var responseQuery = matchDayQuery.ProjectTo<MatchDayResponse>(_mapper.ConfigurationProvider);
+            var response = HandicapResponse<MatchDayResponse, MatchDay>.Create(matchDayQuery, null, page, pageSize, _mapper);
 
-            var response = new HandicapResponse<MatchDayResponse>(responseQuery, null, page, pageSize);
-            
             return Ok(response);
         }
 
@@ -67,9 +65,7 @@ namespace Handicap.Api.Controllers
             var tenantId = this.GetTenantId();
             var players = await _matchDayService.GetMatchDayPlayers(id);
 
-            var responseQuery = players.ProjectTo<PlayerResponse>(_mapper.ConfigurationProvider);
-
-            var response = new HandicapResponse<PlayerResponse>(responseQuery, null, page, pageSize);
+            var response = HandicapResponse<PlayerResponse, Player>.Create(players, null, page, pageSize, _mapper);
 
             return Ok(response);
         }
@@ -85,21 +81,23 @@ namespace Handicap.Api.Controllers
             var tenantId = this.GetTenantId();
             var games = await _matchDayService.GetMatchDayGames(id);
 
-            // workaround
-            var gameResponse = _mapper.Map<List<GameResponse>>(games.ToList());
-
-            //var responseQuery = games.ProjectTo<GameResponse>(_mapper.ConfigurationProvider);
-
-            var response = new HandicapResponse<GameResponse>(gameResponse.AsQueryable(), null, page, pageSize);
+            var response = HandicapResponse<GameResponse, Game>.Create(games, null, page, pageSize, _mapper);
 
             return Ok(response);
         }
 
-        [HttpGet("{id}/newGame")]
+        [HttpPost("{id}/newGame")]
         public async Task<IActionResult> GetNewGame([FromRoute]string id)
         {
-            var newGame = await _gameService.CreateNewGameForMatchDay(id);
-            return Ok(_mapper.Map<GameResponse>(newGame));
+            var tenantId = this.GetTenantId();
+            var newGame = await _gameService.CreateNewGameForMatchDay(id, tenantId);
+
+            var gameResponse = _mapper.Map<GameResponse>(newGame);
+
+            return CreatedAtRoute(
+                routeName: "GetGameById",
+                routeValues: new { id = newGame.Id },
+                value: gameResponse);
         }
 
         [HttpPost]
@@ -107,8 +105,12 @@ namespace Handicap.Api.Controllers
         {
             var tenantId = this.GetTenantId();
             var matchDay = await _matchDayService.CreateMatchDay(tenantId);
+            var matchDayResponse = _mapper.Map<MatchDayResponse>(matchDay);
 
-            return Ok(_mapper.Map<MatchDayResponse>(matchDay));
+            return CreatedAtAction(
+                nameof(Get),
+                new { id = matchDay.Id },
+                matchDayResponse);
         }
 
         [HttpPost("{id}/players")]
@@ -133,6 +135,15 @@ namespace Handicap.Api.Controllers
             var tenantId = this.GetTenantId();
 
             var matchDay = await _matchDayService.AddGame(id, gameId);
+            return Ok(_mapper.Map<MatchDayResponse>(matchDay));
+        }
+
+        [HttpPost("{id}/finalize")]
+        public async Task<IActionResult> FinalizeMatchDay([FromRoute]string id)
+        {
+            var tenantId = this.GetTenantId();
+            var matchDay = await _matchDayService.FinalizeMatchDay(id, tenantId);
+
             return Ok(_mapper.Map<MatchDayResponse>(matchDay));
         }
     }

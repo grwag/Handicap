@@ -7,5 +7,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Handicap.Domain\Handicap.Domain.csproj" />
+    <ProjectReference Include="..\Handicap.Dto\Handicap.Dto.csproj" />
   </ItemGroup>
 </Project>

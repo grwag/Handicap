@@ -15,6 +15,7 @@ namespace Handicap.Application.Interfaces
             params string[] navigationProperties);
         Task Insert(MatchDay matchDay);
         Task<MatchDay> Update(MatchDay matchDay);
+        Task<MatchDay> UpdateMatchDayPlayers(MatchDay matchDay);
         Task<MatchDay> GetById(string id);
         void Delete(MatchDay matchDay);
         Task SaveChangesAsync();

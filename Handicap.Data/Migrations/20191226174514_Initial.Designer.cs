@@ -3,14 +3,16 @@ using System;
 using Handicap.Data.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Handicap.Data.Migrations
 {
     [DbContext(typeof(HandicapContext))]
-    partial class HandicapContextModelSnapshot : ModelSnapshot
+    [Migration("20191226174514_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,9 +99,6 @@ namespace Handicap.Data.Migrations
 
                     b.Property<DateTimeOffset>("Date")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("IsFinished")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("TenantId")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");

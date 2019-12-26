@@ -36,9 +36,11 @@ namespace Handicap.Data.Repo
             Expression<Func<MatchDay, bool>> expression,
             params string[] navigationProperties)
         {
-            var query = _matchDays
-                .Include(md => md.MatchDayPlayers)
-                .ThenInclude(mp => mp.Player)
+            var matchDays = _context.MatchDays.AsNoTracking().AsQueryable();
+
+            var query = matchDays
+                //.Include(md => md.MatchDayPlayers)
+                //.ThenInclude(mp => mp.Player)
                 .AsNoTracking()
                 .AsQueryable()
                 ;
@@ -104,17 +106,28 @@ namespace Handicap.Data.Repo
                 throw new EntityNotFoundException($"Matchday with id {matchDay.Id} does not exist.");
             }
 
+            _context.Update(matchDay);
+            return matchDay;
+        }
+
+        public async Task<MatchDay> UpdateMatchDayPlayers(MatchDay matchDay)
+        {
+            if (matchDay == null)
+            {
+                throw new EntityNotFoundException($"Matchday with id {matchDay.Id} does not exist.");
+            }
+
             var matchDayPlayers = _context.MatchDayPlayers
                 .Where(md => md.MatchDayId == matchDay.Id)
                 .AsNoTracking()
                 .ToList();
 
-            foreach(var matchDayPlayer in matchDayPlayers)
+            foreach (var matchDayPlayer in matchDayPlayers)
             {
                 var existingMatchDayPlayer = matchDay.MatchDayPlayers
                     .FirstOrDefault(md => md.PlayerId == matchDayPlayer.PlayerId);
 
-                if(existingMatchDayPlayer != null)
+                if (existingMatchDayPlayer != null)
                 {
                     continue;
                 }

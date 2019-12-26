@@ -58,12 +58,12 @@ namespace Handicap.Api.Controllers
 
             //var responseQuery = query.ProjectTo<GameResponse>(_mapper.ConfigurationProvider);
 
-            var response = new HandicapResponse<Game>(query, null, page, pageSize);
+            var response = HandicapResponse<GameResponse, Game>.Create(query, null, page, pageSize, _mapper);
 
             return Ok(response);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetGameById")]
         public async Task<IActionResult> GetById([FromRoute]string id)
         {
             var tenantId = this.GetTenantId();
@@ -72,14 +72,14 @@ namespace Handicap.Api.Controllers
                 nameof(Game.PlayerOne),
                 nameof(Game.PlayerTwo));
 
-            query = query.Where(g => g.Id == id);
+            var game = query.FirstOrDefault(g => g.Id == id);
 
-            var gameResponse = _mapper.Map<GameResponse>(query.FirstOrDefault());
-
-            if(gameResponse == null)
+            if(game == null)
             {
                 throw new EntityNotFoundException($"Game with id {id} not found.");
             }
+
+            var gameResponse = _mapper.Map<GameResponse>(query.FirstOrDefault());
 
             return Ok(gameResponse);
         }
@@ -96,11 +96,12 @@ namespace Handicap.Api.Controllers
                 gameRequest.MatchDayId);
 
             game = await _gameService.Add(game);
+            var gameResponse = _mapper.Map<GameResponse>(game);
 
             return CreatedAtAction(
                 nameof(GetById),
                 new { id = game.Id },
-                game);
+                gameResponse);
         }
 
         [HttpPut("{id}")]
@@ -109,8 +110,9 @@ namespace Handicap.Api.Controllers
             var gameUpdate = _mapper.Map<GameUpdate>(gameUpdateDto);
 
             var game = await _gameService.Update(gameUpdate);
+            var gameResponse = _mapper.Map<GameResponse>(game);
 
-            return Ok(game);
+            return Ok(gameResponse);
         }
 
         [HttpDelete("{id}")]

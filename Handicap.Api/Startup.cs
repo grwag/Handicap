@@ -65,9 +65,12 @@ namespace Handicap.Api
             services.AddScoped<IPlayerRepository, PlayerRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
             services.AddScoped<IMatchDayRepository, MatchDayRepository>();
+            services.AddScoped<IHandicapConfigurationRepository, HandicapConfigurationRepository>();
             services.AddScoped<IPlayerService, PlayerService>();
             services.AddScoped<IGameService, GameService>();
             services.AddScoped<IMatchDayService, MatchDayService>();
+            services.AddScoped<IHandicapConfigurationService, HandicapConfigurationService>();
+            services.AddScoped<IHandicapUpdateService, HandicapUpdateService>();
             services.AddScoped<IHandicapCalculator, HandicapCalculator>();
 
 
@@ -99,7 +102,7 @@ namespace Handicap.Api
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetService<HandicapContext>();
-                context.Database.EnsureCreated();
+                context.Database.Migrate();
             }
 
             app.UseRouting();

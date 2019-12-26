@@ -9,6 +9,7 @@ namespace Handicap.Domain.Models
         public DateTimeOffset Date { get; set; }
         public ICollection<MatchDayPlayer> MatchDayPlayers { get; set; }
         public ICollection<Game> Games { get; set; }
+        public bool IsFinished { get; set; }
 
         public MatchDay()
         {
@@ -16,6 +17,7 @@ namespace Handicap.Domain.Models
             Date = DateTimeOffset.Now;
             MatchDayPlayers = new List<MatchDayPlayer>();
             Games = new List<Game>();
+            IsFinished = false;
         }
     }
 }
