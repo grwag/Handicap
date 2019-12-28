@@ -6,6 +6,6 @@ namespace Handicap.Application.Exceptions
 {
     public class TenantMissmatchException : Exception
     {
-        public TenantMissmatchException(string message) : base(message) { }
+        public TenantMissmatchException() : base($"Wrong tenant.") { }
     }
 }

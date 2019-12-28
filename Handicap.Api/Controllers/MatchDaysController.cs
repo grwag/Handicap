@@ -63,7 +63,7 @@ namespace Handicap.Api.Controllers
             [FromQuery]int page = 0)
         {
             var tenantId = this.GetTenantId();
-            var players = await _matchDayService.GetMatchDayPlayers(id);
+            var players = await _matchDayService.GetMatchDayPlayers(id, tenantId);
 
             var response = HandicapResponse<PlayerResponse, Player>.Create(players, null, page, pageSize, _mapper);
 
@@ -79,7 +79,7 @@ namespace Handicap.Api.Controllers
             [FromQuery]int page = 0)
         {
             var tenantId = this.GetTenantId();
-            var games = await _matchDayService.GetMatchDayGames(id);
+            var games = await _matchDayService.GetMatchDayGames(id, tenantId);
 
             var response = HandicapResponse<GameResponse, Game>.Create(games, null, page, pageSize, _mapper);
 
@@ -116,7 +116,8 @@ namespace Handicap.Api.Controllers
         [HttpPost("{id}/players")]
         public async Task<IActionResult> AddPlayer(string id, [FromBody]AddPlayerToMatchDayRequest addPlayerRequest)
         {
-            var matchDay = await _matchDayService.AddPlayers(id, addPlayerRequest.PlayerIds);
+            var tenantId = this.GetTenantId();
+            var matchDay = await _matchDayService.AddPlayers(id, addPlayerRequest.PlayerIds, tenantId);
 
             return Ok(_mapper.Map<MatchDayResponse>(matchDay));
         }
@@ -124,7 +125,8 @@ namespace Handicap.Api.Controllers
         [HttpDelete("{id}/players/{playerId}")]
         public async Task<IActionResult> RemovePlayer([FromRoute]string id, [FromRoute]string playerId)
         {
-            var matchDay = await _matchDayService.RemovePlayer(id, playerId);
+            var tenantId = this.GetTenantId();
+            var matchDay = await _matchDayService.RemovePlayer(id, playerId, tenantId);
 
             return Ok(_mapper.Map<MatchDayResponse>(matchDay));
         }
@@ -134,7 +136,7 @@ namespace Handicap.Api.Controllers
         {
             var tenantId = this.GetTenantId();
 
-            var matchDay = await _matchDayService.AddGame(id, gameId);
+            var matchDay = await _matchDayService.AddGame(id, gameId, tenantId);
             return Ok(_mapper.Map<MatchDayResponse>(matchDay));
         }
 

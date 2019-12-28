@@ -13,7 +13,7 @@ namespace Handicap.Application.Interfaces
         Task<Game> AddOrUpdate(Game game);
         Task<IQueryable<Game>> Find(Expression<Func<Game, bool>> expression = null,
             params string[] navigationProperties);
-        Task Delete(string id);
+        Task Delete(string id, string tenantId);
         Task SaveChangesAsync();
     }
 }

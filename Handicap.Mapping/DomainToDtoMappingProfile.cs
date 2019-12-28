@@ -29,7 +29,8 @@ namespace Handicap.Mapping
             CreateMap<MatchDayPlayer, MatchDayResponse>(MemberList.Destination)
                 .ForMember(dst => dst.TenantId, opt => opt.MapFrom(src => src.MatchDay.TenantId))
                 .ForMember(dst => dst.Date, opt => opt.MapFrom(src => src.MatchDay.Date))
-                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.MatchDay.Id));
+                .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.MatchDay.Id))
+                .ForMember(dst => dst.IsFinished, opt => opt.Ignore());
 
             CreateMap<GameType, GameTypeDto>();
 

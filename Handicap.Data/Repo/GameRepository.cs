@@ -41,14 +41,22 @@ namespace Handicap.Data.Repo
             }
         }
 
-        public async Task Delete(string id)
+        public async Task Delete(string id, string tenantId)
         {
             var game = _games.Where(g => g.Id == id).FirstOrDefault();
 
-            if (game != null)
+            if(game == null)
             {
-                _games.Remove(game);
+                throw new EntityNotFoundException($"Game with id {id} not found.");
             }
+
+            if(game.TenantId != tenantId)
+            {
+                throw new TenantMissmatchException();
+            }
+
+            _games.Remove(game);
+            await SaveChangesAsync();
         }
 
         public async Task<IQueryable<Game>> Find(

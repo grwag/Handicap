@@ -118,7 +118,9 @@ namespace Handicap.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete ([FromRoute]string id)
         {
-            await _gameService.Delete(id);
+            var tenantId = this.GetTenantId();
+
+            await _gameService.Delete(id, tenantId);
             return NoContent();
         }
     }

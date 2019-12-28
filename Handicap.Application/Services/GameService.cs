@@ -43,10 +43,9 @@ namespace Handicap.Application.Services
             return await _gameRepository.Find(expression, navigationProperties);
         }
 
-        public async Task Delete(string id)
+        public async Task Delete(string id, string tenantId)
         {
-            await _gameRepository.Delete(id);
-            await _gameRepository.SaveChangesAsync();
+            await _gameRepository.Delete(id, tenantId);
         }
 
         public async Task<Game> GetById(string Id)
@@ -149,10 +148,10 @@ namespace Handicap.Application.Services
 
             if(matchDay.TenantId != tenantId)
             {
-                throw new TenantMissmatchException($"Wrong tenant.");
+                throw new TenantMissmatchException();
             }
 
-            var matchDayGames = (await _matchDayService.GetMatchDayGames(matchDayId)).ToList();
+            var matchDayGames = (await _matchDayService.GetMatchDayGames(matchDayId, tenantId)).ToList();
             var nextPlayers = matchDay.GetNextPlayers(matchDayGames);
 
             var game = await CreateGame(matchDay.TenantId, nextPlayers.PlayerOneId, nextPlayers.PlayerTwoId, matchDay.Id);

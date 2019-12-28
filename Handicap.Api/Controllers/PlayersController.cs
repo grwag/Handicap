@@ -94,13 +94,15 @@ namespace Handicap.Api.Controllers
         {
             var tenantId = this.GetTenantId();
 
-            var player = _mapper.Map<Player>(playerRequest);
-            player.Id = id;
-            player.TenantId = tenantId;
+            var existingPlayer = await _playerService.GetById(id, tenantId);
 
-            player = await _playerService.AddOrUpdate(player);
+            existingPlayer.FirstName = playerRequest.FirstName;
+            existingPlayer.LastName = playerRequest.LastName;
+            existingPlayer.Handicap = playerRequest.Handicap;
 
-            return Ok(_mapper.Map<PlayerResponse>(player));
+            existingPlayer = await _playerService.AddOrUpdate(existingPlayer);
+
+            return Ok(_mapper.Map<PlayerResponse>(existingPlayer));
         }
 
         [HttpDelete("{id}")]
