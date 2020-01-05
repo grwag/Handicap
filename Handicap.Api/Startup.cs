@@ -9,6 +9,7 @@ using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,8 +58,6 @@ namespace Handicap.Api
 
             services.AddEntityFrameworkMySql().AddDbContext<HandicapContext>(opts =>
             {
-                //opts.UseInMemoryDatabase("InMemoryDb");
-                //opts.UseSqlite("Data Source=database.db");
                 opts.UseMySql("Server=localhost;Database=handicap;User=root;Password=xyIVoRWPngF5AMFzE8DxiJt9");
             });
 
@@ -75,9 +74,20 @@ namespace Handicap.Api
 
 
             services.AddAutoMapper(
-                //typeof(DomainToDboMappingProfile),
                 typeof(DomainToDtoMappingProfile)
                 );
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAngularDevClient",
+                  builder =>
+                  {
+                      builder
+                        .WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                  });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,6 +99,7 @@ namespace Handicap.Api
                 config.SwaggerEndpoint("/swagger/v1/swagger.json", "Handicap Api");
             });
 
+            app.UseCors("AllowAngularDevClient");
             app.UseAuthentication();
 
             if (env.IsDevelopment())
