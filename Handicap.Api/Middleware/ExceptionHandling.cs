@@ -55,20 +55,7 @@ namespace Handicap.Api.Middleware
             }
 
             var result = JsonSerializer.Serialize(
-                //new HandicapResponse<ExceptionHandling, ExceptionHandling>
-                //{
-                //    Cursor = 0,
-                //    Error = new HandicapError
-                //    {
-                //        ErrorMessage = $"Message: {ex.Message}",
-                //        ErrorCode = errorCode
-                //    },
-                //    HasNext = false,
-                //    HasPrevious = false,
-                //    PageSize = 0,
-                //    Payload = null,
-                //    TotalCount = 0
-                //}
+                
                 HandicapResponse<ExceptionHandling, ExceptionHandling>.CreateErrorResponse(
                     new HandicapError
                     {

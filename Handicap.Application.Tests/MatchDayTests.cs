@@ -12,28 +12,6 @@ namespace Handicap.Application.Tests
     public class MatchDayTests
     {
         [Fact]
-        public void GetNextGame_UsesFirstAvailableTable()
-        {
-            var mockCalculator = new Mock<IHandicapCalculator>();
-            var mockQueueService = new Mock<IQueueService>();
-
-            mockCalculator.Setup(calc =>
-                calc.Calculate(It.IsAny<int>(), It.IsAny<GameType>())).Returns(25);
-
-            mockQueueService.Setup(queue =>
-                queue.NextPlayer()).Returns(new Player()
-                {
-                    FirstName = "alf",
-                    LastName = "wurst",
-                });
-
-            mockQueueService.Setup(queue =>
-                queue.IsQueueingPossible()).Returns(true);
-
-            true.Should().BeTrue();
-        }
-
-        [Fact]
         public void GetNextPlayersReturnsFirstPlayersIfNoGamesExist()
         {
             var matchDay = new MatchDay

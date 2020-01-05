@@ -11,7 +11,7 @@ namespace Handicap.Application.Services
         {
             if (game.PlayerOnePoints >= game.PlayerOneRequiredPoints)
             {
-                game.PlayerOne.Handicap = (game.PlayerOne.Handicap - 5 < 5)
+                game.PlayerOne.Handicap = (game.PlayerOne.Handicap - 5 < 0)
                     ? game.PlayerOne.Handicap
                     : game.PlayerOne.Handicap - 5;
                 game.PlayerTwo.Handicap = (game.PlayerTwo.Handicap + 5 > 100)
@@ -23,7 +23,7 @@ namespace Handicap.Application.Services
                 game.PlayerOne.Handicap = (game.PlayerOne.Handicap + 5 > 100)
                     ? game.PlayerOne.Handicap
                     : game.PlayerOne.Handicap + 5;
-                game.PlayerTwo.Handicap = (game.PlayerTwo.Handicap - 5 < 5)
+                game.PlayerTwo.Handicap = (game.PlayerTwo.Handicap - 5 < 0)
                     ? game.PlayerTwo.Handicap
                     : game.PlayerTwo.Handicap - 5;
             }
