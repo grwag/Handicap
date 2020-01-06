@@ -139,7 +139,10 @@ namespace Handicap.Application.Services
 
         public async Task<Game> CreateNewGameForMatchDay(string matchDayId, string tenantId)
         {
-            var matchDay = (await _matchDayService.Find(m => m.Id == matchDayId, nameof(MatchDay.Games))).FirstOrDefault();
+            var matchDay = (await _matchDayService.Find(m => m.Id == matchDayId,
+                nameof(MatchDay.Games),
+                nameof(MatchDay.MatchDayPlayers),
+                $"{nameof(MatchDay.MatchDayPlayers)}.{nameof(MatchDayPlayer.Player)}")).FirstOrDefault();
 
             if(matchDay == null)
             {

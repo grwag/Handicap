@@ -1,9 +1,14 @@
 ﻿using FluentAssertions;
+using Handicap.Application.Interfaces;
 using Handicap.Application.Services;
 using Handicap.Domain.Models;
+using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Handicap.Application.Tests
@@ -13,7 +18,8 @@ namespace Handicap.Application.Tests
         [Fact]
         public void HandicapIsUpdatedCorrectly()
         {
-            var handicapUpdateService = new HandicapUpdateService();
+            var mockPlayerRepository = new Mock<IPlayerRepository>();
+            var handicapUpdateService = new HandicapUpdateService(mockPlayerRepository.Object);
             var game = GetGame();
 
             game = handicapUpdateService.UpdatePlayerHandicap(game);
@@ -24,7 +30,8 @@ namespace Handicap.Application.Tests
         [Fact]
         public void HandicapDoesNotGoBelowZero()
         {
-            var handicapUpdateService = new HandicapUpdateService();
+            var mockPlayerRepository = new Mock<IPlayerRepository>();
+            var handicapUpdateService = new HandicapUpdateService(mockPlayerRepository.Object);
             var game = GetGame();
 
             game.PlayerOne.Handicap = 0;
@@ -37,7 +44,8 @@ namespace Handicap.Application.Tests
         [Fact]
         public void HandicapDoesNotGoAboveHundred()
         {
-            var handicapUpdateService = new HandicapUpdateService();
+            var mockPlayerRepository = new Mock<IPlayerRepository>();
+            var handicapUpdateService = new HandicapUpdateService(mockPlayerRepository.Object);
             var game = GetGame();
 
             game.PlayerTwo.Handicap = 100;
@@ -50,7 +58,8 @@ namespace Handicap.Application.Tests
         [Fact]
         public void HandicapGoesToZero()
         {
-            var handicapUpdateService = new HandicapUpdateService();
+            var mockPlayerRepository = new Mock<IPlayerRepository>();
+            var handicapUpdateService = new HandicapUpdateService(mockPlayerRepository.Object);
             var game = GetGame();
 
             game.PlayerOne.Handicap = 5;
@@ -63,7 +72,8 @@ namespace Handicap.Application.Tests
         [Fact]
         public void HandicapGoesToHundred()
         {
-            var handicapUpdateService = new HandicapUpdateService();
+            var mockPlayerRepository = new Mock<IPlayerRepository>();
+            var handicapUpdateService = new HandicapUpdateService(mockPlayerRepository.Object);
             var game = GetGame();
 
             game.PlayerTwo.Handicap = 95;
@@ -71,6 +81,29 @@ namespace Handicap.Application.Tests
             game = handicapUpdateService.UpdatePlayerHandicap(game);
             game.PlayerOne.Handicap.Should().Be(50);
             game.PlayerTwo.Handicap.Should().Be(100);
+        }
+
+        [Fact]
+        public async Task MatchDayIsUpdatedCorrectly()
+        {
+            var game = GetGame();
+            var matchDay = GetMatchDay();
+
+            var mockPlayerRepository = new Mock<IPlayerRepository>();
+            mockPlayerRepository.SetupSequence(
+                repo => repo.Find(It.IsAny<Expression<Func<Player, bool>>>()))
+                .Returns(Task.FromResult(new List<Player>() { game.PlayerOne }.AsQueryable()))
+                .Returns(Task.FromResult(new List<Player>() { game.PlayerTwo }.AsQueryable()));
+
+            mockPlayerRepository.Setup(
+                repo => repo.AddOrUpdate(It.IsAny<Player>()))
+                .Returns(Task.FromResult(new Player()));
+
+            var handicapUpdateService = new HandicapUpdateService(mockPlayerRepository.Object);
+
+            matchDay = await handicapUpdateService.UpdateMatchDayHandicaps(matchDay);
+
+            matchDay.Should().NotBeNull();
         }
 
         private Game GetGame(){
@@ -103,6 +136,26 @@ namespace Handicap.Application.Tests
                 PlayerOneRequiredPoints = 5,
                 PlayerTwoPoints = 0,
                 PlayerTwoRequiredPoints = 5
+            };
+        }
+
+        private MatchDay GetMatchDay()
+        {
+            var game = GetGame();
+            var game2 = GetGame();
+
+            return new MatchDay
+            {
+                Id = "matchDay",
+                Date = DateTimeOffset.Now,
+                Games = new List<Game>()
+                {
+                    game,
+                    game2
+                },
+                IsFinished = false,
+                TenantId = "tenant",
+                MatchDayPlayers = new List<MatchDayPlayer>()
             };
         }
     }

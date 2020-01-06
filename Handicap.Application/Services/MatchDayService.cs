@@ -222,8 +222,6 @@ namespace Handicap.Application.Services
             var matchDay = (await _matchDayRepository
                 .Find(md => md.Id == matchDayId,
                 nameof(MatchDay.Games)))
-                //$"{nameof(MatchDay.Games)}.{nameof(Game.PlayerOne)}",
-                //$"{nameof(MatchDay.Games)}.{nameof(Game.PlayerTwo)}"))
                 .FirstOrDefault();
 
             if (matchDay == null)
@@ -245,17 +243,7 @@ namespace Handicap.Application.Services
 
             if (!config.UpdatePlayersImmediately)
             {
-                var playerResults = GetPlayersResults(matchDay);
-
-                foreach (var playerResult in playerResults)
-                {
-                    var player = (await _playerRepository.Find(p => p.Id == playerResult.PlayerId)).FirstOrDefault();
-                    if (player != null)
-                    {
-                        player.Handicap += playerResult.HandicapToAdd;
-                        await _playerRepository.AddOrUpdate(player);
-                    }
-                }
+                matchDay = await _handicapUpdateService.UpdateMatchDayHandicaps(matchDay);
             }
 
             matchDay.IsFinished = true;
@@ -273,55 +261,6 @@ namespace Handicap.Application.Services
             .FirstOrDefault();
 
             return tstPlayer != null;
-        }
-
-        private List<(string PlayerId, int HandicapToAdd)> GetPlayersResults(MatchDay matchDay)
-        {
-            var results = new List<(string PlayerId, int HandicapToAdd)>();
-
-            var playerIds = matchDay.Games.Select(g => g.PlayerOneId).ToList();
-            playerIds.AddRange(matchDay.Games.Select(g => g.PlayerTwoId).ToList());
-
-            playerIds = playerIds.Distinct().ToList();
-
-
-
-            foreach (var playerId in playerIds)
-            {
-                var handicapToAdd = 0;
-                foreach (var game in matchDay.Games)
-                {
-                    handicapToAdd += HandicapToAdd(playerId, game);
-                }
-
-                results.Add((PlayerId: playerId, HandicapToAdd: handicapToAdd));
-            }
-
-            return results;
-        }
-
-        private int HandicapToAdd(string playerId, Game game)
-        {
-            if (game.PlayerOneId != playerId && game.PlayerTwoId != playerId) { return 0; }
-
-            if (game.PlayerOnePoints >= game.PlayerOneRequiredPoints)
-            {
-                if (playerId == game.PlayerOneId)
-                {
-                    return -5;
-                }
-
-                return 5;
-            }
-            else
-            {
-                if (playerId == game.PlayerTwoId)
-                {
-                    return -5;
-                }
-
-                return 5;
-            }
         }
     }
 }
