@@ -158,6 +158,8 @@ namespace Handicap.Application.Services
             var nextPlayers = matchDay.GetNextPlayers(matchDayGames);
 
             var game = await CreateGame(matchDay.TenantId, nextPlayers.PlayerOneId, nextPlayers.PlayerTwoId, matchDay.Id);
+            game.MatchDayId = matchDay.Id;
+            
             game = await Add(game);
 
             return game;
