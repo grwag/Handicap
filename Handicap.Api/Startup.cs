@@ -1,5 +1,6 @@
 using AutoMapper;
 using Handicap.Api.Middleware;
+using Handicap.Api.Serializers;
 using Handicap.Application.Interfaces;
 using Handicap.Application.Services;
 using Handicap.Data.Infrastructure;
@@ -49,7 +50,8 @@ namespace Handicap.Api
                 options.AddPolicy("read", policy => policy.RequireScope("read"));
             });
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new DoubleConverter()));
 
             services.AddSwaggerGen(config =>
             {
