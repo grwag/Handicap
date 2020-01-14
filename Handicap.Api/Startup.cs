@@ -17,17 +17,20 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using System;
 
 namespace Handicap.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment)
         {
             Configuration = configuration;
+            Environment = environment;
         }
 
         public IConfiguration Configuration { get; }
+        public Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -58,9 +61,19 @@ namespace Handicap.Api
                 config.SwaggerDoc("v1", new OpenApiInfo { Title = "Handicap Api" });
             });
 
+            var connectionString = String.Empty;
+            if (Environment.IsDevelopment())
+            {
+                connectionString = "Server=localhost;Database=handicap;User=root;Password=xyIVoRWPngF5AMFzE8DxiJt9";
+            }
+            else
+            {
+                connectionString = GetConnectionString();
+            }
+
             services.AddEntityFrameworkMySql().AddDbContext<HandicapContext>(opts =>
             {
-                opts.UseMySql("Server=localhost;Database=handicap;User=root;Password=xyIVoRWPngF5AMFzE8DxiJt9");
+                opts.UseMySql(connectionString);
             });
 
             services.AddScoped<IPlayerRepository, PlayerRepository>();
@@ -126,6 +139,19 @@ namespace Handicap.Api
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private string GetConnectionString()
+        {
+            var user = "root";
+            var pw = System.Environment.GetEnvironmentVariable("MYSQL_PASSWORD");
+            var host = System.Environment.GetEnvironmentVariable("MYSQL_HOST");
+            var db = System.Environment.GetEnvironmentVariable("MYSQL_DATABASE");
+            var port = System.Environment.GetEnvironmentVariable("MYSQL_PORT");
+
+            var connString = $"Server={host};Port={port};User={user};Password={pw};Database={db};Pooling=True";
+
+            return connString;
         }
     }
 }
