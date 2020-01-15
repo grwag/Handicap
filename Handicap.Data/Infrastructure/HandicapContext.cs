@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Handicap.Data.Infrastructure
@@ -19,10 +20,10 @@ namespace Handicap.Data.Infrastructure
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder builder) 
+        protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<HandicapConfiguration>().HasData(
-                new HandicapConfiguration 
+                new HandicapConfiguration
                 {
                     Id = "99",
                     TenantId = "",
@@ -97,6 +98,8 @@ namespace Handicap.Data.Infrastructure
                 );
 
             ConfigureMatchDayPlayers(builder);
+
+            ConfigureGame(builder);
         }
 
         private void ConfigureMatchDayPlayers(ModelBuilder builder)
@@ -113,6 +116,22 @@ namespace Handicap.Data.Infrastructure
                 .HasOne(mp => mp.Player)
                 .WithMany(p => p.MatchDayPlayers)
                 .HasForeignKey(mp => mp.PlayerId);
+        }
+
+        private void ConfigureGame(ModelBuilder builder)
+        {
+            builder.Entity<Game>(b =>
+            {
+                b.HasOne("Handicap.Domain.Models.Player", "PlayerOne")
+                .WithMany()
+                .HasForeignKey("PlayerOneId")
+                .OnDelete(DeleteBehavior.SetNull);
+
+                b.HasOne("Handicap.Domain.Models.Player", "PlayerTwo")
+                .WithMany()
+                .HasForeignKey("PlayerTwoId")
+                .OnDelete(DeleteBehavior.SetNull);
+            });
         }
     }
 }

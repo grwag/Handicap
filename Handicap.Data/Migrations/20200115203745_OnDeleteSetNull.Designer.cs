@@ -3,14 +3,16 @@ using System;
 using Handicap.Data.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Handicap.Data.Migrations
 {
     [DbContext(typeof(HandicapContext))]
-    partial class HandicapContextModelSnapshot : ModelSnapshot
+    [Migration("20200115203745_OnDeleteSetNull")]
+    partial class OnDeleteSetNull
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
