@@ -36,7 +36,7 @@ namespace Handicap.Api.Paging
             var response = new HandicapResponse<T,S>();
             var list = query.Skip(cursor * pageSize).Take(pageSize).ToList();
             var responseList = mapper.Map<List<T>>(list);
-            var totalCount = responseList.Count;
+            var totalCount = query.Count();
 
             response.TotalCount = totalCount;
             response.Cursor = cursor;

@@ -51,11 +51,11 @@ namespace Handicap.Api.Controllers
             var tenantId = this.GetTenantId();
 
             var query = await _playerService.Find(p => p.TenantId == tenantId);
-            
-            var responseQuery = query.ProjectTo<PlayerResponse>(_mapper.ConfigurationProvider);
-            responseQuery = desc ?
-                responseQuery.OrderByDescending(orderBy)
-                : responseQuery.OrderBy(orderBy);
+
+            //var responseQuery = query.ProjectTo<PlayerResponse>(_mapper.ConfigurationProvider);
+            query = desc ?
+                query.OrderByDescending(orderBy)
+                : query.OrderBy(orderBy);
 
             var response = HandicapResponse<PlayerResponse, Player>.Create(query, null, page, pageSize, _mapper);
             return Ok(response);
