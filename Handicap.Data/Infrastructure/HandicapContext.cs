@@ -97,6 +97,42 @@ namespace Handicap.Data.Infrastructure
                 }
                 );
 
+            builder.Entity<Game>().HasData(
+                new Game
+                {
+                    Id = "g1",
+                    Date = DateTimeOffset.Now,
+                    IsFinished = true,
+                    MatchDayId = "m1",
+                    PlayerOne = null,
+                    PlayerOneId = "1",
+                    PlayerOnePoints = 5,
+                    PlayerOneRequiredPoints = 5,
+                    PlayerTwo = null,
+                    PlayerTwoId = "2",
+                    PlayerTwoPoints = 0,
+                    PlayerTwoRequiredPoints = 5,
+                    TenantId = "816ef7d5-4589-4408-b64c-87594e2075bb",
+                    Type = GameType.Eightball
+                },
+                new Game
+                {
+                    Id = "g2",
+                    Date = DateTimeOffset.Now,
+                    IsFinished = true,
+                    MatchDayId = "m1",
+                    PlayerOne = null,
+                    PlayerOneId = "1",
+                    PlayerOnePoints = 5,
+                    PlayerOneRequiredPoints = 5,
+                    PlayerTwo = null,
+                    PlayerTwoId = "2",
+                    PlayerTwoPoints = 0,
+                    PlayerTwoRequiredPoints = 5,
+                    TenantId = "816ef7d5-4589-4408-b64c-87594e2075bb",
+                    Type = GameType.Eightball
+                });
+
             ConfigureMatchDayPlayers(builder);
 
             ConfigureGame(builder);

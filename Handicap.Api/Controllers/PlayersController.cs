@@ -125,7 +125,10 @@ namespace Handicap.Api.Controllers
         {
             var tenantId = this.GetTenantId();
 
-            var games = await _gameService.Find(g => g.TenantId == tenantId);
+            var games = await _gameService.Find(g => g.TenantId == tenantId,
+                nameof(Game.PlayerOne),
+                nameof(Game.PlayerTwo));
+
             games = games.Where(g => g.PlayerOne.Id == id || g.PlayerTwo.Id == id);
             games = desc ?
                 games.OrderByDescending(orderBy)
