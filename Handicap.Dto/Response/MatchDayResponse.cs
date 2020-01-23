@@ -8,5 +8,7 @@ namespace Handicap.Dto.Response
     {
         public DateTimeOffset Date { get; set; }
         public bool IsFinished { get; set; }
+        public int NumberOfPlayers { get; set; }
+        public int NumberOfGames { get; set; }
     }
 }

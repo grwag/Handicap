@@ -47,7 +47,9 @@ namespace Handicap.Api.Controllers
         {
             var tenantId = this.GetTenantId();
             var matchDayQuery = await _matchDayService
-                .Find(m => m.TenantId == tenantId);
+                .Find(m => m.TenantId == tenantId,
+                nameof(MatchDay.Games),
+                nameof(MatchDay.MatchDayPlayers));
 
             var response = HandicapResponse<MatchDayResponse, MatchDay>.Create(matchDayQuery, null, page, pageSize, _mapper);
 

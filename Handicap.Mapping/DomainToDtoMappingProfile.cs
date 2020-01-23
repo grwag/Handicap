@@ -30,7 +30,9 @@ namespace Handicap.Mapping
                 .ForMember(dst => dst.TenantId, opt => opt.MapFrom(src => src.MatchDay.TenantId))
                 .ForMember(dst => dst.Date, opt => opt.MapFrom(src => src.MatchDay.Date))
                 .ForMember(dst => dst.Id, opt => opt.MapFrom(src => src.MatchDay.Id))
-                .ForMember(dst => dst.IsFinished, opt => opt.Ignore());
+                .ForMember(dst => dst.IsFinished, opt => opt.Ignore())
+                .ForMember(dst => dst.NumberOfGames, opt => opt.MapFrom(src => src.MatchDay.Games != null ? src.MatchDay.Games.Count : 0))
+                .ForMember(dst => dst.NumberOfPlayers, opt => opt.Ignore());
 
             CreateMap<GameType, GameTypeDto>();
 
@@ -40,7 +42,9 @@ namespace Handicap.Mapping
 
             CreateMap<GameUpdateDto, GameUpdate>();
 
-            CreateMap<MatchDay, MatchDayResponse>();
+            CreateMap<MatchDay, MatchDayResponse>()
+                .ForMember(dst => dst.NumberOfGames, opt => opt.MapFrom(src => src.Games != null ? src.Games.Count : 0))
+                .ForMember(dst => dst.NumberOfPlayers, opt => opt.MapFrom(src => src.MatchDayPlayers != null ? src.MatchDayPlayers.Count : 0));
         }
     }
 }

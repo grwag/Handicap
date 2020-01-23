@@ -76,6 +76,52 @@ namespace Handicap.Mapping.Tests
         }
 
         [Fact]
+        public void MatchDayMapsToMatchDayResponseWithNullGames()
+        {
+            var mapper = this.provider.GetService<IMapper>();
+            var matchDay = GetMatchDay();
+            matchDay.Games = null;
+
+            var matchDayResponse = mapper.Map<MatchDayResponse>(matchDay);
+
+            matchDayResponse.NumberOfGames.Should().Be(0);
+        }
+
+        [Fact]
+        public void MatchDayMapsToMatchDayResponseWithNullMatchdayPlayers()
+        {
+            var mapper = this.provider.GetService<IMapper>();
+            var matchDay = GetMatchDay();
+            matchDay.MatchDayPlayers = null;
+
+            var matchDayResponse = mapper.Map<MatchDayResponse>(matchDay);
+
+            matchDayResponse.NumberOfPlayers.Should().Be(0);
+        }
+
+        [Fact]
+        public void MatchDayMapsToMatchDayResponseWithGames()
+        {
+            var mapper = this.provider.GetService<IMapper>();
+            var matchDay = GetMatchDay();
+
+            var matchDayResponse = mapper.Map<MatchDayResponse>(matchDay);
+
+            matchDayResponse.NumberOfGames.Should().Be(1);
+        }
+
+        [Fact]
+        public void MatchDayMapsToMatchDayResponseWithMatchdayPlayers()
+        {
+            var mapper = this.provider.GetService<IMapper>();
+            var matchDay = GetMatchDay();
+
+            var matchDayResponse = mapper.Map<MatchDayResponse>(matchDay);
+
+            matchDayResponse.NumberOfPlayers.Should().Be(1);
+        }
+
+        [Fact]
         public void GameMapsToGameResponse()
         {
             var mapper = this.provider.GetService<IMapper>();
