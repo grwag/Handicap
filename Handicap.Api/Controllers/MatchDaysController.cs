@@ -54,6 +54,34 @@ namespace Handicap.Api.Controllers
             return Ok(response);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById([FromRoute] string id){
+            var tenantId = this.GetTenantId();
+
+            var matchDay = await _matchDayService.GetById(id);
+
+            return Ok(_mapper.Map<MatchDayResponse>(matchDay));
+        }
+
+        [HttpGet("open")]
+        public async Task<IActionResult> GetOpenMatchDays(
+            [FromQuery]string orderBy = "Date",
+            [FromQuery]bool desc = false,
+            [FromQuery]int pageSize = 10,
+            [FromQuery]int page = 0
+        ){
+            var tenantId = this.GetTenantId();
+            var matchDayQuery = await _matchDayService.Find(m => m.TenantId == tenantId && !m.IsFinished);
+
+            matchDayQuery = desc ?
+                matchDayQuery.OrderByDescending(orderBy)
+                : matchDayQuery.OrderBy(orderBy);
+
+            var response = HandicapResponse<MatchDayResponse, MatchDay>.Create(matchDayQuery, null, page, pageSize, _mapper);
+
+            return Ok(response);
+        }
+
         [HttpGet("{id}/players")]
         public async Task<IActionResult> GetMatchDayPlayers(
             [FromRoute]string id,
