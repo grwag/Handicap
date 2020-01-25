@@ -6,6 +6,7 @@ using Handicap.Application.Services;
 using Handicap.Domain.Models;
 using Handicap.Dto.Request;
 using Handicap.Dto.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 namespace Handicap.Api.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize("read_write")]
     public class MatchDaysController : ControllerBase
     {
         private readonly IMatchDayService _matchDayService;
@@ -50,6 +52,10 @@ namespace Handicap.Api.Controllers
                 .Find(m => m.TenantId == tenantId,
                 nameof(MatchDay.Games),
                 nameof(MatchDay.MatchDayPlayers));
+
+            matchDayQuery = desc ?
+                matchDayQuery.OrderByDescending(orderBy)
+                : matchDayQuery.OrderBy(orderBy);
 
             var response = HandicapResponse<MatchDayResponse, MatchDay>.Create(matchDayQuery, null, page, pageSize, _mapper);
 
@@ -144,10 +150,19 @@ namespace Handicap.Api.Controllers
         }
 
         [HttpPost("{id}/players")]
-        public async Task<IActionResult> AddPlayer(string id, [FromBody]AddPlayerToMatchDayRequest addPlayerRequest)
+        public async Task<IActionResult> AddPlayers(string id, [FromBody]AddRemovePlayerToMatchDayRequest addPlayerRequest)
         {
             var tenantId = this.GetTenantId();
             var matchDay = await _matchDayService.AddPlayers(id, addPlayerRequest.PlayerIds, tenantId);
+
+            return Ok(_mapper.Map<MatchDayResponse>(matchDay));
+        }
+
+        [HttpDelete("{id}/players")]
+        public async Task<IActionResult> DeletePlayers(string id, [FromBody]AddRemovePlayerToMatchDayRequest addPlayerRequest)
+        {
+            var tenantId = this.GetTenantId();
+            var matchDay = await _matchDayService.RemovePlayers(id, addPlayerRequest.PlayerIds, tenantId);
 
             return Ok(_mapper.Map<MatchDayResponse>(matchDay));
         }
@@ -177,6 +192,26 @@ namespace Handicap.Api.Controllers
             var matchDay = await _matchDayService.FinalizeMatchDay(id, tenantId);
 
             return Ok(_mapper.Map<MatchDayResponse>(matchDay));
+        }
+
+        [HttpGet("{id}/availableplayers")]
+        public async Task<IActionResult> GetAvailablePlayers(
+            [FromRoute]string id,
+            [FromQuery]string orderBy = "FirstName",
+            [FromQuery]bool desc = false,
+            [FromQuery]int pageSize = 10,
+            [FromQuery]int page = 0)
+        {
+            var tenantId = this.GetTenantId();
+            var availablePlayerQuery = (await _matchDayService.GetAvailablePlayers(id, tenantId));
+
+            availablePlayerQuery = desc ?
+                availablePlayerQuery.OrderByDescending(orderBy)
+                : availablePlayerQuery.OrderBy(orderBy);
+
+            var response = HandicapResponse<PlayerResponse, Player>.Create(availablePlayerQuery, null, page, pageSize, _mapper);
+
+            return Ok(response);
         }
     }
 }

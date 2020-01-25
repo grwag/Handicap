@@ -45,7 +45,7 @@ namespace Handicap.Application.Services
                 var player = (await _playerRepository.Find(p => p.Id == playerId)).FirstOrDefault();
                 if (player != null)
                 {
-                    if(player.TenantId != tenantId)
+                    if (player.TenantId != tenantId)
                     {
                         throw new TenantMissmatchException();
                     }
@@ -66,11 +66,48 @@ namespace Handicap.Application.Services
             return matchDay;
         }
 
+        public async Task<MatchDay> RemovePlayers(string matchDayId, IEnumerable<string> playerIds, string tenantId)
+        {
+            var matchDay = await GetById(matchDayId);
+
+            if (matchDay.IsFinished)
+            {
+                throw new EntityClosedForUpdateException($"MatchDay with id {matchDayId} is already finished.");
+            }
+
+            foreach (var playerId in playerIds)
+            {
+                var player = (await _playerRepository.Find(p => p.Id == playerId)).FirstOrDefault();
+                if (player != null)
+                {
+                    if (player.TenantId != tenantId)
+                    {
+                        throw new TenantMissmatchException();
+                    }
+
+                    if (MatchDayHasPlayer(matchDay, player))
+                    {
+                        var mdp = matchDay.MatchDayPlayers.Where(md => md.PlayerId == player.Id).FirstOrDefault();
+                        if (mdp != null)
+                        {
+                            matchDay.MatchDayPlayers.Remove(mdp);
+                        }
+                        
+                    }
+                }
+            }
+
+            await _matchDayRepository.UpdateMatchDayPlayers(matchDay);
+            await _matchDayRepository.SaveChangesAsync();
+
+            return matchDay;
+        }
+
         public async Task<MatchDay> RemovePlayer(string matchDayId, string playerId, string tenantId)
         {
             var matchDay = await GetById(matchDayId);
 
-            if(matchDay.TenantId != tenantId)
+            if (matchDay.TenantId != tenantId)
             {
                 throw new TenantMissmatchException();
             }
@@ -83,7 +120,7 @@ namespace Handicap.Application.Services
             var player = (await _playerRepository.Find(p => p.Id == playerId)).FirstOrDefault();
             if (player != null)
             {
-                if(player.TenantId != tenantId)
+                if (player.TenantId != tenantId)
                 {
                     throw new TenantMissmatchException();
                 }
@@ -139,7 +176,7 @@ namespace Handicap.Application.Services
                 throw new EntityNotFoundException($"MatchDay with id: {matchDayId} not found.");
             }
 
-            if(matchDay.TenantId != tenantId)
+            if (matchDay.TenantId != tenantId)
             {
                 throw new TenantMissmatchException();
             }
@@ -158,7 +195,7 @@ namespace Handicap.Application.Services
                 throw new EntityNotFoundException($"Game with id: {gameId} not found.");
             }
 
-            if(game.TenantId != tenantId)
+            if (game.TenantId != tenantId)
             {
                 throw new TenantMissmatchException();
             }
@@ -185,7 +222,7 @@ namespace Handicap.Application.Services
                 $"{nameof(MatchDay.MatchDayPlayers)}.{nameof(MatchDayPlayer.Player)}"))
                 .FirstOrDefault();
 
-            if(matchDay.TenantId != tenantId)
+            if (matchDay.TenantId != tenantId)
             {
                 throw new TenantMissmatchException();
             }
@@ -204,12 +241,12 @@ namespace Handicap.Application.Services
                 $"{nameof(MatchDay.Games)}.{nameof(Game.PlayerTwo)}"))
                 .FirstOrDefault();
 
-            if(matchDay == null)
+            if (matchDay == null)
             {
                 throw new EntityNotFoundException($"MatchDay wit id {matchDayId} not found.");
             }
 
-            if(matchDay.TenantId != tenantId)
+            if (matchDay.TenantId != tenantId)
             {
                 throw new TenantMissmatchException();
             }
@@ -239,6 +276,11 @@ namespace Handicap.Application.Services
                 throw new EntityClosedForUpdateException($"MatchDay with id {matchDayId} is already finished.");
             }
 
+            if (matchDay.Games.Any(g => !g.IsFinished))
+            {
+                throw new EntityClosedForUpdateException($"MatchDay has open games.");
+            }
+
             var config = await _configService.Get(tenantId);
 
             if (!config.UpdatePlayersImmediately)
@@ -261,6 +303,24 @@ namespace Handicap.Application.Services
             .FirstOrDefault();
 
             return tstPlayer != null;
+        }
+
+        public async Task<IQueryable<Player>> GetAvailablePlayers(string matchDayId, string tenantId)
+        {
+            var matchDay = (await _matchDayRepository
+                .Find(md => md.Id == matchDayId,
+                $"{nameof(MatchDay.MatchDayPlayers)}",
+                $"{nameof(MatchDay.MatchDayPlayers)}.{nameof(MatchDayPlayer.Player)}"))
+                .FirstOrDefault();
+
+            var matchDayPlayerIds = matchDay.MatchDayPlayers.Select(mdp => mdp.PlayerId).ToArray();
+            var playersIds = (await _playerRepository.Find(p => p.TenantId == tenantId)).Select(p => p.Id).ToArray();
+
+            var availablePlayerIds = playersIds.Except(matchDayPlayerIds).ToArray();
+
+            var availablePlayers = await _playerRepository.Find(p => p.TenantId == tenantId && availablePlayerIds.Contains(p.Id));
+
+            return availablePlayers;
         }
     }
 }

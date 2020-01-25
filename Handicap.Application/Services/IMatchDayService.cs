@@ -15,11 +15,13 @@ namespace Handicap.Application.Services
             params string[] navigationProperties);
         Task<MatchDay> CreateMatchDay(string tenantId);
         Task<MatchDay> AddPlayers(string matchDayId, IEnumerable<string> playerIds, string tenantId);
+        Task<MatchDay> RemovePlayers(string matchDayId, IEnumerable<string> playerIds, string tenantId);
         Task<MatchDay> RemovePlayer(string matchDayId, string playerId, string tenantId);
         Task<MatchDay> GetById(string id);
         Task<MatchDay> AddGame(string matchDayId, string gameId, string tenantId);
         Task<IQueryable<Player>> GetMatchDayPlayers(string matchDayId, string tenantId);
         Task<IQueryable<Game>> GetMatchDayGames(string matchDayId, string tenantId);
+        Task<IQueryable<Player>> GetAvailablePlayers(string matchDayId, string tenantId);
         Task<MatchDay> FinalizeMatchDay(string matchDayId, string tenantId);
     }
 }

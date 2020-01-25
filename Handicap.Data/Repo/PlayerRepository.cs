@@ -32,13 +32,20 @@ namespace Handicap.Data.Repo
             }
         }
 
-        public async Task<IQueryable<Player>> Find(Expression<Func<Player, bool>> expression = null)
+        public async Task<IQueryable<Player>> Find(
+            Expression<Func<Player, bool>> expression = null,
+            params string[] navigationProperties)
         {
             var query = _players
-                .Include(p => p.MatchDayPlayers)
+                //.Include(p => p.MatchDayPlayers)
                 .AsNoTracking()
                 .AsQueryable()
                 ;
+
+            foreach (var navigationProperty in navigationProperties)
+            {
+                query = query.Include(navigationProperty);
+            }
 
             if (expression != null)
             {

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Handicap.Dto.Request
 {
-    public class AddPlayerToMatchDayRequest
+    public class AddRemovePlayerToMatchDayRequest
     {
         public IEnumerable<string> PlayerIds { get; set; }
     }

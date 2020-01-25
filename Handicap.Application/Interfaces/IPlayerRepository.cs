@@ -9,7 +9,8 @@ namespace Handicap.Application.Interfaces {
     {
         Task<Player> AddOrUpdate(Player player);
         Task Delete(string id);
-        Task<IQueryable<Player>> Find(Expression<Func<Player, bool>> expression = null);
+        Task<IQueryable<Player>> Find(Expression<Func<Player, bool>> expression = null,
+            params string[] navigationProperties);
         Task SaveChangesAsync();
     }
 }
