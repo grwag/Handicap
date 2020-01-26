@@ -154,6 +154,11 @@ namespace Handicap.Application.Services
                 throw new TenantMissmatchException();
             }
 
+            if(matchDay.IsFinished)
+            {
+                throw new EntityClosedForUpdateException($"MatchDay with id {matchDayId} is already finished.");
+            }
+
             var matchDayGames = (await _matchDayService.GetMatchDayGames(matchDayId, tenantId)).ToList();
             var nextPlayers = matchDay.GetNextPlayers(matchDayGames);
 
