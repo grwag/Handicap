@@ -1,0 +1,14 @@
+﻿<h4>{{'activePlayers' | translate}}</h4>
+<mat-list>
+    <mat-list-item *ngFor="let player of data.matchdayPlayers">
+        <mat-checkbox checked="true" (change)="checkboxChanged($event)" value="{{player.id}}">{{player.firstName | uppercase}} {{player.lastName}}</mat-checkbox>
+    </mat-list-item>
+</mat-list>
+<mat-divider></mat-divider>
+<h4>{{'availablePlayers' | translate}}</h4>
+<mat-list>
+    <mat-list-item *ngFor="let player of data.availablePlayers">
+        <mat-checkbox (change)="checkboxChanged($event)" value="{{player.id}}">{{player.firstName | uppercase}} {{player.lastName}}</mat-checkbox>
+    </mat-list-item>
+</mat-list>
+<button mat-raised-button color="primary" (click)="addRemove()">{{'save' | translate}}</button>

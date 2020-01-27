@@ -1,0 +1,32 @@
+<mat-spinner *ngIf="dataSource.loading$ | async" [color]="accent" diameter="50"></mat-spinner>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort matSortActive="date"
+    matSortDirection="asc" matSortDisableClear>
+    <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{'date' | translate}}</th>
+        <td mat-cell *matCellDef="let game">
+            {{game.date | date}}</td>
+    </ng-container>
+    <ng-container matColumnDef="playerOne">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{'playerOne' | translate}}</th>
+        <td mat-cell *matCellDef="let game">
+            {{game.playerOne.firstName | uppercase }} {{game.playerOne.lastName}}</td>
+    </ng-container>
+    <ng-container matColumnDef="playerOnePoints">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{'points' | translate}}</th>
+        <td mat-cell *matCellDef="let game">
+            <span class="points">{{game.playerOnePoints}}</span> ({{game.playerOneRequiredPoints}})</td>
+    </ng-container>
+    <ng-container matColumnDef="playerTwoPoints">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{'points' | translate}}</th>
+        <td mat-cell *matCellDef="let game">
+            <span class="points">{{game.playerTwoPoints}}</span> ({{game.playerTwoRequiredPoints}})</td>
+    </ng-container>
+    <ng-container matColumnDef="playerTwo">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{'playerTwo' | translate}}</th>
+        <td mat-cell *matCellDef="let game">
+            {{game.playerTwo.firstName | uppercase }} {{game.playerTwo.lastName}}</td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" [ngClass]="{won: isWinner(row)}"></tr>
+</table>
+<mat-paginator [length]="totalGames" [pageSize]="10" [pageSizeOptions]="[5,10,20]"></mat-paginator>

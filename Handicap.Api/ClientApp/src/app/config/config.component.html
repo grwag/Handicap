@@ -1,0 +1,17 @@
+<p *ngIf="!config"><em>Loading...</em></p>
+<h2>{{'settings' | translate}}</h2>
+<mat-card *ngIf="config">{{'handicaps' | translate}}
+    <mat-card-content>
+        <mat-slide-toggle [(ngModel)]="config.updatePlayersImmediately" (change)="updateConfig()">{{'updateHandicapsImmediately' | translate}}</mat-slide-toggle>
+    </mat-card-content>
+</mat-card>
+<mat-card>{{'languages' | translate}}
+    <mat-card-content>
+        <mat-form-field>
+            <mat-label>{{'languages' | translate}}</mat-label>
+            <mat-select #langSelect1 [(value)]="selectedLanguage" (selectionChange)="translate.use(langSelect1.value)">
+                <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">{{lang}}</mat-option>
+              </mat-select>
+        </mat-form-field>
+    </mat-card-content>
+</mat-card>

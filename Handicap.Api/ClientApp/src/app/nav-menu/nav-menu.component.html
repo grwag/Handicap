@@ -1,0 +1,47 @@
+<header>
+  <mat-toolbar class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <div class="container">
+      <a class="navbar-brand" [routerLink]="['/']">{{'handicap' | translate}}</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"
+        aria-label="Toggle navigation" [attr.aria-expanded]="isExpanded" (click)="toggle()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- <select #langSelect (change)="translate.use(langSelect.value)">
+        <option
+          *ngFor="let lang of translate.getLangs()"
+          [value]="lang"
+          [attr.selected]="lang === translate.currentLang ? '' : null"
+        >{{lang}}</option>
+      </select>
+      <mat-select #langSelect1 (selectionChange)="translate.use(langSelect1.value)">
+        <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">{{lang}}</mat-option>
+      </mat-select> -->
+      <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]="{ show: isExpanded }">
+        <ul class="navbar-nav flex-grow">
+          <li *ngIf="loggedIn$ | async" class="nav-item" [routerLinkActive]="['link-active']"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <a mat-button [routerLink]="['/']">{{'home' | translate}}</a>
+          </li>
+          <li *ngIf="loggedIn$ | async" class="nav-item" [routerLinkActive]="['link-active']"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <a mat-raised-button color="primary" [routerLink]="['/matchdays']">{{'matchdays' | translate}}</a>
+          </li>
+          <li *ngIf="loggedIn$ | async" class="nav-item" [routerLinkActive]="['link-active']"
+            [routerLinkActiveOptions]="{ exact: true }">
+            <a mat-button [routerLink]="['/players']">{{'players' | translate}}</a>
+          </li>
+          <li *ngIf="loggedIn$ | async" class="nav-item" [routerLinkActive]="['link-active']">
+            <a mat-button [routerLink]="['/config']">{{'settings' | translate}}</a>
+          </li>
+          <li *ngIf="!(loggedIn$ | async)" class="nav-item" [routerLinkActive]="['link-active']">
+            <button mat-button (click)="login()">{{'login' | translate}}</button>
+          </li>
+
+          <li *ngIf="loggedIn$ | async" class="nav-item" [routerLinkActive]="['link-active']">
+            <button mat-button (click)="logout()">{{'logout' | translate}}</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </mat-toolbar>
+</header>

@@ -56,6 +56,11 @@ namespace Handicap.Api
             services.AddControllers()
                 .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new DoubleConverter()));
 
+            services.AddSpaStaticFiles(config =>
+            {
+                config.RootPath = "ClientApp/dist";
+            });
+
             services.AddSwaggerGen(config =>
             {
                 config.SwaggerDoc("v1", new OpenApiInfo { Title = "Handicap Api" });
@@ -123,12 +128,18 @@ namespace Handicap.Api
             }
 
             app.UseMiddleware(typeof(ExceptionHandling));
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetService<HandicapContext>();
                 context.Database.Migrate();
+            }
+
+            app.UseStaticFiles();
+            if (env.IsDevelopment())
+            {
+                app.UseSpaStaticFiles();
             }
 
             app.UseRouting();
@@ -138,6 +149,16 @@ namespace Handicap.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSpa(spa =>
+            {
+                spa.Options.SourcePath = "ClientApp";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseAngularCliServer(npmScript: "start");
+                }
             });
         }
 

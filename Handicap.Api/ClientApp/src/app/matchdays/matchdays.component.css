@@ -1,0 +1,11 @@
+table {
+    width: 100%;
+}
+
+.unfinished {
+    outline-width: 4px;
+    outline-style: solid;
+    outline-color: #536dfe;
+    outline-offset: -4px;
+    border-color: #536dfe;
+}

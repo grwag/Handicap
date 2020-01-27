@@ -1,0 +1,23 @@
+table {
+  width: 100%;
+}
+
+mat-drawer {
+  width: 30%;
+  height: 100%;
+  padding: 20px;
+  background-color: inherit;
+}
+
+mat-form-field {
+  margin-right: 12px;
+}
+
+mat-drawer-container {
+  min-height: 400px;
+  padding: 20px;
+}
+
+mat-card {
+    border-radius: 0px;
+}
