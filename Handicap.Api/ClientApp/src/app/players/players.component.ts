@@ -108,15 +108,19 @@ export class PlayersComponent implements OnInit, AfterViewInit {
       });
   }
 
-  createPlayer(firstName: string, lastName: string, handicap: number) {
-    const playerRequest = new PlayerRequest(firstName, lastName, handicap);
-    this.playerService.createPlayer(playerRequest)
-      .subscribe(player => {
-        this.onSelect(player);
-        this.dataSource.loadPlayers('FirstName', false, this.paginator.pageSize, this.paginator.pageIndex);
-        this.setTotalPlayers();
-      });
-  }
+	createPlayer() {
+		const playerRequest = new PlayerRequest(
+			this.form.controls.firstName.value,
+			this.form.controls.lastName.value,
+			this.form.controls.handicap.value
+		);
+		this.playerService.createPlayer(playerRequest)
+			.subscribe(player => {
+				this.onSelect(player);
+				this.dataSource.loadPlayers('FirstName', false, this.paginator.pageSize, this.paginator.pageIndex);
+				this.setTotalPlayers();
+			});
+	}
 
   updatePlayer(): void {
     this.playerService.updatePlayer(this.playerRequest, this.selectedPlayer.id)
