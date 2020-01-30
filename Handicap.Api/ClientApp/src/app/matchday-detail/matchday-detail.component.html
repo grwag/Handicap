@@ -4,13 +4,17 @@
     <mat-drawer-container>
         <mat-toolbar>
             <div class="button-row" *ngIf="matchday">
-                <button mat-raised-button color="basic" (click)="addRemovePlayers()" [disabled]="matchday.isFinished">{{'addRemovePlayers' | translate}}</button>
-                <button mat-raised-button color="primary" (click)="nextGame()" [disabled]="matchday.isFinished">{{'nextGame' | translate}} </button>
-                <button mat-raised-button color="accent" (click)="finishMatchday()" [disabled]="matchday.isFinished">{{'finishMatchday' | translate}}</button>
+                <button mat-raised-button color="basic" (click)="addRemovePlayers()"
+                    [disabled]="matchday.isFinished">{{'addRemovePlayers' | translate}}</button>
+                <button mat-raised-button color="primary" (click)="nextGame()"
+                    [disabled]="matchday.isFinished">{{'nextGame' | translate}} </button>
+                <button mat-raised-button color="accent" (click)="finishMatchday()"
+                    [disabled]="matchday.isFinished">{{'finishMatchday' | translate}}</button>
             </div>
         </mat-toolbar>
         <app-game-table *ngIf="matchday && matchday.isFinished"></app-game-table>
-        <mat-card *ngFor="let game of activeGames">
+        <mat-card *ngFor="let game of activeGames" [class.eightball]="game.type==7" [class.nineball]="game.type==9"
+            [class.tenball]="game.type==8" [class.straightpool]="game.type==100">
             <form>
                 <mat-form-field>
                     <input matInput #playerOnePoints value="0"
@@ -25,7 +29,8 @@
             </form>
         </mat-card>
         <mat-drawer *ngIf="matchday && !matchday.isFinished" #drawer mode="side" position="end" opened>
-            <mat-card *ngFor="let game of finishedGames">
+            <mat-card *ngFor="let game of finishedGames" [class.eightball]="game.type==7" [class.nineball]="game.type==9"
+                [class.tenball]="game.type==8" [class.straightpool]="game.type==100" >
                 <p>
                     <span [ngClass]="{won: isWinner(game, game.playerOne)}">{{game.playerOne.firstName | uppercase}}
                         {{game.playerOne.lastName}} </span>

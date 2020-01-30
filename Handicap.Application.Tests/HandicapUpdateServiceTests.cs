@@ -113,7 +113,7 @@ namespace Handicap.Application.Tests
                 TenantId = "tenant",
                 IsFinished = true,
                 MatchDayId = "matchDay",
-                Type = GameType.Eightball,
+                Type = (int)GameType.Eightball,
                 PlayerOne = new Player{
                     FirstName = "Hans",
                     LastName  =  "Maulwurf",

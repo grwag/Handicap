@@ -100,7 +100,7 @@ namespace Handicap.Application.Tests
                         PlayerTwoPoints = 0,
                         PlayerTwoRequiredPoints = 5,
                         TenantId = "tenant",
-                        Type = GameType.Eightball
+                        Type = (int)GameType.Eightball
                     }
                 },
                 TenantId = "tenant",

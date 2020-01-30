@@ -1,0 +1,26 @@
+﻿version: '3'
+
+services:
+  grwag.handicap:
+    image: grwag/handicap:${TAG}
+    container_name: 'handicap'
+    restart: on-failure
+    networks:
+      - proxy
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - LETSENCRYPT_HOST=pbc.greshawag.com
+      - LETSENCRYPT_EMAIL=cert@greshawag.com
+      - VIRTUAL_HOST=pbc.greshawag.com
+      - VIRTUAL_PORT=80
+
+networks:
+  proxy:
+    external:
+      name: nginxproxy_nginx-proxy

@@ -24,3 +24,19 @@ code {
 .mat-spinner {
     margin:0 auto;
 }
+
+.eightball {
+    background-color: #CFD8DC;
+  }
+  
+  .nineball {
+    background-color: #FFECB3;
+  }
+  
+  .tenball {
+    background-color: #C5CAE9;
+  }
+  
+  .straightpool {
+    background-color: #ffcdd2;
+  }

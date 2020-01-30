@@ -113,7 +113,7 @@ namespace Handicap.Data.Infrastructure
                     PlayerTwoPoints = 0,
                     PlayerTwoRequiredPoints = 5,
                     TenantId = "816ef7d5-4589-4408-b64c-87594e2075bb",
-                    Type = GameType.Eightball
+                    Type = (int)GameType.Eightball
                 },
                 new Game
                 {
@@ -130,7 +130,7 @@ namespace Handicap.Data.Infrastructure
                     PlayerTwoPoints = 0,
                     PlayerTwoRequiredPoints = 5,
                     TenantId = "816ef7d5-4589-4408-b64c-87594e2075bb",
-                    Type = GameType.Eightball
+                    Type = (int)GameType.Eightball
                 });
 
             ConfigureMatchDayPlayers(builder);

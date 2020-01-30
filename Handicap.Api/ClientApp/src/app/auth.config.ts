@@ -11,7 +11,7 @@ export const authConfig: AuthConfig = {
 
   // The SPA's id. The SPA is registered with this id at the auth-server
   // id.greshawag.com
-  clientId: '26d33d30-7790-49c2-a544-8ce8e18ebd4a',
+  clientId: 'fe075cd1-76e0-4780-b3b0-e9dcfd597629',
   // local identityserver
   // clientId: '6db7ad0e-8f90-4c8f-a191-048dd0253d1c',
   dummyClientSecret: 'secret',
@@ -19,5 +19,5 @@ export const authConfig: AuthConfig = {
   // set the scope for the permissions the client should request
   // The first three are defined by OIDC. The 4th is a usecase-specific one
   scope: 'read read_write openid profile email offline_access',
-  postLogoutRedirectUri: 'https://localhost:5001',
+  postLogoutRedirectUri: 'https://pbc.greshawag.com',
 };

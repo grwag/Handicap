@@ -15,7 +15,7 @@ namespace Handicap.Application.Tests
         {
             var calc = new HandicapCalculator();
             var handicap = 60;
-            var gameType = GameType.Nineball;
+            var gameType = (int)GameType.Nineball;
             var expected = 4;
 
             var actual = calc.Calculate(handicap, gameType);

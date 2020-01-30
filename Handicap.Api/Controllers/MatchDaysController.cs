@@ -117,6 +117,10 @@ namespace Handicap.Api.Controllers
             var tenantId = this.GetTenantId();
             var games = await _matchDayService.GetMatchDayGames(id, tenantId);
 
+            games = desc ?
+                games.OrderByDescending(orderBy)
+                : games.OrderBy(orderBy);
+
             var response = HandicapResponse<GameResponse, Game>.Create(games, null, page, pageSize, _mapper);
 
             return Ok(response);

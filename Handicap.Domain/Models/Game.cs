@@ -8,7 +8,7 @@ namespace Handicap.Domain.Models
         public Player PlayerTwo { get; set; }
         public string PlayerTwoId { get; set; }
         public string MatchDayId { get; set; }
-        public GameType Type { get; set; }
+        public int Type { get; set; }
         public int PlayerOneRequiredPoints { get; set; }
         public int PlayerOnePoints { get; set; }
         public int PlayerTwoRequiredPoints { get; set; }
@@ -26,7 +26,7 @@ namespace Handicap.Domain.Models
             PlayerTwoPoints = 0;
             PlayerTwoRequiredPoints = 0;
             Date = DateTimeOffset.Now;
-            Type = GameType.Eightball;
+            Type = (int)GameType.Eightball;
             IsFinished = false;
         }
 
@@ -36,7 +36,7 @@ namespace Handicap.Domain.Models
             var rnd = new Random();
 
             var type = (GameType)values.GetValue(rnd.Next(values.Length));
-            this.Type = type;
+            this.Type = (int)type;
         }
     }
 }

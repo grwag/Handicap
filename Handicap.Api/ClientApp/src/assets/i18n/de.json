@@ -11,11 +11,24 @@
     "playerTwo": "Spieler 2",
     "game": "Spiel",
     "games": "Spiele",
+    "discipline": "Disziplin",
     "gameType": {
-        "eightBall": "Achtball",
-        "nineBall": "Neunball",
-        "tenBall": "Zehnball",
-        "straightPool": "14/1 e"
+        "eightBall": {
+            "long": "Achtball",
+            "short": "8"
+        },
+        "nineBall": {
+            "long": "Neunball",
+            "short": "9"
+        },
+        "tenBall": {
+            "long": "Zehnball",
+            "short": "10"
+        },
+        "straightPool": {
+            "long": "14/1 e",
+            "short": "14/1"
+        }
     },
     "matchday": "Spieltag",
     "matchdays": "Spieltage",

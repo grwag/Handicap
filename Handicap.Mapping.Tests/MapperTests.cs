@@ -196,7 +196,7 @@ namespace Handicap.Mapping.Tests
                 PlayerTwoPoints = 1,
                 PlayerTwoRequiredPoints = 11,
                 TenantId = tenantId,
-                Type = GameType.Eightball,
+                Type = (int)GameType.Eightball,
                 PlayerOne = players[0],
                 PlayerTwo = players[1]
             };

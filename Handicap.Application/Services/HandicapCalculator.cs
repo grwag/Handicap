@@ -5,7 +5,7 @@ namespace Handicap.Application.Services
 {
     public class HandicapCalculator : IHandicapCalculator
     {
-        public int Calculate(int handicap, GameType gameType)
+        public int Calculate(int handicap, int gameType)
         {
             var max = (double)gameType;
             var adjustment = ((max / 100) * handicap);

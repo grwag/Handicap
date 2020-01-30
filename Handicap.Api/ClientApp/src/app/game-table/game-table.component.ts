@@ -24,7 +24,7 @@ export class GameTableComponent implements OnInit, AfterViewInit {
   id: string = this.route.snapshot.params.id;
   isMatchdayGames: boolean = this.route.snapshot.url[0].path === 'matchdays';
   dataSource: GamesDataSource;
-  displayedColumns: string[] = ['date', 'playerOne', 'playerOnePoints', 'playerTwoPoints', 'playerTwo'];
+  displayedColumns: string[] = ['date', 'type', 'playerOne', 'playerOnePoints', 'playerTwoPoints', 'playerTwo'];
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
@@ -102,6 +102,24 @@ export class GameTableComponent implements OnInit, AfterViewInit {
       return game.playerOnePoints >= game.playerOneRequiredPoints;
     }
     return game.playerTwoPoints >= game.playerTwoRequiredPoints;
+  }
+
+  getType(type: string) {
+    console.log(type);
+    switch (type) {
+      case '7': {
+        return 'gameType.eightBall.long';
+      }
+      case '9': {
+        return 'gameType.nineBall.long';
+      }
+      case '8': {
+        return 'gameType.tenBall.long';
+      }
+      case '100': {
+        return 'gameType.straightPool.long';
+      }
+    }
   }
 
 }
