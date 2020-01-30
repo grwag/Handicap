@@ -1,4 +1,4 @@
-<mat-spinner *ngIf="dataSource.loading$ | async" [color]="accent" diameter="50"></mat-spinner>
+<mat-spinner *ngIf="dataSource.loading$ | async" color="accent" diameter="50"></mat-spinner>
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort matSortActive="date"
     matSortDirection="asc" matSortDisableClear>
     <ng-container matColumnDef="date">

@@ -19,7 +19,7 @@
         <button mat-button color="primary" [disabled]="form.invalid"
             (click)="createPlayer()">{{'add' | translate}}</button>
     </form>
-    <mat-spinner *ngIf="dataSource.loading$ | async" [color]="accent" diameter="50"></mat-spinner>
+    <mat-spinner *ngIf="dataSource.loading$ | async" color="accent" diameter="50"></mat-spinner>
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort matSortActive="firstName"
         matSortDirection="asc" matSortDisableClear>
         <ng-container matColumnDef="firstName">
@@ -63,7 +63,7 @@
                     <mat-label>{{'handicap' | translate}}</mat-label>
                     <input matInput [(ngModel)]="playerRequest.handicap">
                 </mat-form-field>
-                <mat-spinner *ngIf="statsAreLoading" [color]="accent" diameter="25"></mat-spinner>
+                <mat-spinner *ngIf="statsAreLoading" color="accent" diameter="25"></mat-spinner>
                 <p>{{'gamesPlayed' | translate}}: <span>{{selectedPlayerStats.gamesPlayed}}</span></p>
             </mat-card-content>
             <mat-card-actions>

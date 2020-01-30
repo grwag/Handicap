@@ -6,16 +6,6 @@
         aria-label="Toggle navigation" [attr.aria-expanded]="isExpanded" (click)="toggle()">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <!-- <select #langSelect (change)="translate.use(langSelect.value)">
-        <option
-          *ngFor="let lang of translate.getLangs()"
-          [value]="lang"
-          [attr.selected]="lang === translate.currentLang ? '' : null"
-        >{{lang}}</option>
-      </select>
-      <mat-select #langSelect1 (selectionChange)="translate.use(langSelect1.value)">
-        <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">{{lang}}</mat-option>
-      </mat-select> -->
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]="{ show: isExpanded }">
         <ul class="navbar-nav flex-grow">
           <li *ngIf="loggedIn$ | async" class="nav-item" [routerLinkActive]="['link-active']"

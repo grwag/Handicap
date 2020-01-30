@@ -19,7 +19,7 @@
             <mat-label>{{'handicap' | translate}}</mat-label>
             <input matInput [(ngModel)]="playerRequest.handicap">
         </mat-form-field>
-        <mat-spinner *ngIf="detailsAreLoading" [color]="accent" diameter="50"></mat-spinner>
+        <mat-spinner *ngIf="detailsAreLoading" color="accent" diameter="50"></mat-spinner>
         <p>{{'gamesPlayed' | translate}}: {{gamesPlayed}}</p>
     </mat-card-content>
     <mat-card-actions>
