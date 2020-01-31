@@ -16,13 +16,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-     <!--Don't publish the SPA source files, but do show them in the project files list--> 
-    <Content Remove="$(SpaRoot)**" />
-    <None Remove="$(SpaRoot)**" />
-    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.0" />
@@ -45,6 +38,13 @@
   <ItemGroup>
     <ProjectReference Include="..\Handicap.Application\Handicap.Application.csproj" />
     <ProjectReference Include="..\Handicap.Data\Handicap.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+     <!--Don't publish the SPA source files, but do show them in the project files list--> 
+    <Content Remove="$(SpaRoot)**" />
+    <None Remove="$(SpaRoot)**" />
+    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

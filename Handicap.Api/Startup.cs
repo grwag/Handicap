@@ -103,7 +103,8 @@ namespace Handicap.Api
                   builder =>
                   {
                       builder
-                        .WithOrigins("http://localhost:4200")
+                        // .WithOrigins("http://localhost:4200")
+                        .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                   });
@@ -113,19 +114,17 @@ namespace Handicap.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
             app.UseSwagger();
             app.UseSwaggerUI(config =>
             {
                 config.SwaggerEndpoint("/swagger/v1/swagger.json", "Handicap Api");
             });
 
-            app.UseCors("AllowAngularDevClient");
-            app.UseAuthentication();
-
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
 
             app.UseMiddleware(typeof(ExceptionHandling));
             //app.UseHttpsRedirection();
@@ -137,13 +136,15 @@ namespace Handicap.Api
             }
 
             app.UseStaticFiles();
-            if (env.IsDevelopment())
+            if (!env.IsDevelopment())
             {
                 app.UseSpaStaticFiles();
             }
 
+            app.UseCors("AllowAngularDevClient");
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

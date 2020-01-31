@@ -98,7 +98,8 @@ namespace Handicap.Api.Controllers
 
             existingPlayer.FirstName = playerRequest.FirstName;
             existingPlayer.LastName = playerRequest.LastName;
-            existingPlayer.Handicap = playerRequest.Handicap;
+            existingPlayer.Handicap = playerRequest.Handicap >= 0 && playerRequest.Handicap <= 95 ?
+                playerRequest.Handicap : existingPlayer.Handicap;
 
             existingPlayer = await _playerService.AddOrUpdate(existingPlayer);
 

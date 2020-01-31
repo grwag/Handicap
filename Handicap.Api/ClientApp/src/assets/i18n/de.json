@@ -3,6 +3,7 @@
     "lastName": "Nachname",
     "handicap": "Handicap",
     "handicaps": "Handicaps",
+    "handicapDescription": "Handicap-basierte Turnier App.",
     "players": "Spieler",
     "player": "Spieler",
     "activePlayers": "Aktive Spieler",
