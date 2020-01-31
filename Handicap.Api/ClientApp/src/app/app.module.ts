@@ -92,7 +92,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
     NgbModule,
     OAuthModule.forRoot({
       resourceServer: {
-        allowedUrls: ['https://localhost:5001/api'],
+        // allowedUrls: ['https://localhost:5001/api'],
         sendAccessToken: true
       }
     }),
