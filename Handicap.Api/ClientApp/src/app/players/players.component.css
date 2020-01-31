@@ -6,7 +6,7 @@ mat-drawer {
   width: 30%;
   height: 100%;
   padding: 20px;
-  background-color: inherit;
+  /* background-color: inherit; */
 }
 
 mat-form-field {
@@ -20,4 +20,11 @@ mat-drawer-container {
 
 mat-card {
     border-radius: 0px;
+}
+
+mat-drawer-container,
+mat-drawer-content {
+  display: block;
+  height: 90vh;
+  background-color: transparent;
 }

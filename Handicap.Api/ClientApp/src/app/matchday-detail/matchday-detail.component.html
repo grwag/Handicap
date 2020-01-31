@@ -1,8 +1,9 @@
 <h3>{{'matchday' | translate}} <small *ngIf="matchday">{{matchday.date | date}}</small></h3>
 
+<app-game-table *ngIf="matchday && matchday.isFinished"></app-game-table>
 <div class="main-container">
     <mat-drawer-container>
-        <mat-toolbar>
+        <mat-toolbar *ngIf="matchday && !matchday.isFinished">
             <div class="button-row" *ngIf="matchday">
                 <button mat-raised-button color="basic" (click)="addRemovePlayers()"
                     [disabled]="matchday.isFinished">{{'addRemovePlayers' | translate}}</button>
@@ -12,7 +13,6 @@
                     [disabled]="matchday.isFinished">{{'finishMatchday' | translate}}</button>
             </div>
         </mat-toolbar>
-        <app-game-table *ngIf="matchday && matchday.isFinished"></app-game-table>
         <mat-card *ngFor="let game of activeGames" [class.eightball]="game.type==7" [class.nineball]="game.type==9"
             [class.tenball]="game.type==8" [class.straightpool]="game.type==100">
             <form>

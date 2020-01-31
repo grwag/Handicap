@@ -13,15 +13,14 @@ mat-drawer {
   background-color: inherit;
 }
 
-div.container { height: 100%;}
-
-
 mat-drawer-container,
 mat-drawer-content {
   display: block;
   height: 90vh;
   background-color: transparent;
 }
+
+/* div.container { height: 100%;} */
 
 mat-toolbar {
   background-color: transparent;
