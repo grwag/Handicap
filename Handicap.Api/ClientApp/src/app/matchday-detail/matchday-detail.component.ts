@@ -37,11 +37,6 @@ export class AddRemovePlayersDialog {
       this.handlePlayer(event, playerId);
     }
 
-    console.log('players to add');
-    console.log(this.playersToAdd);
-
-    console.log('players to remove');
-    console.log(this.playersToRemove);
   }
 
   handlePlayer(event, playerId) {
@@ -79,12 +74,6 @@ export class AddRemovePlayersDialog {
   }
 
   addRemove() {
-    console.log('add-remove');
-    console.log('add');
-    console.log(this.playersToAdd);
-    console.log('remove');
-    console.log(this.playersToRemove);
-
     this.matchdayService.addRemovePlayers(this.data.matchdayId, this.playersToAdd, this.playersToRemove)
       .then(() => {
         this.addRemovePlayersDialogRef.dismiss();
@@ -187,8 +176,6 @@ export class MatchdayDetailComponent implements OnInit {
   }
 
   saveGame(gameId: string, playerOnePoints: number, playerTwoPoints: number, game: Game) {
-    console.log(playerOnePoints);
-    console.log(playerTwoPoints);
     if (playerOnePoints < game.playerOneRequiredPoints && playerTwoPoints < game.playerTwoRequiredPoints) {
       this.snackBar.open('Someone has to win the game ;).', 'Error',
         { duration: 5000 });

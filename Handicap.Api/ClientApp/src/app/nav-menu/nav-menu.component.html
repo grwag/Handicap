@@ -14,7 +14,7 @@
           </li>
           <li *ngIf="loggedIn$ | async" class="nav-item" [routerLinkActive]="['link-active']"
             [routerLinkActiveOptions]="{ exact: true }">
-            <a mat-raised-button color="primary" [routerLink]="['/matchdays']">{{'matchdays' | translate}}</a>
+            <a mat-button [routerLink]="['/matchdays']">{{'matchdays' | translate}}</a>
           </li>
           <li *ngIf="loggedIn$ | async" class="nav-item" [routerLinkActive]="['link-active']"
             [routerLinkActiveOptions]="{ exact: true }">

@@ -2,17 +2,29 @@
 
 <app-game-table *ngIf="matchday && matchday.isFinished"></app-game-table>
 <div class="main-container">
+    <mat-toolbar *ngIf="matchday && !matchday.isFinished" class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow mb-3">
+        <div class="container">
+            <ul class="navbar-nav flex-grow">
+                <li class="nav-item">
+                    <a mat-stroked-button color="basic" (click)="addRemovePlayers()" class="nav-item"
+                        [disabled]="matchday.isFinished">{{'addRemovePlayers' | translate}}</a>
+                </li>
+                <li class="nav-item">
+                    <a mat-stroked-button color="primary" (click)="nextGame()" class="nav-item"
+                        [disabled]="matchday.isFinished">{{'nextGame' | translate}} </a>
+                </li>
+            </ul>
+        </div>
+        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse"*ngIf="matchday && !matchday.isFinished" >
+            <ul class="navbar-nav flex-grow">
+                <li class="nav-item">
+                    <button mat-stroked-button color="accent" (click)="finishMatchday()" class="nav-item"
+                        [disabled]="matchday.isFinished">{{'finishMatchday' | translate}}</button>
+                </li>
+            </ul>
+        </div>
+    </mat-toolbar>
     <mat-drawer-container>
-        <mat-toolbar *ngIf="matchday && !matchday.isFinished">
-            <div class="button-row" *ngIf="matchday">
-                <button mat-raised-button color="basic" (click)="addRemovePlayers()"
-                    [disabled]="matchday.isFinished">{{'addRemovePlayers' | translate}}</button>
-                <button mat-raised-button color="primary" (click)="nextGame()"
-                    [disabled]="matchday.isFinished">{{'nextGame' | translate}} </button>
-                <button mat-raised-button color="accent" (click)="finishMatchday()"
-                    [disabled]="matchday.isFinished">{{'finishMatchday' | translate}}</button>
-            </div>
-        </mat-toolbar>
         <mat-card *ngFor="let game of activeGames" [class.eightball]="game.type==7" [class.nineball]="game.type==9"
             [class.tenball]="game.type==8" [class.straightpool]="game.type==100">
             <form>

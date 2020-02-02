@@ -32,13 +32,11 @@ export class GameTableComponent implements OnInit, AfterViewInit {
   constructor(private gameService: GameService, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    console.log(this.route);
     this.setTotalGames();
     this.dataSource = new GamesDataSource(this.gameService);
 
     if (this.isPlayerGames) {
       this.dataSource.loadPlayerGames(this.id, 'date', false, 10, 0);
-      console.log(this.dataSource);
     } else if (this.isMatchdayGames) {
       this.dataSource.loadMatchdayGames(this.id, 'date', false, 10, 0);
     }
@@ -77,9 +75,7 @@ export class GameTableComponent implements OnInit, AfterViewInit {
     if (this.isPlayerGames) {
       this.gameService.getNumberOfPlayerGames(this.id)
         .subscribe(res => {
-          console.log(res);
           this.totalGames = res.totalCount;
-          console.log('totalgames ' + this.totalGames);
         });
     } else if (this.isMatchdayGames) {
       this.gameService.getNumberOfMatchdayGames(this.id)
@@ -105,7 +101,6 @@ export class GameTableComponent implements OnInit, AfterViewInit {
   }
 
   getType(type: string) {
-    console.log(type);
     switch (type) {
       case '7': {
         return 'gameType.eightBall.long';

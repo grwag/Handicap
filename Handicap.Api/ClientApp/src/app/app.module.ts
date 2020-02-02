@@ -21,6 +21,7 @@ import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
+import { MatBadgeModule } from '@angular/material/badge';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -34,7 +35,7 @@ import { environment } from 'src/environments/environment';
 import { AvatarModule } from 'ngx-avatar';
 
 import { OAuthModule } from 'angular-oauth2-oidc';
-import { PlayersComponent } from './players/players.component';
+import { PlayersComponent, PlayerDetailsSheet } from './players/players.component';
 import { PlayerDetailComponent } from './player-detail/player-detail.component';
 import { MatchdaysComponent } from './matchdays/matchdays.component';
 import { GameComponent } from './game/game.component';
@@ -51,6 +52,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
     ConfigComponent,
     NavMenuComponent,
     PlayersComponent,
+    PlayerDetailsSheet,
     PlayerDetailComponent,
     MatchdaysComponent,
     GameComponent,
@@ -62,6 +64,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
   ],
   entryComponents: [
     AddRemovePlayersDialog,
+    PlayerDetailsSheet,
   ],
   imports: [
     BrowserModule,
@@ -86,6 +89,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
     MatDividerModule,
     MatListModule,
     MatSelectModule,
+    MatBadgeModule,
     ReactiveFormsModule,
     AvatarModule,
     FormsModule,
@@ -107,7 +111,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
       }
     }),
   ],
-  providers: [ ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {
@@ -115,7 +119,7 @@ export class AppModule {
     translate.addLangs(['de', 'en']);
     translate.use('de');
   }
- }
+}
 
 export function translateLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);

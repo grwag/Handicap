@@ -1,8 +1,8 @@
-import { Component, OnInit, OnChanges, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, AfterViewInit, Input, Inject } from '@angular/core';
 import { PlayerService } from '../shared/services/player.service';
 import { Player } from '../shared/player';
 import { PlayerRequest } from '../shared/playerRequest';
-import { MatPaginator } from '@angular/material';
+import { MatPaginator, MAT_BOTTOM_SHEET_DATA, MatBottomSheet, MatBottomSheetRef } from '@angular/material';
 import { MatSort } from '@angular/material/sort';
 import { PlayersDataSource } from '../shared/dataSources/playersDataSource';
 import { FormControl, FormGroupDirective, NgForm, Validators, ReactiveFormsModule, FormGroup } from '@angular/forms';
@@ -14,6 +14,69 @@ import { merge, Observable, of as observableOf } from 'rxjs';
 import { PlayerStats } from '../shared/playerStats';
 import { tap } from 'rxjs/operators';
 
+@Component({
+  // tslint:disable-next-line:component-selector
+  selector: 'player-details-sheet',
+  templateUrl: 'player-details-sheet.html',
+  providers: [PlayerService],
+  styleUrls: ['./players.component.css']
+})
+// tslint:disable-next-line:component-class-suffix
+export class PlayerDetailsSheet implements OnInit {
+  playerStats: PlayerStats;
+  statsAreLoading: boolean;
+
+  constructor(
+    private playerDetailsSheetRef: MatBottomSheetRef<PlayerDetailsSheet>,
+    private playerService: PlayerService,
+    @Inject(MAT_BOTTOM_SHEET_DATA) public data,
+  ) {
+    this.statsAreLoading = true;
+    console.log(data);
+  }
+
+  ngOnInit() {
+    this.loadPlayerStats();
+  }
+
+  updatePlayer() {
+    console.log(this.data.playerRequest);
+    const returnUrl = '/players';
+    this.playerService.updatePlayer(this.data.playerRequest, this.data.playerId)
+      .subscribe(() => {
+        this.playerDetailsSheetRef.dismiss(returnUrl);
+      });
+  }
+
+  goToGames() {
+    console.log('gotogames');
+    const returnUrl = '/players/' + this.data.playerId + '/games';
+    this.playerDetailsSheetRef.dismiss(returnUrl);
+  }
+
+  deletePlayer() {
+    this.playerService.deletePlayer(this.data.playerId)
+      .toPromise()
+      .then(() => {
+        this.playerDetailsSheetRef.dismiss('/players');
+      });
+  }
+
+  loadPlayerStats() {
+    console.log('load games');
+    this.playerService.getPlayerGames(this.data.playerId)
+      .subscribe(
+        response => {
+          if (!response.error) {
+            this.playerStats = new PlayerStats(response.totalCount);
+            console.log(this.playerStats);
+            this.statsAreLoading = false;
+          }
+        });
+  }
+
+
+}
 @Component({
   selector: 'app-players',
   templateUrl: './players.component.html',
@@ -46,8 +109,11 @@ export class PlayersComponent implements OnInit, AfterViewInit {
     ])
   });
 
-  constructor(private playerService: PlayerService, private router: Router, private route: ActivatedRoute) {
-    this.statsAreLoading = true;
+  constructor(
+    private playerService: PlayerService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private playerDetailsSheet: MatBottomSheet) {
   }
 
   ngOnInit() {
@@ -55,13 +121,12 @@ export class PlayersComponent implements OnInit, AfterViewInit {
     this.dataSource = new PlayersDataSource(this.playerService);
     this.dataSource.loadPlayers('FirstName', false, 10, 0);
 
-    const id = this.getCurrentPlayerId();
+    const id = this.route.snapshot.params.id;
     if (id != null) {
       this.playerService.getPlayer(id)
         .subscribe(player => {
-          this.selectedPlayer = player;
-          this.setPlayerRequest();
-          this.loadGames();
+          this.router.navigate(['/players/' + player.id]);
+          this.onSelect(player);
         });
     }
   }
@@ -77,10 +142,30 @@ export class PlayersComponent implements OnInit, AfterViewInit {
 
   onSelect(player: Player): void {
     this.router.navigate(['/players/' + player.id]);
-    this.selectedPlayer = player;
-    this.setPlayerRequest();
-    this.loadGames();
-    console.log('selected');
+    const request = this.getPlayerRequest(player);
+    const ref = this.playerDetailsSheet.open(PlayerDetailsSheet,
+      {
+        data: {
+          player,
+          playerId: player.id,
+          playerRequest: request
+        }
+      });
+
+    ref.afterDismissed().subscribe(returnUrl => {
+      console.log('after dismissed');
+      console.log(returnUrl);
+      if (returnUrl) {
+        this.router.navigate([returnUrl]);
+      } else {
+        this.router.navigate(['/players']);
+      }
+    });
+  }
+
+  getPlayerRequest(player: Player): PlayerRequest {
+    const request = new PlayerRequest(player.firstName, player.lastName, player.handicap);
+    return request;
   }
 
   loadPlayersPage() {
@@ -104,66 +189,22 @@ export class PlayersComponent implements OnInit, AfterViewInit {
     this.playerService.getPlayer(id)
       .subscribe(player => {
         this.selectedPlayer = player;
-        this.setPlayerRequest();
+        // this.setPlayerRequest();
       });
   }
 
-	createPlayer() {
-		const playerRequest = new PlayerRequest(
-			this.form.controls.firstName.value,
-			this.form.controls.lastName.value,
-			this.form.controls.handicap.value
-		);
-		this.playerService.createPlayer(playerRequest)
-			.subscribe(player => {
-				this.onSelect(player);
-				this.dataSource.loadPlayers('FirstName', false, this.paginator.pageSize, this.paginator.pageIndex);
-				this.setTotalPlayers();
-			});
-	}
-
-  updatePlayer(): void {
-    this.playerService.updatePlayer(this.playerRequest, this.selectedPlayer.id)
+  createPlayer() {
+    const playerRequest = new PlayerRequest(
+      this.form.controls.firstName.value,
+      this.form.controls.lastName.value,
+      this.form.controls.handicap.value
+    );
+    this.playerService.createPlayer(playerRequest)
       .subscribe(player => {
-        console.log('updated player: ' + this.selectedPlayer.id);
+        this.onSelect(player);
         this.dataSource.loadPlayers('FirstName', false, this.paginator.pageSize, this.paginator.pageIndex);
-        this.router.navigate(['/players/' + this.selectedPlayer.id]);
+        this.setTotalPlayers();
       });
-  }
-
-  deletePlayer(): void {
-    const id = this.getCurrentPlayerId();
-
-    this.selectedPlayer = null;
-
-    this.playerService.deletePlayer(id)
-      .subscribe(() => {
-        console.log('Deleted player: ' + id);
-        this.router.navigate(['/players']);
-      });
-  }
-
-  loadGames() {
-    console.log('load games');
-    this.playerService.getPlayerGames(this.selectedPlayer.id)
-      .subscribe(
-        response => {
-          if (!response.error) {
-            this.selectedPlayerStats = new PlayerStats(response.totalCount);
-            this.statsAreLoading = false;
-          }
-        });
-  }
-
-  setPlayerRequest() {
-    console.log('set request');
-    this.playerRequest = new PlayerRequest(this.selectedPlayer.firstName, this.selectedPlayer.lastName, this.selectedPlayer.handicap);
-  }
-
-  getCurrentPlayerId(): string {
-    const id = this.route.snapshot.params.id;
-    console.log(id);
-    return id;
   }
 
   validateHandicap(formControl: FormControl) {
@@ -179,4 +220,5 @@ export class PlayersComponent implements OnInit, AfterViewInit {
       }
     };
   }
+
 }

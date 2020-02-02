@@ -6,16 +6,14 @@ mat-drawer {
   width: 30%;
   height: 100%;
   padding: 20px;
-  /* background-color: inherit; */
+}
+
+.detail-form {
+  width: 70%;
 }
 
 mat-form-field {
   margin-right: 12px;
-}
-
-mat-drawer-container {
-  min-height: 400px;
-  padding: 20px;
 }
 
 mat-card {
