@@ -1,35 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
 
 a {
-    color: #0366d6;
+  color: #0366d6;
 }
-  
+
 code {
-    color: #e01a76;
+  color: #e01a76;
 }
 
 .btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
 }
 
 .mat-spinner {
-    margin:0 auto;
+  margin: 0 auto;
 }
 
 .eightball {
-    background-color: #CFD8DC;
-  }
-  
-  .nineball {
-    background-color: #FFECB3;
-  }
-  
-  .tenball {
-    background-color: #C5CAE9;
-  }
-  
-  .straightpool {
-    background-color: #ffcdd2;
-  }
+  color: #455a64;
+}
+
+.nineball {
+  color: #e64a19;
+}
+
+.tenball {
+  color: #00796b;
+}
+
+.straightpool {
+  color: #d32f2f;
+}
+
+body {
+  font-family: Roboto,"Helvetica Neue",sans-serif;
+}

@@ -21,7 +21,6 @@ import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
-import { MatBadgeModule } from '@angular/material/badge';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -89,7 +88,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
     MatDividerModule,
     MatListModule,
     MatSelectModule,
-    MatBadgeModule,
     ReactiveFormsModule,
     AvatarModule,
     FormsModule,

@@ -10,6 +10,7 @@ import { PlayerService } from '../shared/services/player.service';
 import { GameService } from '../shared/services/game.service';
 import { GameRequest } from '../shared/gameRequest';
 import { FormControl, FormGroup, FormArray, FormBuilder, Form } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   // tslint:disable-next-line:component-selector
@@ -109,7 +110,8 @@ export class MatchdayDetailComponent implements OnInit {
     private router: Router,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
-    private addRemovePlayersDialog: MatBottomSheet
+    private addRemovePlayersDialog: MatBottomSheet,
+    private translate: TranslateService
   ) { }
 
   ngOnInit() {
@@ -218,6 +220,10 @@ export class MatchdayDetailComponent implements OnInit {
       return game.playerOnePoints >= game.playerOneRequiredPoints;
     }
     return game.playerTwoPoints >= game.playerTwoRequiredPoints;
+  }
+
+  getTranslatedGameType(game: Game){
+
   }
 
 }

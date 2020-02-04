@@ -4,7 +4,7 @@
 <div class="main-container">
     <mat-toolbar *ngIf="matchday && !matchday.isFinished"
         class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light box-shadow mb-3">
-        <div class="container">
+        <div >
             <ul class="navbar-nav flex-grow">
                 <li class="nav-item">
                     <a mat-stroked-button color="basic" (click)="addRemovePlayers()" class="nav-item"
@@ -27,8 +27,12 @@
         </div>
     </mat-toolbar>
     <mat-drawer-container>
-        <mat-card *ngFor="let game of activeGames" [class.eightball]="game.type==7" [class.nineball]="game.type==9"
-            [class.tenball]="game.type==8" [class.straightpool]="game.type==100">
+        <h4>{{'activeGames' | translate}}</h4>
+        <mat-card *ngFor="let game of activeGames">
+            <mat-card-subtitle *ngIf="game.type==7" class="tenball">{{'gameType.tenBall.long' | translate}}</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="game.type==8" class="eightball">{{'gameType.eightBall.long' | translate}}</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="game.type==9" class="nineball">{{'gameType.nineBall.long' | translate}}</mat-card-subtitle>
+            <mat-card-subtitle *ngIf="game.type==100" class="straightpool">{{'gameType.straightPool.long' | translate}}</mat-card-subtitle>
             <form>
                 <mat-form-field>
                     <mat-label><b>({{game.playerOneRequiredPoints}})</b> {{game.playerOne.firstName | uppercase}}
@@ -40,32 +44,36 @@
                         {{game.playerTwo.lastName}}</mat-label>
                     <input matInput #playerTwoPoints value="0">
                 </mat-form-field>
-                <button mat-raised-button color="primary"
+                <button mat-stroked-button color="primary"
                     (click)="saveGame(game.id,playerOnePoints.value,playerTwoPoints.value,game)">{{'save' | translate}}</button>
             </form>
         </mat-card>
         <mat-drawer *ngIf="matchday && !matchday.isFinished" #drawer mode="side" position="end" opened>
-            <mat-card *ngFor="let game of finishedGames" [class.eightball]="game.type==7"
-                [class.nineball]="game.type==9" [class.tenball]="game.type==8" [class.straightpool]="game.type==100">
-                <mat-card-title *ngIf="isWinner(game, game.playerOne)" class="finished-game" align="center">
-                    {{game.playerOne.firstName | uppercase }} {{game.playerOne.lastName}}
-                </mat-card-title>
-                <mat-card-subtitle *ngIf="!isWinner(game, game.playerOne)" class="finished-game" align="center">
-                    {{game.playerOne.firstName | uppercase }} {{game.playerOne.lastName}}
-                </mat-card-subtitle>
-                <div class="point-row" align="center">
-                    <span class="points">{{game.playerOnePoints}} </span>
-                    <span>({{game.playerOneRequiredPoints}}) </span>
-                    <span> : </span>
-                    <span class="points">{{game.playerTwoPoints}} </span>
-                    <span>({{game.playerTwoRequiredPoints}}) </span>
-                </div>
-                <mat-card-title *ngIf="isWinner(game, game.playerTwo)" class="finished-game" align="center">
-                    {{game.playerTwo.firstName | uppercase }} {{game.playerTwo.lastName}}
-                </mat-card-title>
-                <mat-card-subtitle *ngIf="!isWinner(game, game.playerTwo)" class="finished-game" align="center">
-                    {{game.playerTwo.firstName | uppercase }} {{game.playerTwo.lastName}}
-                </mat-card-subtitle>
+            <h4>{{'finishedGames' | translate}} </h4>
+            <mat-card *ngFor="let game of finishedGames">
+                <mat-card-header class="title">
+                    <div mat-card-avatar *ngIf="game.type==7">
+                        <ngx-avatar value="{{'gameType.tenBall.short' | translate}}" bgColor="#00796B"></ngx-avatar>
+                    </div>
+                    <div mat-card-avatar *ngIf="game.type==8">
+                        <ngx-avatar value="{{'gameType.eightBall.short' | translate}}" bgColor="#455A64"></ngx-avatar>
+                    </div>
+                    <div mat-card-avatar *ngIf="game.type==9">
+                        <ngx-avatar value="{{'gameType.nineBall.short' | translate}}" bgColor="#E64A19"></ngx-avatar>
+                    </div>
+                    <div mat-card-avatar *ngIf="game.type==100">
+                        <ngx-avatar value="{{'gameType.straightPool.short' | translate}}" bgColor="#d32f2f"></ngx-avatar>
+                    </div>
+                    <mat-card-title class="title">
+                        {{game.playerOnePoints}} : {{game.playerTwoPoints}} 
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                        <span matTooltip="{{game.playerOne.firstName}} {{game.playerOne.lastName}}">
+                            {{game.playerOne.firstName | uppercase }} {{game.playerOne.lastName[0]}}. - </span>
+                        <span matTooltip="{{game.playerTwo.firstName}} {{game.playerTwo.lastName}}">
+                            {{game.playerTwo.firstName | uppercase }} {{game.playerTwo.lastName[0]}}.</span>
+                    </mat-card-subtitle>
+                </mat-card-header>
             </mat-card>
         </mat-drawer>
     </mat-drawer-container>

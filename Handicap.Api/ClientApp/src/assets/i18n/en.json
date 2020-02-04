@@ -53,5 +53,7 @@
     "add": "Add",
     "updateHandicapsImmediately": "Update handicaps immediately",
     "language": "Language",
-    "languages": "Languages"
+    "languages": "Languages",
+    "finishedGames": "Finished Games",
+    "activeGames": "Active Games"
 }

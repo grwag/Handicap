@@ -53,5 +53,7 @@
     "add": "Hinzufügen",
     "updateHandicapsImmediately": "Handicaps sofort aktualisieren",
     "language": "Sprache",
-    "languages": "Sprachen"
+    "languages": "Sprachen",
+    "finishedGames": "Beendete Spiele",
+    "activeGames": "Laufende Spiele"
 }

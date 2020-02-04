@@ -9,9 +9,19 @@
 .main-container {
   height: 100%;
 }
+
+h4 {
+  margin-left: 8px;
+}
+
+mat-card {
+  margin-bottom: 8px;
+  margin-right: 8px;
+  margin-left: 8px;
+}
+
 mat-drawer {
   width: 40%;
-  padding: 20px;
   background-color: inherit;
 }
 
@@ -24,29 +34,14 @@ mat-drawer-content {
 
 mat-toolbar {
   background-color: transparent;
-}
-
-mat-card {
-  margin: 8px;
-  border-radius: 0px;
-}
-
-mat-card-title,
-mat-card-subtitle {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-  word-break: break-all;
+  padding: 0px;
+  margin-left: 8px;
 }
 
 mat-card-title.finished-game,
 mat-card-subtitle.finished-game {
   margin-bottom: 0px;
   margin-top: 0px;
-}
-
-.button-row button {
-  margin-right: 8px;
 }
 
 mat-form-field {
@@ -56,9 +51,4 @@ mat-form-field {
 
 .points {
   font-size: 1.2em;
-}
-
-.point-row {
-  margin-bottom: 8px;
-  margin-top: 8px;
 }
