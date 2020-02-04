@@ -6,6 +6,7 @@
     "handicapDescription": "Handicap-based Tournament App.",
     "players": "Players",
     "player": "Player",
+    "playerDeleted": "Player deleted",
     "activePlayers": "Active Players",
     "availablePlayers": "Available Players",
     "playerOne": "Player 1",

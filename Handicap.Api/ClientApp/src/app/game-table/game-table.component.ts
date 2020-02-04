@@ -3,12 +3,10 @@ import { Player } from '../shared/player';
 import { GamesDataSource } from '../shared/dataSources/gamesDataSource';
 import { MatPaginator, MatSort } from '@angular/material';
 import { GameService } from '../shared/services/game.service';
-import { Matchday } from '../shared/matchday';
 import { Game } from '../shared/game';
 import { merge } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { PlayerService } from '../shared/services/player.service';
 
 @Component({
   selector: 'app-game-table',
@@ -29,7 +27,9 @@ export class GameTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
 
-  constructor(private gameService: GameService, private route: ActivatedRoute) { }
+  constructor(
+    private gameService: GameService,
+    private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.setTotalGames();

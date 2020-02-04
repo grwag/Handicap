@@ -14,7 +14,9 @@
     <ng-container matColumnDef="playerOne">
         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{'playerOne' | translate}}</th>
         <td mat-cell *matCellDef="let game">
-            {{game.playerOne.firstName | uppercase }} {{game.playerOne.lastName}}</td>
+            <span *ngIf="game.playerOne">{{game.playerOne.firstName | uppercase }} {{game.playerOne.lastName}}</span>
+            <span *ngIf="!game.playerOne">{{'playerDeleted' | translate}} </span>
+        </td>
     </ng-container>
     <ng-container matColumnDef="playerOnePoints">
         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{'points' | translate}}</th>
@@ -29,7 +31,9 @@
     <ng-container matColumnDef="playerTwo">
         <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> {{'playerTwo' | translate}}</th>
         <td mat-cell *matCellDef="let game">
-            {{game.playerTwo.firstName | uppercase }} {{game.playerTwo.lastName}}</td>
+            <span *ngIf="game.playerTwo">{{game.playerTwo.firstName | uppercase }} {{game.playerTwo.lastName}}</span>
+            <span *ngIf="!game.playerTwo">{{'playerDeleted' | translate}}</span>
+        </td>
     </ng-container>
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"

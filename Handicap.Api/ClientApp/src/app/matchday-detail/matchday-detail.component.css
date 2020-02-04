@@ -6,7 +6,9 @@
   align-items: stretch;
 }
 
-.main-container { height: 100%;}
+.main-container {
+  height: 100%;
+}
 mat-drawer {
   width: 40%;
   padding: 20px;
@@ -20,8 +22,6 @@ mat-drawer-content {
   background-color: transparent;
 }
 
-/* div.container { height: 100%;} */
-
 mat-toolbar {
   background-color: transparent;
 }
@@ -31,19 +31,34 @@ mat-card {
   border-radius: 0px;
 }
 
+mat-card-title,
+mat-card-subtitle {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  word-break: break-all;
+}
+
+mat-card-title.finished-game,
+mat-card-subtitle.finished-game {
+  margin-bottom: 0px;
+  margin-top: 0px;
+}
+
 .button-row button {
   margin-right: 8px;
 }
 
 mat-form-field {
   margin-right: 12px;
+  width: 40%;
 }
 
 .points {
   font-size: 1.2em;
 }
 
-.won {
-  color: #536dfe;
-  font-weight: bold;
+.point-row {
+  margin-bottom: 8px;
+  margin-top: 8px;
 }
