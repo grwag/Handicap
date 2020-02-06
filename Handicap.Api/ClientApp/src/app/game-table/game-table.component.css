@@ -5,3 +5,7 @@ table {
 .points {
   font-size: 1.2em;
 }
+
+.isWinner {
+  background-color: #C5CAE9;
+}

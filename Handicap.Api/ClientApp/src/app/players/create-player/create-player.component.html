@@ -1,0 +1,18 @@
+<form [formGroup]="form">
+    <mat-form-field>
+        <mat-label>{{'firstName' | translate}}</mat-label>
+        <input matInput placeholder="{{'firstName' | translate}}" formControlName="firstName">
+        <mat-error>{{'required' | translate}}!</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>{{'lastName' | translate}}</mat-label>
+        <input matInput placeholder="{{'lastName' | translate}}" formControlName="lastName">
+        <mat-error>{{'required' | translate}}!</mat-error>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>{{'handicap' | translate}}</mat-label>
+        <input matInput placeholder="{{'handicap' | translate}}" type="number" step="5" formControlName="handicap">
+        <mat-error>{{'invalidHandicap' | translate}}!</mat-error>
+    </mat-form-field>
+    <button mat-button color="primary" [disabled]="form.invalid" (click)="createPlayer()">{{'add' | translate}}</button>
+</form>

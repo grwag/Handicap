@@ -8,14 +8,6 @@ mat-drawer {
   padding: 20px;
 }
 
-.detail-form {
-  width: 70%;
-}
-
-mat-form-field {
-  margin-right: 12px;
-}
-
 mat-card {
     border-radius: 0px;
 }

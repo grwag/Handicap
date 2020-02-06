@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
-import { MatchdayService } from '../shared/services/matchday.service';
-import { MatchdaysDataSource } from '../shared/dataSources/matchdaysDataSource';
+import { MatchdayService } from '../../shared/services/matchday.service';
+import { MatchdaysDataSource } from '../../shared/dataSources/matchdaysDataSource';
 import { MatPaginator, MatSort } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
 import { merge } from 'rxjs';

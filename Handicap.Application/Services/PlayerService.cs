@@ -47,12 +47,19 @@ namespace Handicap.Application.Services
 
         public async Task Delete(string id, string tenantId)
         {
-            var player = (await _playerRepository.Find(p => p.Id == id && p.TenantId == tenantId))
+            var player = (await _playerRepository.Find(
+                p => p.Id == id && p.TenantId == tenantId,
+                nameof(Player.MatchDayPlayers),
+                $"{nameof(Player.MatchDayPlayers)}.{nameof(MatchDayPlayer.MatchDay)}"))
                 .FirstOrDefault();
 
             if (player == null)
             {
                 throw new EntityNotFoundException($"Player with id {id} not found.");
+            }
+
+            if(player.MatchDayPlayers.Any(mdp => mdp.MatchDay.IsFinished == false)) {
+                throw new EntityClosedForUpdateException($"Cannot delete player {player.Id}. He is part of an open Matchday");
             }
 
             await _playerRepository.Delete(id);

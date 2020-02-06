@@ -27,7 +27,7 @@
         </div>
     </mat-toolbar>
     <mat-drawer-container>
-        <h4>{{'activeGames' | translate}}</h4>
+        <h4 *ngIf="matchday && !matchday.isFinished">{{'activeGames' | translate}}</h4>
         <mat-card *ngFor="let game of activeGames">
             <mat-card-subtitle *ngIf="game.type==7" class="tenball">{{'gameType.tenBall.long' | translate}}</mat-card-subtitle>
             <mat-card-subtitle *ngIf="game.type==8" class="eightball">{{'gameType.eightBall.long' | translate}}</mat-card-subtitle>

@@ -1,10 +1,8 @@
 import { Component, Inject } from '@angular/core';
 import { JwksValidationHandler, AuthConfig } from 'angular-oauth2-oidc';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { HandicapAuthConfig } from './shared/auth/handicapAuthConfig';
-import { authConfig } from './auth.config';
 
 @Component({
   selector: 'app-root',

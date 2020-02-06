@@ -1,14 +1,14 @@
 import { Component, OnInit, ChangeDetectorRef, AfterViewChecked, Inject } from '@angular/core';
-import { MatchdayService } from '../shared/services/matchday.service';
+import { MatchdayService } from '../../shared/services/matchday.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Matchday } from '../shared/matchday';
-import { GamesDataSource } from '../shared/dataSources/gamesDataSource';
-import { Game } from '../shared/game';
-import { Player } from '../shared/player';
+import { Matchday } from '../../shared/matchday';
+import { GamesDataSource } from '../../shared/dataSources/gamesDataSource';
+import { Game } from '../../shared/game';
+import { Player } from '../../shared/player';
 import { MatSnackBar, MatBottomSheet, MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material';
-import { PlayerService } from '../shared/services/player.service';
-import { GameService } from '../shared/services/game.service';
-import { GameRequest } from '../shared/gameRequest';
+import { PlayerService } from '../../shared/services/player.service';
+import { GameService } from '../../shared/services/game.service';
+import { GameRequest } from '../../shared/gameRequest';
 import { FormControl, FormGroup, FormArray, FormBuilder, Form } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -189,7 +189,7 @@ export class MatchdayDetailComponent implements OnInit {
     this.gameService.updateGame(gameRequest)
       .subscribe(
         () => {
-          this.loadGames()
+          this.loadGames();
         },
         error => this.snackBar.open(error.error.Error.ErrorMessage,
           'Error',
@@ -200,9 +200,9 @@ export class MatchdayDetailComponent implements OnInit {
   finishMatchday() {
     this.matchdayService.finalize(this.matchdayId)
       .subscribe((md) => {
-          console.log(md);
-          this.router.navigate(['/matchdays']);
-        },
+        console.log(md);
+        this.router.navigate(['/matchdays']);
+      },
         error => {
           this.snackBar.open(error.error.Error.ErrorMessage,
             'Error',
@@ -220,10 +220,6 @@ export class MatchdayDetailComponent implements OnInit {
       return game.playerOnePoints >= game.playerOneRequiredPoints;
     }
     return game.playerTwoPoints >= game.playerTwoRequiredPoints;
-  }
-
-  getTranslatedGameType(game: Game){
-
   }
 
 }

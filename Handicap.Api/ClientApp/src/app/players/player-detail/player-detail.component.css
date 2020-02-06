@@ -1,0 +1,15 @@
+ngx-avatar {
+	display: inline-block;
+}
+
+input {
+	width: 90%;
+}
+
+mat-form-field {
+	margin-right: 12px;
+}
+
+.detail-form {
+	width: 70%;
+}

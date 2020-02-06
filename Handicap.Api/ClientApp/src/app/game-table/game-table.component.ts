@@ -18,9 +18,8 @@ export class GameTableComponent implements OnInit, AfterViewInit {
   @Input() player?: Player;
 
   totalGames: number;
-  isPlayerGames: boolean = this.route.snapshot.url[0].path === 'players';
+  isPlayerGames: boolean = this.player !== null;
   id: string = this.route.snapshot.params.id;
-  isMatchdayGames: boolean = this.route.snapshot.url[0].path === 'matchdays';
   dataSource: GamesDataSource;
   displayedColumns: string[] = ['date', 'type', 'playerOne', 'playerOnePoints', 'playerTwoPoints', 'playerTwo'];
 
@@ -32,12 +31,14 @@ export class GameTableComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+    console.log('init game table');
+    console.log(this.route.snapshot.url);
     this.setTotalGames();
     this.dataSource = new GamesDataSource(this.gameService);
 
     if (this.isPlayerGames) {
       this.dataSource.loadPlayerGames(this.id, 'date', false, 10, 0);
-    } else if (this.isMatchdayGames) {
+    } else {
       this.dataSource.loadMatchdayGames(this.id, 'date', false, 10, 0);
     }
   }
@@ -60,7 +61,7 @@ export class GameTableComponent implements OnInit, AfterViewInit {
         this.paginator.pageSize,
         this.paginator.pageIndex
       );
-    } else if (this.isMatchdayGames) {
+    } else {
       this.dataSource.loadMatchdayGames(
         this.id,
         this.sort.active,
@@ -73,11 +74,12 @@ export class GameTableComponent implements OnInit, AfterViewInit {
 
   setTotalGames() {
     if (this.isPlayerGames) {
+      console.log('playergames');
       this.gameService.getNumberOfPlayerGames(this.id)
         .subscribe(res => {
           this.totalGames = res.totalCount;
         });
-    } else if (this.isMatchdayGames) {
+    } else {
       this.gameService.getNumberOfMatchdayGames(this.id)
         .subscribe(res => {
           this.totalGames = res.totalCount;
@@ -86,10 +88,6 @@ export class GameTableComponent implements OnInit, AfterViewInit {
   }
 
   isWinner(game: Game): boolean {
-    if (this.isMatchdayGames) {
-      return false;
-    }
-
     if (this.player === null) {
       return false;
     }

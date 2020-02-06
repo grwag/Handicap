@@ -138,8 +138,14 @@ export class MatchdayService {
 
   getAvailablePlayers(id: string) {
     const uri = this.baseApiUrl + '/' + id + '/availableplayers';
-    return this.http.get<HandicapResponse>(uri)
-    .pipe();
+    return this.http.get<HandicapResponse>(uri, {
+      params: new HttpParams()
+        .set('orderBy', 'firstName')
+        .set('desc', false.toString())
+        .set('pageSize', '99999')
+        .set('page', '0')
+    })
+      .pipe();
   }
 
 }

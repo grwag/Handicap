@@ -1,13 +1,9 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { Player } from '../shared/player';
-import { GamesDataSource } from '../shared/dataSources/gamesDataSource';
-import { MatPaginator, MatSort } from '@angular/material';
-import { PlayerService } from '../shared/services/player.service';
+import { Player } from '../../shared/player';
+import { PlayerService } from '../../shared/services/player.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { GameService } from '../shared/services/game.service';
-import { merge } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { Game } from '../shared/game';
+import { GameService } from '../../shared/services/game.service';
+import { Game } from '../../shared/game';
 
 @Component({
   selector: 'app-player-games',
