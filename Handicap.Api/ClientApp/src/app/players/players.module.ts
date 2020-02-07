@@ -24,6 +24,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AvatarModule } from 'ngx-avatar';
 
 import { SharedModule } from '../shared/shared.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
     declarations: [
@@ -51,7 +52,7 @@ import { SharedModule } from '../shared/shared.module';
         MatSnackBarModule,
         MatTooltipModule,
         AvatarModule,
-        SharedModule
+        SharedModule,
     ]
 })
 export class PlayersModule { }
