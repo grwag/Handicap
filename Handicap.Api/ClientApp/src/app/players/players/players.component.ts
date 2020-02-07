@@ -77,15 +77,17 @@ export class PlayersComponent implements OnInit, AfterViewInit {
       });
 
     ref.afterDismissed().subscribe(data => {
-      console.log('after dismissed');
-      console.log(data);
-      if (data.error) {
-        this.snackBar.open(data.error,
-          'Error',
-          { duration: 5000 });
-        this.router.navigate(['/players']);
+      if (data) {
+        if (data.error) {
+          this.snackBar.open(data.error,
+            'Error',
+            { duration: 5000 });
+          this.router.navigate(['/players']);
+        } else if (data.url) {
+          this.router.navigate([data.url]);
+        }
       } else {
-        this.router.navigate([data.url]);
+        this.router.navigate(['/players']);
       }
     });
   }
@@ -108,14 +110,6 @@ export class PlayersComponent implements OnInit, AfterViewInit {
     this.playerService.getNumberOfTotalPlayers()
       .subscribe(res => {
         this.totalPlayers = res.totalCount;
-      });
-  }
-
-  getPlayerDetails(id: string): void {
-    console.log('get details');
-    this.playerService.getPlayer(id)
-      .subscribe(player => {
-        this.selectedPlayer = player;
       });
   }
 

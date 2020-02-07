@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnChanges, SimpleChange, SimpleChanges, Injec
 import { PlayerService } from '../../shared/services/player.service';
 import { PlayerStats } from '../../shared/playerStats';
 import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-player-detail',
@@ -17,6 +18,7 @@ export class PlayerDetailComponent implements OnInit {
     private playerDetailsSheetRef: MatBottomSheetRef<PlayerDetailComponent>,
     private playerService: PlayerService,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data,
+    private route: ActivatedRoute
   ) {
     this.statsAreLoading = true;
   }

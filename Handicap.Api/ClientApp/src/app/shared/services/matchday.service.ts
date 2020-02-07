@@ -50,6 +50,7 @@ export class MatchdayService {
 
   getGames(id: string): Observable<HandicapResponse> {
     const uri = this.baseApiUrl + '/' + id + '/games';
+    console.log('load games from ' + uri);
     return this.http.get<HandicapResponse>(uri, {
       params: new HttpParams()
         .set('orderBy', 'date')

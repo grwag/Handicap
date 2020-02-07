@@ -15,10 +15,10 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./game-table.component.css']
 })
 export class GameTableComponent implements OnInit, AfterViewInit {
-  @Input() player?: Player;
+  @Input() player?: Player = null;
 
   totalGames: number;
-  isPlayerGames: boolean = this.player !== null;
+  isPlayerGames: boolean;
   id: string = this.route.snapshot.params.id;
   dataSource: GamesDataSource;
   displayedColumns: string[] = ['date', 'type', 'playerOne', 'playerOnePoints', 'playerTwoPoints', 'playerTwo'];
@@ -31,8 +31,7 @@ export class GameTableComponent implements OnInit, AfterViewInit {
     private route: ActivatedRoute) { }
 
   ngOnInit() {
-    console.log('init game table');
-    console.log(this.route.snapshot.url);
+    this.isPlayerGames = this.player !== null ;
     this.setTotalGames();
     this.dataSource = new GamesDataSource(this.gameService);
 
@@ -74,7 +73,6 @@ export class GameTableComponent implements OnInit, AfterViewInit {
 
   setTotalGames() {
     if (this.isPlayerGames) {
-      console.log('playergames');
       this.gameService.getNumberOfPlayerGames(this.id)
         .subscribe(res => {
           this.totalGames = res.totalCount;
@@ -93,9 +91,9 @@ export class GameTableComponent implements OnInit, AfterViewInit {
     }
 
     if (this.player.id === game.playerOne.id) {
-      return game.playerOnePoints >= game.playerOneRequiredPoints;
+      return (game.playerOnePoints >= game.playerOneRequiredPoints) && (game.playerOnePoints > 0);
     }
-    return game.playerTwoPoints >= game.playerTwoRequiredPoints;
+    return (game.playerTwoPoints >= game.playerTwoRequiredPoints) && (game.playerTwoPoints > 0);
   }
 
   getType(type: string) {
