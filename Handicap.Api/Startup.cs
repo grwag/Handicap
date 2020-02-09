@@ -116,8 +116,8 @@ namespace Handicap.Api
                   builder =>
                   {
                       builder
-                        .WithOrigins(clientUrl)
-                        // .AllowAnyOrigin()
+                        // .WithOrigins(clientUrl)
+                        .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                   });
