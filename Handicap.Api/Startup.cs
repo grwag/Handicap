@@ -187,9 +187,5 @@ namespace Handicap.Api
 
             return connString;
         }
-
-        private string GetClientUrl(){
-            Environment.
-        }
     }
 }
