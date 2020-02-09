@@ -109,7 +109,6 @@ namespace Handicap.Api
                 clientUrl = "https://localhost:5001";
             }
 
-            logger.LogInformation($"clientUrl: {clientUrl}");
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngularDevClient",
