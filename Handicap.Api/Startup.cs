@@ -104,12 +104,12 @@ namespace Handicap.Api
                 typeof(DomainToDtoMappingProfile)
                 );
 
-            var clientUrl = System.Environment.GetEnvironmentVariable("CLIENT_URL");
-            if(Environment.IsDevelopment()){
-                clientUrl = "https://localhost:5001";
-            }
+            // var clientUrl = System.Environment.GetEnvironmentVariable("CLIENT_URL");
+            // if(Environment.IsDevelopment()){
+            //     clientUrl = "https://localhost:5001";
+            // }
 
-            logger.LogInformation($"clientUrl: {clientUrl}");
+            // logger.LogInformation($"clientUrl: {clientUrl}");
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngularDevClient",
