@@ -33,7 +33,7 @@ namespace Handicap.Api
         public Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services, ILogger<Startup> logger)
         {
             services.AddLogging(logBuilder =>
             {
@@ -109,6 +109,7 @@ namespace Handicap.Api
                 clientUrl = "https://localhost:5001";
             }
 
+            logger.LogInformation($"clientUrl: {clientUrl}");
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngularDevClient",
