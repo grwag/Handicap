@@ -40,11 +40,18 @@ namespace Handicap.Api
                 logBuilder.AddSeq(Configuration.GetSection("Seq"));
             });
 
+            var authority = System.Environment.GetEnvironmentVariable("OAUTH_ISSUER");
+            var apiName = System.Environment.GetEnvironmentVariable("OAUTH_API_NAME");
+            if(Environment.IsDevelopment()){
+                authority = "https://id.greshawag.com";
+                apiName = "handicap_test";
+            }
+
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "https://id.greshawag.com";
-                    options.ApiName = "handicap_test";
+                    options.Authority = authority;
+                    options.ApiName = apiName;
                 });
 
             services.AddAuthorization(options =>
@@ -97,13 +104,18 @@ namespace Handicap.Api
                 typeof(DomainToDtoMappingProfile)
                 );
 
+            var clientUrl = System.Environment.GetEnvironmentVariable("CLIENT_URL");
+            if(Environment.IsDevelopment()){
+                clientUrl = "https://localhost:5001";
+            }
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAngularDevClient",
                   builder =>
                   {
                       builder
-                        // .WithOrigins("http://localhost:4200")
+                        .WithOrigins(clientUrl)
                         .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
@@ -174,6 +186,10 @@ namespace Handicap.Api
             var connString = $"Server={host};Port={port};User={user};Password={pw};Database={db};Pooling=True";
 
             return connString;
+        }
+
+        private string GetClientUrl(){
+            Environment.
         }
     }
 }
