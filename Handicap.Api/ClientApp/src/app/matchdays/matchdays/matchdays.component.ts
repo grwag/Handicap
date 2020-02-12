@@ -43,6 +43,9 @@ export class MatchdaysComponent implements OnInit, AfterViewInit {
     this.matchdayService.getTotalMatchdays()
       .subscribe(res => {
         this.totalMatchdays = res.totalCount;
+      },
+      error => {
+        console.log(error);
       });
   }
 
@@ -50,6 +53,9 @@ export class MatchdaysComponent implements OnInit, AfterViewInit {
     this.matchdayService.getOpenMatchdays()
     .subscribe(res => {
       this.openMatchdays = res.totalCount;
+    },
+    error => {
+      console.log(error);
     });
   }
 

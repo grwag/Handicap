@@ -51,6 +51,9 @@ export class PlayersComponent implements OnInit, AfterViewInit {
         .subscribe(player => {
           this.router.navigate(['/players/' + player.id]);
           this.onSelect(player);
+        },
+        error => {
+          console.log(error);
         });
     }
   }
@@ -110,6 +113,9 @@ export class PlayersComponent implements OnInit, AfterViewInit {
     this.playerService.getNumberOfTotalPlayers()
       .subscribe(res => {
         this.totalPlayers = res.totalCount;
+      },
+      error => {
+        console.log(error);
       });
   }
 

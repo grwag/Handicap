@@ -10,7 +10,7 @@ import { CreatePlayerComponent } from './create-player/create-player.component';
 // import { GameTableComponent } from '../game-table/game-table.component';
 
 import { TranslateModule } from '@ngx-translate/core';
-import { MatCardModule } from '@angular/material';
+import { MatCardModule, MatLabel } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -51,6 +51,7 @@ import { RouterModule } from '@angular/router';
         MatSortModule,
         MatSnackBarModule,
         MatTooltipModule,
+        MatLabel,
         AvatarModule,
         SharedModule,
     ]

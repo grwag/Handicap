@@ -25,6 +25,9 @@ export class PlayerGamesComponent implements OnInit {
     this.playerService.getPlayer(this.route.snapshot.params.id)
       .subscribe(player => {
         this.player = player;
+      },
+      error => {
+        console.log(error);
       });
   }
 

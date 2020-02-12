@@ -34,6 +34,8 @@ export class AppComponent {
         this.oauthService.setupAutomaticSilentRefresh();
         this.oauthService.tokenValidationHandler = new JwksValidationHandler();
         this.oauthService.loadDiscoveryDocumentAndTryLogin();
+      }, (error) => {
+        console.log(error);
       });
   }
 

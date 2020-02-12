@@ -32,6 +32,9 @@ export class PlayerDetailComponent implements OnInit {
     this.playerService.updatePlayer(this.data.playerRequest, this.data.playerId)
       .subscribe(() => {
         this.playerDetailsSheetRef.dismiss({ url: returnUrl });
+      },
+      error => {
+        console.log(error);
       });
   }
 
@@ -57,6 +60,9 @@ export class PlayerDetailComponent implements OnInit {
             this.playerStats = new PlayerStats(response.totalCount);
             this.statsAreLoading = false;
           }
+        },
+        error => {
+          console.log(error);
         });
   }
 

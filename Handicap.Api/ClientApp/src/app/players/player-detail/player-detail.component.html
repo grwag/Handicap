@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card *ngIf="data.playerRequest">
     <mat-card-header>
         <div mat-card-avatar>
             <ngx-avatar name="{{data.playerRequest.firstName}} {{data.playerRequest.lastName}}"></ngx-avatar>
