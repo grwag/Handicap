@@ -6,6 +6,8 @@ import { MatProgressSpinnerModule, MatTableModule, MatPaginatorModule } from '@a
 import { TranslateModule } from '@ngx-translate/core';
 import { HttpClientModule, HttpClient, HttpHandler } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
+import { GameService } from 'src/app/shared/services/game.service';
+import { PlayerService } from 'src/app/shared/services/player.service';
 
 describe('PlayerGamesComponent', () => {
   let component: PlayerGamesComponent;
@@ -28,6 +30,8 @@ describe('PlayerGamesComponent', () => {
       providers: [
         HttpClient,
         HttpHandler,
+        GameService,
+        PlayerService,
         { provide: 'BASE_API_URL', useClass: class {}}
       ]
     })

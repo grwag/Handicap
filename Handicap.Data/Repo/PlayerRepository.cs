@@ -53,7 +53,7 @@ namespace Handicap.Data.Repo
                     .Where(expression);
             }
 
-            return query;
+            return await Task.FromResult(query);
         }
 
         public async Task SaveChangesAsync()
@@ -63,7 +63,7 @@ namespace Handicap.Data.Repo
 
         public async Task Delete(string id)
         {
-            var playerDbo = _players.Where(p => p.Id == id).SingleOrDefault();
+            var playerDbo = await _players.Where(p => p.Id == id).SingleOrDefaultAsync();
 
             if (playerDbo != null)
             {
@@ -72,7 +72,7 @@ namespace Handicap.Data.Repo
         }
         private async Task<Player> Add(Player player)
         {
-            _players.Add(player);
+            await _players.AddAsync(player);
 
             return player;
         }
@@ -81,7 +81,7 @@ namespace Handicap.Data.Repo
         {
             _context.Update(player);
 
-            return player;
+            return await Task.FromResult(player);
         }
 
 

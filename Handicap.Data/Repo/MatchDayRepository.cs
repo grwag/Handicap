@@ -36,11 +36,11 @@ namespace Handicap.Data.Repo
             Expression<Func<MatchDay, bool>> expression,
             params string[] navigationProperties)
         {
-            var matchDays = _context.MatchDays.AsNoTracking().AsQueryable();
+            var matchDays = _context.MatchDays
+                .AsNoTracking()
+                .AsQueryable();
 
             var query = matchDays
-                //.Include(md => md.MatchDayPlayers)
-                //.ThenInclude(mp => mp.Player)
                 .AsNoTracking()
                 .AsQueryable()
                 ;
@@ -55,7 +55,7 @@ namespace Handicap.Data.Repo
                 query = query.Include(navigationProperty);
             }
 
-            return query;
+            return await Task.FromResult(query);
         }
 
         public void Delete(MatchDay matchDay)
@@ -74,7 +74,7 @@ namespace Handicap.Data.Repo
                 .Include($"{nameof(MatchDay.MatchDayPlayers)}")
                 ;
 
-            var matchDay = query.SingleOrDefault(md => md.Id == id);
+            var matchDay = await query.SingleOrDefaultAsync(md => md.Id == id);
 
             if(matchDay == null)
             {
@@ -91,7 +91,7 @@ namespace Handicap.Data.Repo
                 throw new EntityAlreadyExistsException($"MatchDay with id {matchDay.Id} already exists.");
             }
 
-            _matchDays.Add(matchDay);
+            await _matchDays.AddAsync(matchDay);
         }
 
         public async Task SaveChangesAsync()
@@ -107,7 +107,7 @@ namespace Handicap.Data.Repo
             }
 
             _context.Update(matchDay);
-            return matchDay;
+            return await Task.FromResult(matchDay);
         }
 
         public async Task<MatchDay> UpdateMatchDayPlayers(MatchDay matchDay)
@@ -117,10 +117,10 @@ namespace Handicap.Data.Repo
                 throw new EntityNotFoundException($"Matchday with id {matchDay.Id} does not exist.");
             }
 
-            var matchDayPlayers = _context.MatchDayPlayers
+            var matchDayPlayers = await _context.MatchDayPlayers
                 .Where(md => md.MatchDayId == matchDay.Id)
                 .AsNoTracking()
-                .ToList();
+                .ToListAsync();
 
             foreach (var matchDayPlayer in matchDayPlayers)
             {

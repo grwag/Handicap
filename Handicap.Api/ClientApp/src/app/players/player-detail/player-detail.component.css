@@ -13,3 +13,9 @@ mat-form-field {
 .detail-form {
 	width: 70%;
 }
+
+.mat-card {
+	border-style: none;
+	border: none;
+	box-shadow: none;
+}

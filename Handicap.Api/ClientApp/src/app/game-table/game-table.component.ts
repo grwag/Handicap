@@ -76,11 +76,17 @@ export class GameTableComponent implements OnInit, AfterViewInit {
       this.gameService.getNumberOfPlayerGames(this.id)
         .subscribe(res => {
           this.totalGames = res.totalCount;
+        },
+        error => {
+          console.log(error);
         });
     } else {
       this.gameService.getNumberOfMatchdayGames(this.id)
         .subscribe(res => {
           this.totalGames = res.totalCount;
+        },
+        error => {
+          console.log(error);
         });
     }
   }

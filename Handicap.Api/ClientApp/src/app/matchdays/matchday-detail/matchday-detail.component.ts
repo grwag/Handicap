@@ -1,15 +1,19 @@
-import { Component, OnInit, ChangeDetectorRef, AfterViewChecked, Inject } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Inject } from '@angular/core';
+
 import { MatchdayService } from '../../shared/services/matchday.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Matchday } from '../../shared/matchday';
-import { GamesDataSource } from '../../shared/dataSources/gamesDataSource';
-import { Game } from '../../shared/game';
-import { Player } from '../../shared/player';
-import { MatSnackBar, MatBottomSheet, MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material';
 import { PlayerService } from '../../shared/services/player.service';
 import { GameService } from '../../shared/services/game.service';
+
+import { Matchday } from '../../shared/matchday';
+import { Game } from '../../shared/game';
+import { Player } from '../../shared/player';
 import { GameRequest } from '../../shared/gameRequest';
-import { FormControl, FormGroup, FormArray, FormBuilder, Form } from '@angular/forms';
+import { GamesDataSource } from '../../shared/dataSources/gamesDataSource';
+
+import { MatSnackBar, MatBottomSheet, MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material';
+import { FormGroup } from '@angular/forms';
+
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -27,7 +31,6 @@ export class AddRemovePlayersDialog {
     private addRemovePlayersDialogRef: MatBottomSheetRef<AddRemovePlayersDialog>,
     @Inject(MAT_BOTTOM_SHEET_DATA) public data,
     private matchdayService: MatchdayService) {
-    console.log(data);
   }
 
   checkboxChanged(event) {
@@ -120,6 +123,9 @@ export class MatchdayDetailComponent implements OnInit {
     this.matchdayService.getMatchday(this.route.snapshot.params.id)
       .subscribe(md => {
         this.matchday = md;
+      },
+      error => {
+        console.log(error);
       });
   }
 
@@ -130,6 +136,9 @@ export class MatchdayDetailComponent implements OnInit {
         this.finishedGames = res.payload.filter(g => g.isFinished);
 
         this.cdRef.detectChanges();
+      },
+      error => {
+        console.log(error);
       });
   }
 
@@ -143,8 +152,10 @@ export class MatchdayDetailComponent implements OnInit {
         }
       });
     ref.afterDismissed().subscribe(() => {
-      console.log('after dismissed');
-
+      this.setPlayers();
+    },
+    error => {
+      console.log(error);
       this.setPlayers();
     });
   }

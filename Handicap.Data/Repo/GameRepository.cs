@@ -77,7 +77,7 @@ namespace Handicap.Data.Repo
                 query = query.Where(expression);
             }
 
-            return query;
+            return await Task.FromResult(query);
         }
 
         public async Task SaveChangesAsync()
@@ -87,12 +87,13 @@ namespace Handicap.Data.Repo
 
         private async Task<Game> Add(Game game)
         {
-            if (_games.Find(game.Id) != null)
+            var exists = await _games.AnyAsync(g => g.Id == game.Id);
+            if (exists)
             {
                 throw new EntityAlreadyExistsException($"Game with id {game.Id} already exists.");
             }
 
-            _games.Add(game);
+            await _games.AddAsync(game);
 
             return game;
         }
@@ -108,7 +109,7 @@ namespace Handicap.Data.Repo
 
             _context.Update(game);
 
-            return game;
+            return await Task.FromResult(game);
         }
 
         private bool GameExists(Game game)

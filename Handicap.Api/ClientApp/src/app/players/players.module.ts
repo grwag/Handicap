@@ -7,10 +7,7 @@ import { PlayerGamesComponent } from './player-games/player-games.component';
 import { PlayerDetailComponent } from './player-detail/player-detail.component';
 import { CreatePlayerComponent } from './create-player/create-player.component';
 
-// import { GameTableComponent } from '../game-table/game-table.component';
-
-import { TranslateModule } from '@ngx-translate/core';
-import { MatCardModule, MatLabel } from '@angular/material';
+import { MatCardModule } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,10 +18,10 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
+import { TranslateModule } from '@ngx-translate/core';
 import { AvatarModule } from 'ngx-avatar';
 
 import { SharedModule } from '../shared/shared.module';
-import { RouterModule } from '@angular/router';
 
 @NgModule({
     declarations: [
@@ -51,7 +48,6 @@ import { RouterModule } from '@angular/router';
         MatSortModule,
         MatSnackBarModule,
         MatTooltipModule,
-        MatLabel,
         AvatarModule,
         SharedModule,
     ]

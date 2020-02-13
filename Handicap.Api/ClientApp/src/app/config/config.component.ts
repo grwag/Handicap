@@ -33,6 +33,9 @@ export class ConfigComponent implements OnInit {
     this.configService.getConfig()
       .subscribe(config => {
         this.config = config;
+      },
+      error => {
+        console.log(error);
       });
   }
 
@@ -40,6 +43,9 @@ export class ConfigComponent implements OnInit {
     this.configService.updateConfig(this.config)
       .subscribe(config => {
         this.config = config;
+      },
+      error => {
+        console.log(error);
       });
   }
 
@@ -47,6 +53,9 @@ export class ConfigComponent implements OnInit {
     this.configService.resetConfig()
       .subscribe(config => {
         this.config = config;
+      },
+      error => {
+        console.log(error);
       });
   }
 
