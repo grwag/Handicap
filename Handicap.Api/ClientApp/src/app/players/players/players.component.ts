@@ -12,6 +12,7 @@ import { merge, of as observableOf } from 'rxjs';
 import { PlayerStats } from '../../shared/playerStats';
 import { tap } from 'rxjs/operators';
 import { PlayerDetailComponent } from '../player-detail/player-detail.component';
+import { Validators, FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-players',
@@ -31,6 +32,19 @@ export class PlayersComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: false }) sort: MatSort;
+
+  form = new FormGroup({
+    firstName: new FormControl('', [
+      Validators.required
+    ]),
+    lastName: new FormControl('', [
+      Validators.required
+    ]),
+    handicap: new FormControl('', [
+      Validators.required,
+      this.validateHandicap
+    ])
+  });
 
   constructor(
     private playerService: PlayerService,
@@ -117,6 +131,33 @@ export class PlayersComponent implements OnInit, AfterViewInit {
       error => {
         console.log(error);
       });
+  }
+
+  createPlayer() {
+    const playerRequest = new PlayerRequest(
+      this.form.controls.firstName.value,
+      this.form.controls.lastName.value,
+      this.form.controls.handicap.value
+    );
+    this.playerService.createPlayer(playerRequest)
+      .subscribe(player => {
+        this.setTotalPlayers();
+        this.dataSource.loadPlayers();
+      });
+  }
+
+  validateHandicap(formControl: FormControl) {
+    const value = formControl.value;
+
+    if (value % 5 === 0 && (value >= 0 && value <= 100)) {
+      return null;
+    }
+
+    return {
+      handicap: {
+        parsedHandicap: value
+      }
+    };
   }
 
 }

@@ -124,9 +124,9 @@ export class MatchdayDetailComponent implements OnInit {
       .subscribe(md => {
         this.matchday = md;
       },
-      error => {
-        console.log(error);
-      });
+        error => {
+          console.log(error);
+        });
   }
 
   loadGames() {
@@ -137,9 +137,9 @@ export class MatchdayDetailComponent implements OnInit {
 
         this.cdRef.detectChanges();
       },
-      error => {
-        console.log(error);
-      });
+        error => {
+          console.log(error);
+        });
   }
 
   addRemovePlayers() {
@@ -154,10 +154,10 @@ export class MatchdayDetailComponent implements OnInit {
     ref.afterDismissed().subscribe(() => {
       this.setPlayers();
     },
-    error => {
-      console.log(error);
-      this.setPlayers();
-    });
+      error => {
+        console.log(error);
+        this.setPlayers();
+      });
   }
 
   setPlayers() {
@@ -173,7 +173,10 @@ export class MatchdayDetailComponent implements OnInit {
     this.matchdayService.getAvailablePlayers(this.matchdayId)
       .subscribe(res => {
         this.availablePlayers = res.payload;
-      });
+      },
+        error => {
+          console.log(error);
+        });
   }
 
   nextGame() {

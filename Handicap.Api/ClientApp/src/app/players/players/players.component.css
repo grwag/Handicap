@@ -18,3 +18,7 @@ mat-drawer-content {
   height: 90vh;
   background-color: transparent;
 }
+
+mat-form-field {
+	margin-right: 12px;
+}

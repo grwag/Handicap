@@ -3,12 +3,22 @@ import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-transla
 
 import { PlayersComponent } from './players.component';
 import { CreatePlayerComponent } from '../create-player/create-player.component';
-import { MatProgressSpinnerModule, MatTableModule, MatPaginatorModule, MatSortModule, MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA, MatFormFieldModule, MatBottomSheetModule, MatSnackBarModule, MatInputModule } from '@angular/material';
+import {
+  MatProgressSpinnerModule,
+  MatTableModule,
+  MatPaginatorModule,
+  MatSortModule,
+  MatBottomSheetRef,
+  MAT_BOTTOM_SHEET_DATA,
+  MatFormFieldModule,
+  MatBottomSheetModule,
+  MatSnackBarModule,
+  MatInputModule
+} from '@angular/material';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { PlayerRequest } from 'src/app/shared/playerRequest';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NoopAnimationPlayer } from '@angular/animations';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('PlayersComponent', () => {
