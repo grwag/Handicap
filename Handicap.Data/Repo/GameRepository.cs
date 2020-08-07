@@ -56,7 +56,7 @@ namespace Handicap.Data.Repo
             }
 
             _games.Remove(game);
-            await SaveChangesAsync();
+            // await SaveChangesAsync();
         }
 
         public async Task<IQueryable<Game>> Find(

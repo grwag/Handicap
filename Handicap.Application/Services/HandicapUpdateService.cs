@@ -97,6 +97,8 @@ namespace Handicap.Application.Services
 
         private int HandicapToAdd(string playerId, Game game)
         {
+            if(!game.IsFinished){ return 0; }
+            
             if (game.PlayerOneId != playerId && game.PlayerTwoId != playerId) { return 0; }
 
             if (game.PlayerOnePoints >= game.PlayerOneRequiredPoints)
