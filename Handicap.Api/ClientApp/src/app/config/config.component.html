@@ -3,6 +3,10 @@
 <mat-card *ngIf="config">{{'handicaps' | translate}}
     <mat-card-content>
         <mat-slide-toggle [(ngModel)]="config.updatePlayersImmediately" (change)="updateConfig()">{{'updateHandicapsImmediately' | translate}}</mat-slide-toggle>
+        <mat-slider thumbLabel  tickInterval="1" min="1" max="10" step="1" [(ngModel)]="config.eightBallMax" (change)="updateConfig()"></mat-slider>
+        <mat-slider thumbLabel  tickInterval="1" min="1" max="10" step="1" [(ngModel)]="config.nineBallMax" (change)="updateConfig()"></mat-slider>
+        <mat-slider thumbLabel  tickInterval="1" min="1" max="10" step="1" [(ngModel)]="config.tenBallMax" (change)="updateConfig()"></mat-slider>
+        <mat-slider thumbLabel  tickInterval="1" min="1" max="10" step="1" [(ngModel)]="config.straightPoolMax" (change)="updateConfig()"></mat-slider>
     </mat-card-content>
 </mat-card>
 <mat-card>{{'languages' | translate}}

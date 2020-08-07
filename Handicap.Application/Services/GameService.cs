@@ -72,6 +72,8 @@ namespace Handicap.Application.Services
 
         public async Task<Game> CreateGame(string TenantId, string PlayerOneId, string PlayerTwoId, string MatchDayId)
         {
+            var config = await _configService.Get(TenantId);
+
             var playerOne = (await _playerRepository.Find(p => p.Id == PlayerOneId)).FirstOrDefault();
             var playerTwo = (await _playerRepository.Find(p => p.Id == PlayerTwoId)).FirstOrDefault();
 
@@ -83,10 +85,10 @@ namespace Handicap.Application.Services
             game.PlayerTwo = playerTwo;
 
             game.PlayerOneRequiredPoints = _handicapCalculator.Calculate(
-                game.PlayerOne.Handicap, game.Type);
+                game.PlayerOne.Handicap, GetGameMax(config, game.Type));
 
             game.PlayerTwoRequiredPoints = _handicapCalculator.Calculate(
-                game.PlayerTwo.Handicap, game.Type);
+                game.PlayerTwo.Handicap, GetGameMax(config, game.Type));
 
             return game;
         }
@@ -174,6 +176,18 @@ namespace Handicap.Application.Services
         {
             return ((game.PlayerOnePoints >= game.PlayerOneRequiredPoints)
                 || (game.PlayerTwoPoints >= game.PlayerTwoRequiredPoints));
+        }
+
+        private int GetGameMax(HandicapConfiguration configuration, int gameType){
+
+            switch(gameType){
+                case 6: return configuration.EightBallMax;
+                case 7: return configuration.TenBallMax;
+                case 8: return configuration.NineBallMax;
+                case 100: return configuration.StraigntPoolMax;
+            }
+
+            return 0;
         }
     }
 }
