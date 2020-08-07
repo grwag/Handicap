@@ -73,7 +73,7 @@ namespace Handicap.Application.Tests
             
             var actual = calc.Calculate(handicap, config.StraigntPoolMax);
 
-            actual.Should().Be(19);
+            actual.Should().Be(12);
         }
 
         [Fact]
@@ -86,7 +86,7 @@ namespace Handicap.Application.Tests
             );
 
             var calc = new HandicapCalculator();
-            var handicap = 100;
+            var handicap = 90;
             
             var actual = calc.Calculate(handicap, config.StraigntPoolMax);
 

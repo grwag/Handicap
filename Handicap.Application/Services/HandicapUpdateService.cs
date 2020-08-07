@@ -24,13 +24,13 @@ namespace Handicap.Application.Services
                 game.PlayerOne.Handicap = (game.PlayerOne.Handicap - 5 < 0)
                     ? game.PlayerOne.Handicap
                     : game.PlayerOne.Handicap - 5;
-                game.PlayerTwo.Handicap = (game.PlayerTwo.Handicap + 5 > 100)
+                game.PlayerTwo.Handicap = (game.PlayerTwo.Handicap + 5 > 90)
                     ? game.PlayerTwo.Handicap
                     : game.PlayerTwo.Handicap + 5;
             }
             else
             {
-                game.PlayerOne.Handicap = (game.PlayerOne.Handicap + 5 > 100)
+                game.PlayerOne.Handicap = (game.PlayerOne.Handicap + 5 > 90)
                     ? game.PlayerOne.Handicap
                     : game.PlayerOne.Handicap + 5;
                 game.PlayerTwo.Handicap = (game.PlayerTwo.Handicap - 5 < 0)
@@ -50,9 +50,9 @@ namespace Handicap.Application.Services
                 var player = (await _playerRepository.Find(p => p.Id == playerResult.PlayerId)).FirstOrDefault();
                 if (player != null)
                 {
-                    if (player.Handicap + playerResult.HandicapToAdd > 100)
+                    if (player.Handicap + playerResult.HandicapToAdd > 90)
                     {
-                        player.Handicap = 100;
+                        player.Handicap = 90;
                     }
                     else if (player.Handicap + playerResult.HandicapToAdd < 0)
                     {

@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatCardModule, MatLabel, MatInputModule, MatSelectModule } from '@angular/material';
+import { MatCardModule, MatLabel, MatInputModule, MatSelectModule, MatSliderModule } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -26,6 +26,7 @@ describe('ConfigComponent', () => {
         CommonModule,
         ConfigRoutingModule,
         MatSlideToggleModule,
+        MatSliderModule,
         MatCardModule,
         FormsModule,
         ReactiveFormsModule,

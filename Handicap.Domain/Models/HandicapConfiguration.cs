@@ -16,9 +16,9 @@ namespace Handicap.Domain.Models
         {
             Id = Guid.NewGuid().ToString();
             UpdatePlayersImmediately = true;
-            EightBallMax = 6;
-            NineBallMax = 8;
-            TenBallMax = 7;
+            EightBallMax = 7;
+            NineBallMax = 9;
+            TenBallMax = 8;
             StraigntPoolMax = 100;
         }
     }

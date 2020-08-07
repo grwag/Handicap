@@ -181,9 +181,9 @@ namespace Handicap.Application.Services
         private int GetGameMax(HandicapConfiguration configuration, int gameType){
 
             switch(gameType){
-                case 6: return configuration.EightBallMax;
-                case 7: return configuration.TenBallMax;
-                case 8: return configuration.NineBallMax;
+                case 7: return configuration.EightBallMax;
+                case 8: return configuration.TenBallMax;
+                case 9: return configuration.NineBallMax;
                 case 100: return configuration.StraigntPoolMax;
             }
 

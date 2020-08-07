@@ -55,5 +55,6 @@
     "language": "Sprache",
     "languages": "Sprachen",
     "finishedGames": "Beendete Spiele",
-    "activeGames": "Laufende Spiele"
+    "activeGames": "Laufende Spiele",
+    "resetToDefault": "Zurücksetzen"
 }

@@ -40,6 +40,7 @@ export class ConfigComponent implements OnInit {
   }
 
   updateConfig() {
+    console.log(this.config);
     this.configService.updateConfig(this.config)
       .subscribe(config => {
         this.config = config;

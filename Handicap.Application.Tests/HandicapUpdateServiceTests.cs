@@ -42,17 +42,17 @@ namespace Handicap.Application.Tests
         }
 
         [Fact]
-        public void HandicapDoesNotGoAboveHundred()
+        public void HandicapDoesNotGoAbove90()
         {
             var mockPlayerRepository = new Mock<IPlayerRepository>();
             var handicapUpdateService = new HandicapUpdateService(mockPlayerRepository.Object);
             var game = GetGame();
 
-            game.PlayerTwo.Handicap = 100;
+            game.PlayerTwo.Handicap = 90;
 
             game = handicapUpdateService.UpdatePlayerHandicap(game);
             game.PlayerOne.Handicap.Should().Be(50);
-            game.PlayerTwo.Handicap.Should().Be(100);
+            game.PlayerTwo.Handicap.Should().Be(90);
         }
 
         [Fact]
@@ -67,20 +67,6 @@ namespace Handicap.Application.Tests
             game = handicapUpdateService.UpdatePlayerHandicap(game);
             game.PlayerOne.Handicap.Should().Be(0);
             game.PlayerTwo.Handicap.Should().Be(60);
-        }
-
-        [Fact]
-        public void HandicapGoesToHundred()
-        {
-            var mockPlayerRepository = new Mock<IPlayerRepository>();
-            var handicapUpdateService = new HandicapUpdateService(mockPlayerRepository.Object);
-            var game = GetGame();
-
-            game.PlayerTwo.Handicap = 95;
-
-            game = handicapUpdateService.UpdatePlayerHandicap(game);
-            game.PlayerOne.Handicap.Should().Be(50);
-            game.PlayerTwo.Handicap.Should().Be(100);
         }
 
         [Fact]

@@ -23,6 +23,6 @@ export class ConfigService {
   }
 
   resetConfig(): Observable<HandicapConfig> {
-    return this.http.put<HandicapConfig>(this.baseApiUrl, null);
+    return this.http.put<HandicapConfig>(this.baseApiUrl + '/reset', null);
   }
 }

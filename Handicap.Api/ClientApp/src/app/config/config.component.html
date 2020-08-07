@@ -1,12 +1,22 @@
 <p *ngIf="!config"><em>Loading...</em></p>
 <h2>{{'settings' | translate}}</h2>
+<button mat-raised-button color="warn" (click)="resetConfig()">{{'resetToDefault' | translate }}</button>
+<p></p>
 <mat-card *ngIf="config">{{'handicaps' | translate}}
     <mat-card-content>
         <mat-slide-toggle [(ngModel)]="config.updatePlayersImmediately" (change)="updateConfig()">{{'updateHandicapsImmediately' | translate}}</mat-slide-toggle>
+    </mat-card-content>
+</mat-card>
+<mat-card *ngIf="config">{{'games' | translate}}
+    <mat-card-content>
+        <p>{{'gameType.eightBall.long' | translate }} ({{config.eightBallMax}})</p>
         <mat-slider thumbLabel  tickInterval="1" min="1" max="10" step="1" [(ngModel)]="config.eightBallMax" (change)="updateConfig()"></mat-slider>
+        <p>{{'gameType.nineBall.long' | translate }} ({{config.nineBallMax}})</p>
         <mat-slider thumbLabel  tickInterval="1" min="1" max="10" step="1" [(ngModel)]="config.nineBallMax" (change)="updateConfig()"></mat-slider>
+        <p>{{'gameType.tenBall.long' | translate }} ({{config.tenBallMax}})</p>
         <mat-slider thumbLabel  tickInterval="1" min="1" max="10" step="1" [(ngModel)]="config.tenBallMax" (change)="updateConfig()"></mat-slider>
-        <mat-slider thumbLabel  tickInterval="1" min="1" max="10" step="1" [(ngModel)]="config.straightPoolMax" (change)="updateConfig()"></mat-slider>
+        <p>{{'gameType.straightPool.long' | translate }} ({{config.straigntPoolMax}})</p>
+        <mat-slider thumbLabel  tickInterval="1" min="1" max="100" step="1" [(ngModel)]="config.straigntPoolMax" (change)="updateConfig()"></mat-slider>
     </mat-card-content>
 </mat-card>
 <mat-card>{{'languages' | translate}}

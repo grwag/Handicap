@@ -47,6 +47,10 @@ namespace Handicap.Data.Repo
         public async Task<HandicapConfiguration> ResetToDefaults(HandicapConfiguration config)
         {
             config.UpdatePlayersImmediately = true;
+            config.EightBallMax = 7;
+            config.NineBallMax = 9;
+            config.TenBallMax = 8;
+            config.StraigntPoolMax = 100;
 
             _context.Update(config);
             await _context.SaveChangesAsync();

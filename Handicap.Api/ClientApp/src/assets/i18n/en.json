@@ -55,5 +55,6 @@
     "language": "Language",
     "languages": "Languages",
     "finishedGames": "Finished Games",
-    "activeGames": "Active Games"
+    "activeGames": "Active Games",
+    "resetToDefault": "Reset"
 }

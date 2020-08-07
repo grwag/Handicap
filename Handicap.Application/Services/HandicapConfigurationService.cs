@@ -42,6 +42,10 @@ namespace Handicap.Application.Services
             }
 
             config.UpdatePlayersImmediately = configUpdate.UpdatePlayersImmediately;
+            config.EightBallMax = configUpdate.EightBallMax;
+            config.NineBallMax = configUpdate.NineBallMax;
+            config.TenBallMax = configUpdate.TenBallMax;
+            config.StraigntPoolMax = configUpdate.StraigntPoolMax;
 
             await _configRepo.UpdateConfig(config);
 
