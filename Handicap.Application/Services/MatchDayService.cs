@@ -278,7 +278,10 @@ namespace Handicap.Application.Services
 
             if (matchDay.Games.Any(g => !g.IsFinished))
             {
-                throw new EntityClosedForUpdateException($"MatchDay has open games.");
+                var openGames = matchDay.Games.Where(g => !g.IsFinished).ToList();
+                foreach(var game in openGames){
+                    await _gameRepository.Delete(game.Id, game.TenantId);
+                }
             }
 
             var config = await _configService.Get(tenantId);
