@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 namespace Handicap.Api.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize("read_write")]
+    // [Authorize("read_write")]
     public class MatchDaysController : ControllerBase
     {
         private readonly IMatchDayService _matchDayService;

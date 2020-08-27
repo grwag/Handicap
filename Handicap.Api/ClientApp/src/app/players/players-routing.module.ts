@@ -6,9 +6,9 @@ import { PlayersComponent } from './players/players.component';
 import { PlayerGamesComponent } from './player-games/player-games.component';
 
 const routes: Routes = [
-    { path: '', component: PlayersComponent, canActivate: [AuthGuard] },
-    { path: ':id', component: PlayersComponent, canActivate: [AuthGuard] },
-    { path: ':id/games', component: PlayerGamesComponent, canActivate: [AuthGuard] },
+    { path: '', component: PlayersComponent /*, canActivate: [AuthGuard] */},
+    { path: ':id', component: PlayersComponent /*, canActivate: [AuthGuard] */},
+    { path: ':id/games', component: PlayerGamesComponent /*, canActivate: [AuthGuard] */},
 ];
 
 @NgModule({

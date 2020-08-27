@@ -19,7 +19,7 @@ namespace Handicap.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize("read_write")]
+    // [Authorize("read_write")]
     public class PlayersController : ControllerBase
     {
         private readonly IPlayerService _playerService;

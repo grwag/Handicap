@@ -40,25 +40,25 @@ namespace Handicap.Api
                 logBuilder.AddSeq(Configuration.GetSection("Seq"));
             });
 
-            var authority = System.Environment.GetEnvironmentVariable("OAUTH_ISSUER");
-            var apiName = System.Environment.GetEnvironmentVariable("OAUTH_API_NAME");
-            if(Environment.IsDevelopment()){
-                authority = "https://id.greshawag.com";
-                apiName = "handicap_test";
-            }
+            // var authority = System.Environment.GetEnvironmentVariable("OAUTH_ISSUER");
+            // var apiName = System.Environment.GetEnvironmentVariable("OAUTH_API_NAME");
+            // if(Environment.IsDevelopment()){
+            //     authority = "https://id.greshawag.com";
+            //     apiName = "handicap_test";
+            // }
 
-            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                .AddIdentityServerAuthentication(options =>
-                {
-                    options.Authority = authority;
-                    options.ApiName = apiName;
-                });
+            // services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+            //     .AddIdentityServerAuthentication(options =>
+            //     {
+            //         options.Authority = authority;
+            //         options.ApiName = apiName;
+            //     });
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("read_write", policy => policy.RequireScope("read_write"));
-                options.AddPolicy("read", policy => policy.RequireScope("read"));
-            });
+            // services.AddAuthorization(options =>
+            // {
+            //     options.AddPolicy("read_write", policy => policy.RequireScope("read_write"));
+            //     options.AddPolicy("read", policy => policy.RequireScope("read"));
+            // });
 
             services.AddControllers()
                 .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new DoubleConverter()));
@@ -156,8 +156,8 @@ namespace Handicap.Api
             app.UseCors("AllowAngularDevClient");
             app.UseRouting();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+            // app.UseAuthentication();
+            // app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

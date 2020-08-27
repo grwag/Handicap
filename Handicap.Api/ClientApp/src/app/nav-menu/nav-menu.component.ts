@@ -17,11 +17,11 @@ export class NavMenuComponent implements OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
-    this.loggedIn$ = this.isLoggedIn();
+    // this.loggedIn$ = this.isLoggedIn();
   }
 
   ngAfterViewChecked() {
-    this.loggedIn$ = this.isLoggedIn();
+    // this.loggedIn$ = this.isLoggedIn();
   }
 
   isLoggedIn() {

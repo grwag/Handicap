@@ -281,6 +281,7 @@ namespace Handicap.Application.Services
                 var openGames = matchDay.Games.Where(g => !g.IsFinished).ToList();
                 foreach(var game in openGames){
                     await _gameRepository.Delete(game.Id, game.TenantId);
+                    matchDay.Games.Remove(game);
                 }
             }
 

@@ -15,7 +15,7 @@ export class AppComponent {
 
   constructor(private oauthService: OAuthService, private http: HttpClient, @Inject('BASE_API_URL') baseApiUrl: string) {
     this.baseApiUrl = baseApiUrl;
-    this.configure();
+    // this.configure();
   }
 
   private configure() {

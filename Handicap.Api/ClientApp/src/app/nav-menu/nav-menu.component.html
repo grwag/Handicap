@@ -8,27 +8,20 @@
       </button>
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" [ngClass]="{ show: isExpanded }">
         <ul class="navbar-nav flex-grow">
-          <li *ngIf="loggedIn$ | async" class="nav-item" [routerLinkActive]="['link-active']"
+          <li class="nav-item" [routerLinkActive]="['link-active']"
             [routerLinkActiveOptions]="{ exact: true }">
             <a mat-button [routerLink]="['/']">{{'home' | translate}}</a>
           </li>
-          <li *ngIf="loggedIn$ | async" class="nav-item" [routerLinkActive]="['link-active']"
+          <li class="nav-item" [routerLinkActive]="['link-active']"
             [routerLinkActiveOptions]="{ exact: true }">
             <a mat-button [routerLink]="['/matchdays']">{{'matchdays' | translate}}</a>
           </li>
-          <li *ngIf="loggedIn$ | async" class="nav-item" [routerLinkActive]="['link-active']"
+          <li class="nav-item" [routerLinkActive]="['link-active']"
             [routerLinkActiveOptions]="{ exact: true }">
             <a mat-button [routerLink]="['/players']">{{'players' | translate}}</a>
           </li>
-          <li *ngIf="loggedIn$ | async" class="nav-item" [routerLinkActive]="['link-active']">
+          <li class="nav-item" [routerLinkActive]="['link-active']">
             <a mat-button [routerLink]="['/config']">{{'settings' | translate}}</a>
-          </li>
-          <li *ngIf="!(loggedIn$ | async)" class="nav-item" [routerLinkActive]="['link-active']">
-            <button mat-button (click)="login()">{{'login' | translate}}</button>
-          </li>
-
-          <li *ngIf="loggedIn$ | async" class="nav-item" [routerLinkActive]="['link-active']">
-            <button mat-button (click)="logout()">{{'logout' | translate}}</button>
           </li>
         </ul>
       </div>
