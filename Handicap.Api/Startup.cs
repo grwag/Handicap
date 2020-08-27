@@ -115,7 +115,7 @@ namespace Handicap.Api
                   builder =>
                   {
                       builder
-                        .WithOrigins(clientUrl)
+                        .WithOrigins(clientUrl, "http://localhost:5000")
                         // .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod();

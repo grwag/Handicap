@@ -1,8 +1,21 @@
 ﻿version: '3'
 
 services:
-  grwag.handicap:
-    image: grwag/handicap:${TAG}
+  mariadb:
+    container_name: 'mariadb'
+    image: mariadb
+    restart: always
+    volumes:
+      - /data/mariadb:/var/lib/mysql
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=C78VRMJQucRN6XgbksxLmmaz
+      - MYSQL_PASSWORD=Kk4Pm0oBEV8PMOTUwMcRN6wS
+      - MYSQL_DATABASE=handicap
+      - MYSQL_USER=handicap_user
+  bzo.handicap:
+    image: bzo/handicap
     container_name: 'handicap'
     restart: on-failure
     networks:
@@ -11,25 +24,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - MYSQL_HOST=${MYSQL_HOST}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_PORT=${MYSQL_PORT}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
-      - OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET}
-      - OAUTH_ISSUER=${OAUTH_ISSUER}
-      - OAUTH_SCOPE=${OAUTH_SCOPE}
-      - OAUTH_RESPONSE_TYPE=${OAUTH_RESPONSE_TYPE}
-      - OAUTH_REDIRECT_URI=${OAUTH_REDIRECT_URI}
-      - OAUTH_POST_LOGOUT_REDIRECT_URI=${OAUTH_POST_LOGOUT_REDIRECT_URI}
-      - OAUTH_API_NAME=${OAUTH_API_NAME}
-      - CLIENT_URL=${CLIENT_URL}
-      - LETSENCRYPT_HOST=pbc.greshawag.com
-      - LETSENCRYPT_EMAIL=cert@greshawag.com
-      - VIRTUAL_HOST=pbc.greshawag.com
-      - VIRTUAL_PORT=80
-
-networks:
-  proxy:
-    external:
-      name: nginxproxy_nginx-proxy
+      - MYSQL_HOST=mariadb
+      - MYSQL_PASSWORD=C78VRMJQucRN6XgbksxLmmaz
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=handicap
