@@ -4,7 +4,8 @@ import { AuthGuard } from '../shared/auth/auth.guard.service';
 
 import { ConfigComponent } from './config.component';
 
-const routes: Routes = [{ path: '', component: ConfigComponent, canActivate: [AuthGuard] }];
+const routes: Routes = [{ path: '', component: ConfigComponent}];
+//const routes: Routes = [{ path: '', component: ConfigComponent, canActivate: [AuthGuard] }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

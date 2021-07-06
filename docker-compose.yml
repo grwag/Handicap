@@ -15,11 +15,12 @@ services:
       - MYSQL_DATABASE=handicap
       - MYSQL_USER=handicap_user
   bzo.handicap:
+    container_name: handicap
     image: bzo/handicap
     container_name: 'handicap'
+    ports:
+      - '8081:80'
     restart: on-failure
-    networks:
-      - proxy
     build:
       context: .
       dockerfile: Dockerfile

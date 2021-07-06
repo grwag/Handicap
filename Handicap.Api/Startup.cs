@@ -85,7 +85,16 @@ namespace Handicap.Api
 
             services.AddEntityFrameworkMySql().AddDbContext<HandicapContext>(opts =>
             {
-                opts.UseMySql(connectionString);
+                opts.UseMySql(
+                    // connectionString,
+                    "Server=mariadb;Database=handicap;User=root;Password=C78VRMJQucRN6XgbksxLmmaz;Pooling=True",
+                    mySqlOptions =>
+                    {
+                        mySqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 10,
+                            maxRetryDelay: TimeSpan.FromSeconds(30),
+                            errorNumbersToAdd: null);
+                    });
             });
 
             services.AddScoped<IPlayerRepository, PlayerRepository>();
@@ -115,8 +124,8 @@ namespace Handicap.Api
                   builder =>
                   {
                       builder
-                        .WithOrigins(clientUrl, "http://localhost:5000")
-                        // .AllowAnyOrigin()
+                        //.WithOrigins(clientUrl, "http://localhost:5000")
+                        .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                   });
